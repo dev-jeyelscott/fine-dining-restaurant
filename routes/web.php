@@ -1,24 +1,36 @@
 <?php
 
-use App\Http\Controllers\Public\BanquetHallController;
-use App\Http\Controllers\Public\ContactController;
-use App\Http\Controllers\Public\GalleryController;
-use App\Http\Controllers\Public\HomeController;
-use App\Http\Controllers\Public\MenuController;
-use App\Http\Controllers\Public\OrderInquiryController;
-use App\Http\Controllers\Public\ReservationRequestController;
+use App\Http\Controllers\PublicSite\BanquetHallController;
+use App\Http\Controllers\PublicSite\ContactController;
+use App\Http\Controllers\PublicSite\GalleryController;
+use App\Http\Controllers\PublicSite\HomeController;
+use App\Http\Controllers\PublicSite\MenuController;
+use App\Http\Controllers\PublicSite\OrderInquiryController;
+use App\Http\Controllers\PublicSite\ReservationRequestController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', HomeController::class)->name('home');
-Route::get('/menu', MenuController::class)->name('menu');
-Route::get('/gallery', GalleryController::class)->name('gallery');
-Route::get('/banquet-hall', BanquetHallController::class)->name('banquet-hall');
+Route::get('/', [HomeController::class, 'index'])->name('home');
+
+Route::get('/menu', [MenuController::class, 'index'])->name('menu');
+
+Route::get('/gallery', [GalleryController::class, 'index'])->name('gallery');
+
+Route::get('/banquet-hall', [BanquetHallController::class, 'index'])->name('banquet-hall');
 
 Route::get('/reservation-request', [ReservationRequestController::class, 'create'])
     ->name('reservation-request.create');
 
+Route::post('/reservation-request', [ReservationRequestController::class, 'store'])
+    ->name('reservation-request.store');
+
 Route::get('/order-inquiry', [OrderInquiryController::class, 'create'])
     ->name('order-inquiry.create');
 
+Route::post('/order-inquiry', [OrderInquiryController::class, 'store'])
+    ->name('order-inquiry.store');
+
 Route::get('/contact', [ContactController::class, 'create'])
     ->name('contact.create');
+
+Route::post('/contact', [ContactController::class, 'store'])
+    ->name('contact.store');

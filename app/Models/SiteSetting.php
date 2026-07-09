@@ -22,4 +22,11 @@ class SiteSetting extends Model
     {
         return static::query()->where('key', $key)->value('value') ?? $default;
     }
+
+    public static function keyValueMap(): array
+    {
+        return static::query()
+            ->pluck('value', 'key')
+            ->all();
+    }
 }
