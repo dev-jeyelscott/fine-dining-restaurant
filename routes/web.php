@@ -1,11 +1,36 @@
 <?php
 
+use App\Http\Controllers\PublicSite\BanquetHallController;
+use App\Http\Controllers\PublicSite\ContactController;
+use App\Http\Controllers\PublicSite\GalleryController;
+use App\Http\Controllers\PublicSite\HomeController;
+use App\Http\Controllers\PublicSite\MenuController;
+use App\Http\Controllers\PublicSite\OrderInquiryController;
+use App\Http\Controllers\PublicSite\ReservationRequestController;
 use Illuminate\Support\Facades\Route;
 
-Route::view('/', 'welcome')->name('home');
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
-Route::middleware(['auth', 'verified'])->group(function () {
-    Route::view('dashboard', 'dashboard')->name('dashboard');
-});
+Route::get('/menu', [MenuController::class, 'index'])->name('menu');
 
-require __DIR__.'/settings.php';
+Route::get('/gallery', [GalleryController::class, 'index'])->name('gallery');
+
+Route::get('/banquet-hall', [BanquetHallController::class, 'index'])->name('banquet-hall');
+
+Route::get('/reservation-request', [ReservationRequestController::class, 'create'])
+    ->name('reservation-request.create');
+
+Route::post('/reservation-request', [ReservationRequestController::class, 'store'])
+    ->name('reservation-request.store');
+
+Route::get('/order-inquiry', [OrderInquiryController::class, 'create'])
+    ->name('order-inquiry.create');
+
+Route::post('/order-inquiry', [OrderInquiryController::class, 'store'])
+    ->name('order-inquiry.store');
+
+Route::get('/contact', [ContactController::class, 'create'])
+    ->name('contact.create');
+
+Route::post('/contact', [ContactController::class, 'store'])
+    ->name('contact.store');

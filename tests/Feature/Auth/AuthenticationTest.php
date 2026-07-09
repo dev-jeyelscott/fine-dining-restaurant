@@ -10,7 +10,9 @@ test('login screen can be rendered', function () {
 });
 
 test('users can authenticate using the login screen', function () {
-    $user = User::factory()->create();
+    $user = User::factory()->create([
+        'email' => config('admin.seed_user.email'),
+    ]);
 
     $response = $this->post(route('login.store'), [
         'email' => $user->email,
@@ -19,7 +21,7 @@ test('users can authenticate using the login screen', function () {
 
     $response
         ->assertSessionHasNoErrors()
-        ->assertRedirect(route('dashboard', absolute: false));
+        ->assertRedirect(route('filament.admin.pages.dashboard', absolute: false));
 
     $this->assertAuthenticated();
 });
@@ -45,7 +47,9 @@ test('users with two factor enabled are redirected to two factor challenge', fun
         'confirmPassword' => true,
     ]);
 
-    $user = User::factory()->withTwoFactor()->create();
+    $user = User::factory()->withTwoFactor()->create([
+        'email' => config('admin.seed_user.email'),
+    ]);
 
     $response = $this->post(route('login.store'), [
         'email' => $user->email,

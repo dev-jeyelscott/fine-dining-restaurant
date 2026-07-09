@@ -73,7 +73,7 @@ return [
     |
     */
 
-    'home' => '/dashboard',
+    'home' => env('FORTIFY_HOME', '/admin'),
 
     /*
     |--------------------------------------------------------------------------
@@ -161,7 +161,6 @@ return [
     */
 
     'features' => [
-        Features::registration(),
         Features::resetPasswords(),
         Features::emailVerification(),
         Features::twoFactorAuthentication([
