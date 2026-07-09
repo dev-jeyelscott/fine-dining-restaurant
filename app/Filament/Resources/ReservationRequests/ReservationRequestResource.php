@@ -2,8 +2,6 @@
 
 namespace App\Filament\Resources\ReservationRequests;
 
-use App\Filament\Resources\ReservationRequests\Pages\CreateReservationRequest;
-use App\Filament\Resources\ReservationRequests\Pages\EditReservationRequest;
 use App\Filament\Resources\ReservationRequests\Pages\ListReservationRequests;
 use App\Filament\Resources\ReservationRequests\Pages\ViewReservationRequest;
 use App\Filament\Resources\ReservationRequests\Schemas\ReservationRequestForm;
@@ -47,8 +45,8 @@ class ReservationRequestResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListReservationRequests::route('/'),
-            'view' => Pages\ViewReservationRequest::route('/{record}'),
+            'index' => ListReservationRequests::route('/'),
+            'view' => ViewReservationRequest::route('/{record}'),
         ];
     }
 }

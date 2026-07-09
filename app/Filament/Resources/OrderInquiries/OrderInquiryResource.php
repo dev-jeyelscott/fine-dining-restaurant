@@ -2,8 +2,6 @@
 
 namespace App\Filament\Resources\OrderInquiries;
 
-use App\Filament\Resources\OrderInquiries\Pages\CreateOrderInquiry;
-use App\Filament\Resources\OrderInquiries\Pages\EditOrderInquiry;
 use App\Filament\Resources\OrderInquiries\Pages\ListOrderInquiries;
 use App\Filament\Resources\OrderInquiries\Pages\ViewOrderInquiry;
 use App\Filament\Resources\OrderInquiries\Schemas\OrderInquiryForm;

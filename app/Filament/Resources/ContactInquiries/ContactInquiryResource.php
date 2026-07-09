@@ -2,8 +2,6 @@
 
 namespace App\Filament\Resources\ContactInquiries;
 
-use App\Filament\Resources\ContactInquiries\Pages\CreateContactInquiry;
-use App\Filament\Resources\ContactInquiries\Pages\EditContactInquiry;
 use App\Filament\Resources\ContactInquiries\Pages\ListContactInquiries;
 use App\Filament\Resources\ContactInquiries\Pages\ViewContactInquiry;
 use App\Filament\Resources\ContactInquiries\Schemas\ContactInquiryForm;
