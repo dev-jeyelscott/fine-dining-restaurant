@@ -19,7 +19,9 @@ test('email verification screen can be rendered', function () {
 });
 
 test('email can be verified', function () {
-    $user = User::factory()->unverified()->create();
+    $user = User::factory()->unverified()->create([
+        'email' => config('admin.seed_user.email'),
+    ]);
 
     Event::fake();
 
@@ -53,6 +55,7 @@ test('email is not verified with invalid hash', function () {
 
 test('already verified user visiting verification link is redirected without firing event again', function () {
     $user = User::factory()->create([
+        'email' => config('admin.seed_user.email'),
         'email_verified_at' => now(),
     ]);
 

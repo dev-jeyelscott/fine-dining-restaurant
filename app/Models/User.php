@@ -43,7 +43,14 @@ class User extends Authenticatable implements FilamentUser, PasskeyUser
      */
     public function canAccessPanel(Panel $panel): bool
     {
-        return true;
+        $adminEmail = config('admin.seed_user.email');
+
+        if (! is_string($adminEmail) || $adminEmail === '') {
+            return false;
+        }
+
+        return $panel->getId() === 'admin'
+            && strcasecmp($this->email, $adminEmail) === 0;
     }
 
     /**
