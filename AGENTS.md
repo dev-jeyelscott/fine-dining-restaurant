@@ -8,12 +8,12 @@ The project is intentionally scoped as a restaurant marketing website with admin
 
 The core business goal is to help customers:
 
-* Learn about the restaurant.
-* Browse menu categories, item names, descriptions, and prices.
-* View restaurant interiors, dishes, events, and banquet hall photos.
-* Submit reservation requests.
-* Submit pickup or delivery order inquiries.
-* Contact the restaurant through form, phone, email, map, or social links.
+- Learn about the restaurant.
+- Browse menu categories, item names, descriptions, and prices.
+- View restaurant interiors, dishes, events, and banquet hall photos.
+- Submit reservation requests.
+- Submit pickup or delivery order inquiries.
+- Contact the restaurant through form, phone, email, map, or social links.
 
 Restaurant staff should be able to manage common website content through the admin area, including menu items, prices, images, gallery content, general page content, site settings, and submitted inquiries.
 
@@ -23,56 +23,56 @@ Use the terms **Reservation Request** and **Order Inquiry** consistently. These 
 
 ### In Scope
 
-* Public pages:
+- Public pages:
+    - Home
+    - Menu
+    - Reservation Request
+    - Order Inquiry
+    - Gallery
+    - Banquet Hall
+    - Contact
 
-  * Home
-  * Menu
-  * Reservation Request
-  * Order Inquiry
-  * Gallery
-  * Banquet Hall
-  * Contact
-* Responsive desktop, tablet, and mobile layout.
-* Basic SEO metadata and clean page structure.
-* Admin access for website content management.
-* Menu category and menu item management.
-* Gallery/image management.
-* Site settings and general page content management.
-* Reservation request form.
-* Order inquiry form.
-* Contact inquiry form.
-* Banquet inquiry path, either through a dedicated form or agreed contact/reservation path.
-* Server-side validation.
-* Database storage for inquiries.
-* Basic SMTP email notifications.
-* Public image storage and display.
-* Basic deployment readiness, logs, backups, and handover support.
+- Responsive desktop, tablet, and mobile layout.
+- Basic SEO metadata and clean page structure.
+- Admin access for website content management.
+- Menu category and menu item management.
+- Gallery/image management.
+- Site settings and general page content management.
+- Reservation request form.
+- Order inquiry form.
+- Contact inquiry form.
+- Banquet inquiry path, either through a dedicated form or agreed contact/reservation path.
+- Server-side validation.
+- Database storage for inquiries.
+- Basic SMTP email notifications.
+- Public image storage and display.
+- Basic deployment readiness, logs, backups, and handover support.
 
 ### Out of Scope Unless Explicitly Approved
 
 Do not implement or imply:
 
-* Real-time table availability.
-* Automatic reservation approval.
-* Table assignment or table management.
-* Customer accounts or customer login.
-* Shopping cart.
-* Checkout.
-* Online payment processing.
-* Delivery fee calculation.
-* Tax calculation.
-* Promo codes or discounts.
-* Live order status tracking.
-* Kitchen dashboard.
-* POS integration.
-* Inventory management.
-* SMS notifications.
-* Loyalty or rewards system.
-* Multi-branch support.
-* Mobile app.
-* Advanced reporting or analytics.
-* Ongoing SEO or digital marketing services.
-* Any custom third-party integration not approved in the final scope.
+- Real-time table availability.
+- Automatic reservation approval.
+- Table assignment or table management.
+- Customer accounts or customer login.
+- Shopping cart.
+- Checkout.
+- Online payment processing.
+- Delivery fee calculation.
+- Tax calculation.
+- Promo codes or discounts.
+- Live order status tracking.
+- Kitchen dashboard.
+- POS integration.
+- Inventory management.
+- SMS notifications.
+- Loyalty or rewards system.
+- Multi-branch support.
+- Mobile app.
+- Advanced reporting or analytics.
+- Ongoing SEO or digital marketing services.
+- Any custom third-party integration not approved in the final scope.
 
 ## Recommended Technical Direction
 
@@ -80,15 +80,15 @@ Use a simple Laravel monolith.
 
 Preferred stack:
 
-* Backend: Laravel
-* Frontend: Blade templates
-* Styling: Tailwind CSS
-* Lightweight interactivity: Alpine.js
-* Admin panel: Filament
-* Database: MySQL
-* Email: SMTP provider
-* Storage: Laravel public storage or hosting-supported persistent storage
-* Deployment: Laravel-compatible hosting, VPS, managed Laravel hosting, or Laravel Cloud where appropriate
+- Backend: Laravel
+- Frontend: Blade templates
+- Styling: Tailwind CSS
+- Lightweight interactivity: Alpine.js
+- Admin panel: Filament
+- Database: MySQL
+- Email: SMTP provider
+- Storage: Laravel public storage or hosting-supported persistent storage
+- Deployment: Laravel-compatible hosting, VPS, managed Laravel hosting, or Laravel Cloud where appropriate
 
 Avoid unnecessary architecture complexity. Do not introduce a separate SPA frontend, headless CMS, API gateway, microservices, payment subsystem, real-time infrastructure, or restaurant operations system unless the user explicitly changes the approved scope.
 
@@ -98,16 +98,16 @@ Project documentation exists and should be treated as the source of truth when n
 
 Relevant documents may include:
 
-* `Project-Details.txt`
-* `Scope-of-Work.txt`
-* `project-understanding.md`
-* `project-requirements.md`
-* `project-architecture.md`
-* `project-technical-design.md`
-* `project-implementation-roadmap.md`
-* `project-devops-and-operations.md`
-* `project-deliverables.md`
-* `project-acceptance-criteria.md`
+- `Project-Details.txt`
+- `Scope-of-Work.txt`
+- `project-understanding.md`
+- `project-requirements.md`
+- `project-architecture.md`
+- `project-technical-design.md`
+- `project-implementation-roadmap.md`
+- `project-devops-and-operations.md`
+- `project-deliverables.md`
+- `project-acceptance-criteria.md`
 
 Do not load or reread all documentation for every prompt. Only consult these documents when the task requires project context, scope clarification, architecture alignment, implementation planning, acceptance criteria, deployment guidance, or a decision that could affect scope.
 
@@ -115,17 +115,17 @@ When unsure whether a requested feature is included, check the relevant document
 
 ## Implementation Expectations
 
-* Keep the build simple, production-ready, secure, and maintainable.
-* Follow existing Laravel, Filament, Blade, Tailwind, and project conventions.
-* Prefer Laravel-native patterns before custom abstractions.
-* Use server-side validation for all public forms.
-* Protect admin routes with authentication.
-* Restrict image uploads to safe image types and reasonable file sizes.
-* Store customer inquiries before or while sending email notifications so requests are not lost if SMTP fails.
-* Use clear success messages that explain submissions are received for manual review, not automatically confirmed.
-* Do not expose debug details, secrets, stack traces, or inquiry data publicly.
-* Test every meaningful change with the minimum relevant automated tests.
-* Keep documentation changes limited unless the user explicitly asks for documentation.
+- Keep the build simple, production-ready, secure, and maintainable.
+- Follow existing Laravel, Filament, Blade, Tailwind, and project conventions.
+- Prefer Laravel-native patterns before custom abstractions.
+- Use server-side validation for all public forms.
+- Protect admin routes with authentication.
+- Restrict image uploads to safe image types and reasonable file sizes.
+- Store customer inquiries before or while sending email notifications so requests are not lost if SMTP fails.
+- Use clear success messages that explain submissions are received for manual review, not automatically confirmed.
+- Do not expose debug details, secrets, stack traces, or inquiry data publicly.
+- Test every meaningful change with the minimum relevant automated tests.
+- Keep documentation changes limited unless the user explicitly asks for documentation.
 
 <laravel-boost-guidelines>
 === foundation rules ===
@@ -138,7 +138,7 @@ The Laravel Boost guidelines are specifically curated by Laravel maintainers for
 
 This application is a Laravel application and its main Laravel ecosystems package & versions are below. You are an expert with them all. Ensure you abide by these specific packages & versions.
 
-- php - 8.5
+- php - 8.4
 - laravel/fortify (FORTIFY) - v1
 - laravel/framework (LARAVEL) - v13
 - laravel/prompts (PROMPTS) - v0
