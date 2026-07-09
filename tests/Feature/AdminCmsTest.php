@@ -79,16 +79,15 @@ test('admin can create menu categories and menu items', function () {
         ->call('create')
         ->assertHasNoFormErrors();
 
-    $this->assertDatabaseHas(MenuItem::class, [
-        'menu_category_id' => $category->id,
-        'name' => 'Truffle Pasta',
-        'slug' => 'truffle-pasta',
-        'price' => '18.50',
-        'is_visible' => true,
-    ]);
+    $menuItem = MenuItem::query()->where('slug', 'truffle-pasta')->firstOrFail();
+
+    expect($menuItem->menu_category_id)->toBe($category->id);
+    expect($menuItem->name)->toBe('Truffle Pasta');
+    expect($menuItem->price)->toBe('18.50');
+    expect($menuItem->is_visible)->toBeTrue();
 });
 
-test('admin can upload safe gallery images', function () {
+test('admin can upload safe gallery images and reject non images', function () {
     Storage::fake('public');
 
     $this->actingAs(phase2bAdminUser());
@@ -110,6 +109,18 @@ test('admin can upload safe gallery images', function () {
     expect($galleryImage->image_path)->toStartWith('gallery/');
 
     Storage::disk('public')->assertExists($galleryImage->image_path);
+
+    Livewire::test(CreateGalleryImage::class)
+        ->fillForm([
+            'title' => 'Unsafe Upload',
+            'alt_text' => 'Unsafe upload attempt',
+            'image_path' => UploadedFile::fake()->create('payload.php', 1, 'application/x-php'),
+            'category' => 'event',
+            'sort_order' => 2,
+            'is_visible' => true,
+        ])
+        ->call('create')
+        ->assertHasFormErrors(['image_path']);
 });
 
 test('site settings and page content resources are accessible to admins', function () {
