@@ -2,23 +2,41 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Carbon;
 
+/**
+ * @property int $id
+ * @property int $menu_category_id
+ * @property string $name
+ * @property string|null $slug
+ * @property string|null $description
+ * @property string|null $price
+ * @property string|null $image_path
+ * @property int $sort_order
+ * @property bool $is_visible
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ */
+#[Fillable([
+    'menu_category_id',
+    'name',
+    'slug',
+    'description',
+    'price',
+    'image_path',
+    'sort_order',
+    'is_visible',
+])]
 class MenuItem extends Model
 {
-    protected $fillable = [
-        'menu_category_id',
-        'name',
-        'slug',
-        'description',
-        'price',
-        'image_path',
-        'sort_order',
-        'is_visible',
-    ];
-
+    /**
+     * @return array<string, string>
+     */
     protected function casts(): array
     {
         return [
@@ -28,18 +46,29 @@ class MenuItem extends Model
         ];
     }
 
+    /**
+     * @return BelongsTo<MenuCategory, $this>
+     */
     public function menuCategory(): BelongsTo
     {
         return $this->belongsTo(MenuCategory::class);
     }
 
-    public function scopeVisible(Builder $query): Builder
+    /**
+     * @param  Builder<MenuItem>  $query
+     */
+    #[Scope]
+    protected function visible(Builder $query): void
     {
-        return $query->where('is_visible', true);
+        $query->where('is_visible', true);
     }
 
-    public function scopeOrdered(Builder $query): Builder
+    /**
+     * @param  Builder<MenuItem>  $query
+     */
+    #[Scope]
+    protected function ordered(Builder $query): void
     {
-        return $query->orderBy('sort_order')->orderBy('name');
+        $query->orderBy('sort_order')->orderBy('name');
     }
 }

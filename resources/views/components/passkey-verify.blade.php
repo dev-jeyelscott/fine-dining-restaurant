@@ -33,7 +33,7 @@
                         submit: '{{ route($submitRoute) }}',
                     },
                 });
-                Livewire.navigate(response.redirect || '/dashboard');
+                Livewire.navigate(response.redirect || '{{ route('filament.admin.pages.dashboard', absolute: false) }}');
             } catch (e) {
                 if (e.constructor?.name !== 'UserCancelledError') {
                     this.error = e.message;

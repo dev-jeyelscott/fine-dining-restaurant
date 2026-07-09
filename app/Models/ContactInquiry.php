@@ -2,21 +2,38 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
 
+/**
+ * @property int $id
+ * @property string $customer_name
+ * @property string $email
+ * @property string|null $phone
+ * @property string|null $subject
+ * @property string $message
+ * @property bool $is_read
+ * @property Carbon|null $notification_sent_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ */
+#[Fillable([
+    'customer_name',
+    'email',
+    'phone',
+    'subject',
+    'message',
+    'is_read',
+    'notification_sent_at',
+])]
 class ContactInquiry extends Model
 {
-    protected $fillable = [
-        'customer_name',
-        'email',
-        'phone',
-        'subject',
-        'message',
-        'is_read',
-        'notification_sent_at',
-    ];
-
+    /**
+     * @return array<string, string>
+     */
     protected function casts(): array
     {
         return [
@@ -25,13 +42,21 @@ class ContactInquiry extends Model
         ];
     }
 
-    public function scopeUnread(Builder $query): Builder
+    /**
+     * @param  Builder<ContactInquiry>  $query
+     */
+    #[Scope]
+    protected function unread(Builder $query): void
     {
-        return $query->where('is_read', false);
+        $query->where('is_read', false);
     }
 
-    public function scopeLatestFirst(Builder $query): Builder
+    /**
+     * @param  Builder<ContactInquiry>  $query
+     */
+    #[Scope]
+    protected function latestFirst(Builder $query): void
     {
-        return $query->latest();
+        $query->latest();
     }
 }

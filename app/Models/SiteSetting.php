@@ -2,17 +2,22 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @property string $key
+ * @property string $value
+ * @property string $group
+ */
+#[Fillable(['key', 'value', 'group'])]
 class SiteSetting extends Model
 {
-    protected $fillable = [
-        'key',
-        'value',
-        'group',
-    ];
-
+    /**
+     * @param  Builder<SiteSetting>  $query
+     * @return Builder<SiteSetting>
+     */
     public function scopeGroup(Builder $query, string $group): Builder
     {
         return $query->where('group', $group);
@@ -23,6 +28,9 @@ class SiteSetting extends Model
         return static::query()->where('key', $key)->value('value') ?? $default;
     }
 
+    /**
+     * @return array<string, string|null>
+     */
     public static function keyValueMap(): array
     {
         return static::query()

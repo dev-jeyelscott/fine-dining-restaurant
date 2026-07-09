@@ -2,22 +2,40 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
 
+/**
+ * @property int $id
+ * @property string $slug
+ * @property string $title
+ * @property string|null $excerpt
+ * @property string|null $content
+ * @property array<string, mixed>|null $sections
+ * @property string|null $meta_title
+ * @property string|null $meta_description
+ * @property bool $is_published
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ */
+#[Fillable([
+    'slug',
+    'title',
+    'excerpt',
+    'content',
+    'sections',
+    'meta_title',
+    'meta_description',
+    'is_published',
+])]
 class Page extends Model
 {
-    protected $fillable = [
-        'slug',
-        'title',
-        'excerpt',
-        'content',
-        'sections',
-        'meta_title',
-        'meta_description',
-        'is_published',
-    ];
-
+    /**
+     * @return array<string, string>
+     */
     protected function casts(): array
     {
         return [
@@ -26,8 +44,12 @@ class Page extends Model
         ];
     }
 
-    public function scopePublished(Builder $query): Builder
+    /**
+     * @param  Builder<Page>  $query
+     */
+    #[Scope]
+    protected function published(Builder $query): void
     {
-        return $query->where('is_published', true);
+        $query->where('is_published', true);
     }
 }
