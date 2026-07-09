@@ -21,8 +21,9 @@ jobs:
   ci:
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
-        php-version: ['8.3', '8.4', '8.5']
+        php-version: ["8.4", "8.5"]
 
     steps:
       - name: Checkout code
@@ -40,7 +41,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6
         with:
-          node-version: '22'
+          node-version: "25"
 
       - name: Install Node Dependencies
         run: npm i
