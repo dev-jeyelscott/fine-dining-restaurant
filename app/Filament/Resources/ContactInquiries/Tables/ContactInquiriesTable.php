@@ -2,9 +2,8 @@
 
 namespace App\Filament\Resources\ContactInquiries\Tables;
 
-use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteBulkAction;
-use Filament\Actions\EditAction;
+use App\Models\ContactInquiry;
+use Filament\Actions\Action;
 use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
@@ -18,7 +17,7 @@ class ContactInquiriesTable
             ->columns([
                 IconColumn::make('is_read')
                     ->boolean()
-                    ->label('Read'),
+                    ->label('Reviewed'),
 
                 TextColumn::make('customer_name')
                     ->searchable()
@@ -42,12 +41,14 @@ class ContactInquiriesTable
             ])
             ->recordActions([
                 ViewAction::make(),
-                EditAction::make(),
-            ])
-            ->toolbarActions([
-                BulkActionGroup::make([
-                    DeleteBulkAction::make(),
-                ]),
+                Action::make('markAsReviewed')
+                    ->label('Mark as reviewed')
+                    ->visible(fn (ContactInquiry $record): bool => ! $record->is_read)
+                    ->action(fn (ContactInquiry $record): bool => $record->update(['is_read' => true])),
+                Action::make('markAsUnreviewed')
+                    ->label('Mark as unreviewed')
+                    ->visible(fn (ContactInquiry $record): bool => $record->is_read)
+                    ->action(fn (ContactInquiry $record): bool => $record->update(['is_read' => false])),
             ]);
     }
 }
