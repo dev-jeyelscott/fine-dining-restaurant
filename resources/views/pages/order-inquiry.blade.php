@@ -9,15 +9,17 @@
     @endphp
 
     <section class="relative isolate flex min-h-[38rem] items-end overflow-hidden bg-brand-ink lg:min-h-[44rem]">
-        <img
-            src="{{ asset('images/bg-hero.png') }}"
-            alt=""
+        <x-public.responsive-image
+            :image="$heroImage"
+            :alt="$heroImage?->alt_text ?: $heroImage?->title ?: 'Elegant restaurant dining room'"
+            variant="hero"
+            sizes="100vw"
             width="1920"
             height="1280"
+            loading="eager"
             fetchpriority="high"
-            decoding="async"
-            class="absolute inset-0 -z-30 h-full w-full object-cover object-center"
-        >
+            img-class="absolute inset-0 -z-30 h-full w-full object-cover object-center"
+        />
         <div class="absolute inset-0 -z-20 bg-[linear-gradient(to_bottom,rgba(23,25,22,0.62),rgba(23,25,22,0.48)_35%,rgba(23,25,22,0.96))]"></div>
         <div class="absolute inset-0 -z-10 bg-gradient-to-r from-brand-ink/85 via-brand-ink/35 to-brand-ink/20"></div>
 

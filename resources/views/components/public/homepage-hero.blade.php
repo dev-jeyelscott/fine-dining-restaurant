@@ -3,7 +3,7 @@
     'title',
     'description' => null,
     'image' => null,
-    'imageUrl' => asset('images/bg-hero.png'),
+    'imageUrl' => null,
     'imageAlt' => '',
     'primaryLabel' => null,
     'primaryUrl' => null,
