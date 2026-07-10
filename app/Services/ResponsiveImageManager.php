@@ -268,10 +268,6 @@ final class ResponsiveImageManager
             imagedestroy($source);
         }
 
-        if ($encodedVariants === []) {
-            throw new RuntimeException('Responsive image generation did not produce any variants.');
-        }
-
         return $encodedVariants;
     }
 
