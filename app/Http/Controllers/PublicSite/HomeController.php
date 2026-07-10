@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Models\GalleryImage;
 use App\Models\MenuItem;
 use App\Models\Page;
-use App\Models\SiteSetting;
 use Illuminate\Contracts\View\View;
 
 class HomeController extends Controller
@@ -35,8 +34,6 @@ class HomeController extends Controller
                 ->where('slug', 'home')
                 ->where('is_published', true)
                 ->first(),
-
-            'settings' => SiteSetting::keyValueMap(),
 
             'featuredMenuItems' => MenuItem::query()
                 ->with('menuCategory')
