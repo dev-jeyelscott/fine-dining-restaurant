@@ -26,7 +26,7 @@
                         <div>
                             <dt class="font-semibold text-stone-300">Phone</dt>
                             <dd class="mt-1 text-stone-400">
-                                <a href="tel:{{ preg_replace('/\s+/', '', $settings['phone']) }}" class="hover:text-amber-200">
+                                <a href="tel:{{ $settings['phone'] }}" class="hover:text-amber-200">
                                     {{ $settings['phone'] }}
                                 </a>
                             </dd>
