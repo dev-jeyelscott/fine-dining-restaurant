@@ -20,16 +20,12 @@ class AdminUserSeeder extends Seeder
         }
 
         if (! is_string($email) || $email === '') {
-            if (app()->isProduction()) {
-                throw new RuntimeException('SEED_ADMIN_EMAIL must be configured before seeding the production admin user.');
-            }
-
             $email = 'admin@example.com';
         }
 
         if (! is_string($password) || $password === '') {
             if (app()->isProduction()) {
-                throw new RuntimeException('SEED_ADMIN_PASSWORD must be configured before seeding the production admin user.');
+                throw new RuntimeException('ADMIN_USER_PASSWORD must be configured before seeding the production admin user.');
             }
 
             $password = 'password';
