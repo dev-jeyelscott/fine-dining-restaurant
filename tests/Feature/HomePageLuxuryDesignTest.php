@@ -3,6 +3,8 @@
 use App\Models\GalleryImage;
 use App\Models\MenuCategory;
 use App\Models\MenuItem;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 
 test('homepage renders the premium restaurant experience and approved calls to action', function (): void {
     $this->get(route('home'))
@@ -85,10 +87,18 @@ test('homepage displays only the first three visible menu items in configured or
 });
 
 test('homepage renders admin managed gallery images through public storage URLs', function (): void {
+    Storage::fake('public');
+
+    $imagePath = UploadedFile::fake()
+        ->image('grand-dining-room.jpg', 2400, 1600)
+        ->storeAs('gallery', 'grand-dining-room.jpg', 'public');
+
+    expect($imagePath)->toBeString();
+
     GalleryImage::query()->create([
         'title' => 'Grand Dining Room',
         'alt_text' => 'Grand dining room with warm lighting',
-        'image_path' => 'gallery/grand-dining-room.webp',
+        'image_path' => $imagePath,
         'category' => 'interior',
         'sort_order' => 1,
         'is_visible' => true,
@@ -96,6 +106,6 @@ test('homepage renders admin managed gallery images through public storage URLs'
 
     $this->get(route('home'))
         ->assertOk()
-        ->assertSee('/storage/gallery/grand-dining-room.webp', false)
+        ->assertSee('/storage/gallery/variants/grand-dining-room-hero.jpg', false)
         ->assertSee('Grand dining room with warm lighting');
 });
