@@ -9,6 +9,8 @@
 @php
     $isCentered = $align === 'center';
     $isLight = $theme === 'light';
+    $descriptionText = is_string($description) ? $description : (string) $description;
+    $isRichDescription = strip_tags($descriptionText) !== $descriptionText;
 @endphp
 
 <div @class([
@@ -34,14 +36,25 @@
     </h2>
 
     @if ($description)
-        <p @class([
-            'mt-5 max-w-2xl text-base leading-8',
-            'mx-auto' => $isCentered,
-            'text-brand-muted' => $isLight,
-            'text-stone-400' => ! $isLight,
-        ])>
-            {{ $description }}
-        </p>
+        @if ($isRichDescription)
+            <div @class([
+                'prose mt-5 max-w-2xl text-base leading-8',
+                'mx-auto' => $isCentered,
+                'prose-stone prose-headings:font-display prose-headings:text-brand-ink prose-a:text-brand-gold-dark prose-strong:text-brand-ink prose-li:marker:text-brand-gold-dark' => $isLight,
+                'prose-invert' => ! $isLight,
+            ])>
+                {!! str($descriptionText)->sanitizeHtml() !!}
+            </div>
+        @else
+            <p @class([
+                'mt-5 max-w-2xl text-base leading-8',
+                'mx-auto' => $isCentered,
+                'text-brand-muted' => $isLight,
+                'text-stone-400' => ! $isLight,
+            ])>
+                {{ $description }}
+            </p>
+        @endif
     @endif
 
     <div @class([
