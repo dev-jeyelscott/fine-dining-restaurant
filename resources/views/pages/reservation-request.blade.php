@@ -59,7 +59,7 @@
 
                 <div class="mt-10 border border-brand-gold/35 bg-brand-paper p-6 text-sm leading-7 text-brand-muted">
                     <p class="font-semibold text-brand-ink">Please note</p>
-                    <p class="mt-2">This is a Reservation Request, not a confirmed reservation. Our team will contact you after reviewing availability.</p>
+                    <p class="mt-2">This is a Reservation Request, not a confirmed reservation. Our team will manually review your request and contact you after reviewing availability.</p>
                 </div>
             </aside>
 

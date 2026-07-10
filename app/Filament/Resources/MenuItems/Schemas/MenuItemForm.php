@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\MenuItems\Schemas;
 
+use App\Rules\SafeImageDimensions;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
@@ -39,10 +40,13 @@ class MenuItemForm
 
                 FileUpload::make('image_path')
                     ->image()
+                    ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/webp'])
+                    ->rules([new SafeImageDimensions])
                     ->disk('public')
                     ->directory('menu-items')
                     ->visibility('public')
-                    ->maxSize(2048),
+                    ->maxSize(2048)
+                    ->helperText('JPEG, PNG, or WebP up to 2 MB. Responsive derivatives are generated automatically.'),
 
                 TextInput::make('sort_order')
                     ->numeric()

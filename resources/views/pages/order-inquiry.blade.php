@@ -69,7 +69,7 @@
                 <div>
                     <div class="border-l-2 border-brand-gold bg-brand-ivory px-5 py-4 text-sm leading-6 text-brand-muted sm:px-6">
                         <strong class="font-semibold text-brand-ink">A personal review, every time.</strong>
-                        This is an Order Inquiry. Our team will manually confirm availability, final total, and pickup or delivery details directly.
+                        This is an Order Inquiry, not checkout or online payment. Our team will manually confirm availability, final total, and pickup or delivery details directly.
                     </div>
 
                     @if (session()->has('status') || session()->has('success'))

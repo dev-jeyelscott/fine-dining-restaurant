@@ -2,12 +2,12 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\HasResponsiveImages;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Storage;
 
 /**
  * @property int $id
@@ -31,6 +31,8 @@ use Illuminate\Support\Facades\Storage;
 ])]
 class GalleryImage extends Model
 {
+    use HasResponsiveImages;
+
     /**
      * @return array<string, string>
      */
@@ -40,15 +42,6 @@ class GalleryImage extends Model
             'sort_order' => 'integer',
             'is_visible' => 'boolean',
         ];
-    }
-
-    public function getImageUrlAttribute(): ?string
-    {
-        if (blank($this->image_path)) {
-            return null;
-        }
-
-        return Storage::disk('public')->url($this->image_path);
     }
 
     /**
@@ -66,6 +59,9 @@ class GalleryImage extends Model
     #[Scope]
     protected function ordered(Builder $query): void
     {
-        $query->orderBy('sort_order')->orderByDesc('created_at');
+        $query
+            ->orderBy('sort_order')
+            ->orderByDesc('created_at')
+            ->orderByDesc('id');
     }
 }
