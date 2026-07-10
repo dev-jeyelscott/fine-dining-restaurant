@@ -35,7 +35,7 @@ class MenuItemForm
 
                 TextInput::make('price')
                     ->numeric()
-                    ->prefix('₱'),
+                    ->prefix('$'),
 
                 FileUpload::make('image_path')
                     ->image()
