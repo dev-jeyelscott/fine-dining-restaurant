@@ -51,6 +51,14 @@ test('order inquiry notification job sends email and records delivery time', fun
     expect($orderInquiry->refresh()->notification_sent_at)->not->toBeNull();
 });
 
+test('order inquiry notification includes quantity', function (): void {
+    $orderInquiry = createOrderInquiryForNotificationJob(['quantity' => 2]);
+
+    expect((new OrderInquirySubmitted($orderInquiry))->render())
+        ->toContain('Quantity:')
+        ->toContain('2');
+});
+
 test('contact inquiry notification job sends email and records delivery time', function (): void {
     Mail::fake();
     $contactInquiry = createContactInquiryForNotificationJob();
