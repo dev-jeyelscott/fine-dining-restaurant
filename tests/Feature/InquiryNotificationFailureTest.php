@@ -55,6 +55,7 @@ test('reservation request remains stored when notification queue dispatch fails'
 });
 
 test('order inquiry remains stored when notification queue dispatch fails', function (): void {
+    Log::spy();
     simulateInquiryQueueFailure();
 
     $orderInquiry = app(StoreOrderInquiry::class)->handle([
@@ -76,9 +77,19 @@ test('order inquiry remains stored when notification queue dispatch fails', func
     ]);
 
     expect($orderInquiry->fresh()->notification_sent_at)->toBeNull();
+
+    Log::shouldHaveReceived('error')
+        ->once()
+        ->withArgs(function (string $message, array $context) use ($orderInquiry): bool {
+            return $message === 'Order inquiry notification could not be queued.'
+                && $context['order_inquiry_id'] === $orderInquiry->id
+                && $context['exception'] === RuntimeException::class
+                && $context['message'] === 'Simulated queue failure.';
+        });
 });
 
 test('contact inquiry remains stored when notification queue dispatch fails', function (): void {
+    Log::spy();
     simulateInquiryQueueFailure();
 
     $contactInquiry = app(StoreContactInquiry::class)->handle([
@@ -96,4 +107,13 @@ test('contact inquiry remains stored when notification queue dispatch fails', fu
     ]);
 
     expect($contactInquiry->fresh()->notification_sent_at)->toBeNull();
+
+    Log::shouldHaveReceived('error')
+        ->once()
+        ->withArgs(function (string $message, array $context) use ($contactInquiry): bool {
+            return $message === 'Contact inquiry notification could not be queued.'
+                && $context['contact_inquiry_id'] === $contactInquiry->id
+                && $context['exception'] === RuntimeException::class
+                && $context['message'] === 'Simulated queue failure.';
+        });
 });
