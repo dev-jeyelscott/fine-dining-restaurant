@@ -1,9 +1,12 @@
 <?php
 
+use App\Models\GalleryImage;
 use App\Models\SiteSetting;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Storage;
 
 test('approved public page routes are registered with stable paths', function (): void {
     $expectedRoutes = [
@@ -162,6 +165,101 @@ test('reservation and order pages explain manual review boundaries', function ()
         ->assertSeeText('Order Inquiry')
         ->assertSeeText('not checkout or online payment')
         ->assertSeeText('manually confirm availability');
+});
+
+test('contact page uses the reservation request design language while preserving inquiry actions', function (): void {
+    $this->get(route('contact.create'))
+        ->assertOk()
+        ->assertSee('data-contact-hero', false)
+        ->assertSee('data-contact-hero-fallback', false)
+        ->assertDontSee('/storage/gallery/', false)
+        ->assertSee('data-contact-form', false)
+        ->assertSeeText('A warm response, thoughtfully given')
+        ->assertSeeText('Send Inquiry')
+        ->assertSee(route('contact-inquiries.store'), false)
+        ->assertSee(route('reservation-request.create'), false)
+        ->assertSee(route('order-inquiry.create'), false);
+});
+
+test('contact hero uses managed responsive image derivatives', function (): void {
+    Storage::fake('public');
+
+    $imagePath = UploadedFile::fake()
+        ->image('contact-dining-room.jpg', 2400, 1600)
+        ->storeAs('gallery', 'contact-dining-room.jpg', 'public');
+
+    expect($imagePath)->toBeString();
+
+    GalleryImage::query()->create([
+        'title' => 'Contact Dining Room',
+        'alt_text' => 'Elegant dining room prepared for evening service',
+        'image_path' => $imagePath,
+        'category' => 'interior',
+        'sort_order' => 1,
+        'is_visible' => true,
+    ]);
+
+    $this->get(route('contact.create'))
+        ->assertOk()
+        ->assertDontSee('data-contact-hero-fallback', false)
+        ->assertSee('/storage/gallery/variants/contact-dining-room-hero.jpg', false)
+        ->assertSee('srcset=', false)
+        ->assertSee('sizes="100vw"', false)
+        ->assertSee('loading="eager"', false)
+        ->assertSee('fetchpriority="high"', false)
+        ->assertSee('Elegant dining room prepared for evening service');
+});
+
+test('contact hero prefers an interior image beyond the first six ordered records', function (): void {
+    foreach (range(1, 6) as $position) {
+        GalleryImage::query()->create([
+            'title' => "Earlier non-interior image {$position}",
+            'alt_text' => "Earlier non-interior alt {$position}",
+            'image_path' => "gallery/non-interior-{$position}.jpg",
+            'category' => 'dish',
+            'sort_order' => $position,
+            'is_visible' => true,
+        ]);
+    }
+
+    GalleryImage::query()->create([
+        'title' => 'Preferred later interior image',
+        'alt_text' => 'Preferred later interior alt',
+        'image_path' => 'gallery/preferred-later-interior.jpg',
+        'category' => 'interior',
+        'sort_order' => 7,
+        'is_visible' => true,
+    ]);
+
+    $this->get(route('contact.create'))
+        ->assertOk()
+        ->assertSee('Preferred later interior alt', false)
+        ->assertDontSee('Earlier non-interior alt 1', false);
+});
+
+test('contact hero falls back to the first visible ordered image when no interior image exists', function (): void {
+    GalleryImage::query()->create([
+        'title' => 'Second fallback image',
+        'alt_text' => 'Second fallback alt',
+        'image_path' => 'gallery/second-fallback.jpg',
+        'category' => 'event',
+        'sort_order' => 2,
+        'is_visible' => true,
+    ]);
+
+    GalleryImage::query()->create([
+        'title' => 'First fallback image',
+        'alt_text' => 'First fallback alt',
+        'image_path' => 'gallery/first-fallback.jpg',
+        'category' => 'dish',
+        'sort_order' => 1,
+        'is_visible' => true,
+    ]);
+
+    $this->get(route('contact.create'))
+        ->assertOk()
+        ->assertSee('First fallback alt', false)
+        ->assertDontSee('Second fallback alt', false);
 });
 
 test('public pages do not expose out of scope ecommerce or live booking calls to action', function (string $routeName): void {
