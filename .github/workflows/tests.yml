@@ -62,27 +62,7 @@ jobs:
         run: npm run build
 
       - name: Run Type Analysis
-        run: vendor/bin/phpstan analyse
+        run: composer types:check
 
-      - name: Capture Tests
-        id: tests
-        run: |
-          set +e
-          php artisan test > tests-${{ matrix.php-version }}.txt 2>&1
-          exit_code=$?
-          set -e
-          echo "exit_code=$exit_code" >> "$GITHUB_OUTPUT"
-
-      - name: Upload Test Report
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: tests-${{ matrix.php-version }}
-          path: tests-${{ matrix.php-version }}.txt
-          retention-days: 1
-
-      - name: Enforce Tests
-        if: steps.tests.outputs.exit_code != '0'
-        run: |
-          cat tests-${{ matrix.php-version }}.txt
-          exit 1
+      - name: Run Tests
+        run: php artisan test
