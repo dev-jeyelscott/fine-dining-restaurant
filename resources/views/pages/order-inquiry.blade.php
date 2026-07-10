@@ -9,7 +9,21 @@
     @endphp
 
     <section class="relative isolate flex min-h-[38rem] items-end overflow-hidden bg-brand-ink sm:min-h-[44rem] lg:min-h-[48rem]">
-        <div class="absolute inset-0 -z-30 bg-[radial-gradient(circle_at_72%_24%,rgba(201,164,93,0.3),transparent_25%),radial-gradient(circle_at_82%_68%,rgba(113,75,51,0.28),transparent_30%),linear-gradient(135deg,#353126,#171916_68%)]"></div>
+        @if ($heroImage?->image_url)
+            <x-public.responsive-image
+                :image="$heroImage"
+                :alt="$heroImage->alt_text ?: $heroImage->title ?: 'Elegant restaurant dining experience'"
+                variant="hero"
+                sizes="100vw"
+                width="1920"
+                height="1280"
+                loading="eager"
+                fetchpriority="high"
+                img-class="absolute inset-0 -z-30 h-full w-full object-cover object-center"
+            />
+        @else
+            <div class="absolute inset-0 -z-30 bg-[radial-gradient(circle_at_70%_28%,rgba(201,164,93,0.25),transparent_34%),linear-gradient(145deg,#4d4437,#171916_68%)]"></div>
+        @endif
         <div class="absolute inset-0 -z-20 bg-[linear-gradient(to_bottom,rgba(23,25,22,0.5),rgba(23,25,22,0.42)_35%,rgba(23,25,22,0.96))]"></div>
         <div class="absolute inset-0 -z-10 bg-gradient-to-r from-brand-ink/85 via-brand-ink/30 to-transparent"></div>
 
