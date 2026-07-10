@@ -4,6 +4,7 @@ namespace App\Rules;
 
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
+use Illuminate\Support\Facades\Validator;
 
 final readonly class ValidSiteSettingValue implements ValidationRule
 {
@@ -60,17 +61,10 @@ final readonly class ValidSiteSettingValue implements ValidationRule
 
     public static function accepts(?string $key, mixed $value): bool
     {
-        $isValid = true;
-
-        (new self($key))->validate(
-            'value',
-            $value,
-            static function () use (&$isValid): void {
-                $isValid = false;
-            },
-        );
-
-        return $isValid;
+        return Validator::make(
+            ['value' => $value],
+            ['value' => [new self($key)]],
+        )->passes();
     }
 
     private function isValidEmail(string $value): bool
