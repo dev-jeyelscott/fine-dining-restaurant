@@ -35,16 +35,10 @@ class MenuItemForm
 
                 TextInput::make('price')
                     ->numeric()
-                    ->minValue(0)
                     ->prefix('₱'),
 
                 FileUpload::make('image_path')
                     ->image()
-                    ->acceptedFileTypes([
-                        'image/jpeg',
-                        'image/png',
-                        'image/webp',
-                    ])
                     ->disk('public')
                     ->directory('menu-items')
                     ->visibility('public')
