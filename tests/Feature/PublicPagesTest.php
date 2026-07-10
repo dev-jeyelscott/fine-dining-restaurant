@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Route;
 
 test('approved public page routes are registered with stable paths', function (): void {
@@ -17,6 +18,33 @@ test('approved public page routes are registered with stable paths', function ()
         expect(Route::has($name))->toBeTrue("Expected route [{$name}] to be registered.");
         expect(route($name, [], false))->toBe($path);
     }
+});
+
+test('public pages use an isolated Vite stylesheet without Flux sources', function (): void {
+    $publicLayout = File::get(resource_path('views/components/layouts/public.blade.php'));
+    $publicStyles = File::get(resource_path('css/public.css'));
+    $appStyles = File::get(resource_path('css/app.css'));
+    $viteConfig = File::get(base_path('vite.config.js'));
+
+    expect($publicLayout)
+        ->toContain('resources/css/public.css');
+    expect(str_contains($publicLayout, 'resources/css/app.css'))->toBeFalse();
+
+    expect($publicStyles)
+        ->toContain('@import "tailwindcss" source(none);')
+        ->toContain("@source '../views/pages/**/*.blade.php';")
+        ->toContain("@source '../views/components/public/**/*.blade.php';")
+        ->toContain("@source '../views/components/layouts/public.blade.php';");
+    expect(str_contains($publicStyles, 'livewire/flux'))->toBeFalse();
+    expect(str_contains($publicStyles, 'flux-pro'))->toBeFalse();
+
+    expect($appStyles)
+        ->toContain('../../vendor/livewire/flux/dist/flux.css')
+        ->toContain('../../vendor/livewire/flux/stubs/**/*.blade.php');
+
+    expect($viteConfig)
+        ->toContain("'resources/css/app.css'")
+        ->toContain("'resources/css/public.css'");
 });
 
 test('approved public pages render successfully', function (string $routeName): void {
