@@ -23,9 +23,8 @@ class HomeController extends Controller
 
             'featuredMenuItems' => MenuItem::query()
                 ->with('menuCategory')
-                ->where('is_visible', true)
-                ->orderBy('sort_order')
-                ->orderBy('name')
+                ->visible()
+                ->ordered()
                 ->limit(6)
                 ->get(),
 
