@@ -1,0 +1,81 @@
+<?php
+
+use Illuminate\Support\Facades\Route;
+
+test('approved public page routes are registered with stable paths', function (): void {
+    $expectedRoutes = [
+        'home' => '/',
+        'menu' => '/menu',
+        'gallery' => '/gallery',
+        'banquet-hall' => '/banquet-hall',
+        'reservation-request.create' => '/reservation-request',
+        'order-inquiry.create' => '/order-inquiry',
+        'contact.create' => '/contact',
+    ];
+
+    foreach ($expectedRoutes as $name => $path) {
+        expect(Route::has($name))->toBeTrue("Expected route [{$name}] to be registered.");
+        expect(route($name, [], false))->toBe($path);
+    }
+});
+
+test('approved public pages render successfully', function (string $routeName): void {
+    $this->get(route($routeName))->assertOk();
+})->with([
+    'home' => 'home',
+    'menu' => 'menu',
+    'gallery' => 'gallery',
+    'banquet hall' => 'banquet-hall',
+    'reservation request' => 'reservation-request.create',
+    'order inquiry' => 'order-inquiry.create',
+    'contact' => 'contact.create',
+]);
+
+test('public navigation uses the approved workflow labels', function (): void {
+    $this->get(route('home'))
+        ->assertOk()
+        ->assertSeeText('Home')
+        ->assertSeeText('Menu')
+        ->assertSeeText('Reservation Request')
+        ->assertSeeText('Order Inquiry')
+        ->assertSeeText('Gallery')
+        ->assertSeeText('Banquet Hall')
+        ->assertSeeText('Contact');
+});
+
+test('reservation and order pages explain manual review boundaries', function (): void {
+    $this->get(route('reservation-request.create'))
+        ->assertOk()
+        ->assertSeeText('Reservation Request')
+        ->assertSeeText('not a confirmed reservation')
+        ->assertSeeText('manually review your request');
+
+    $this->get(route('order-inquiry.create'))
+        ->assertOk()
+        ->assertSeeText('Order Inquiry')
+        ->assertSeeText('not checkout or online payment')
+        ->assertSeeText('manually confirm availability');
+});
+
+test('public pages do not expose out of scope ecommerce or live booking calls to action', function (string $routeName): void {
+    $response = $this->get(route($routeName))->assertOk();
+
+    foreach ([
+        'Book Now',
+        'Order Now',
+        'Pay Online',
+        'Track Order',
+        'Confirmed Booking',
+        'Add to Cart',
+    ] as $outOfScopeLabel) {
+        $response->assertDontSeeText($outOfScopeLabel);
+    }
+})->with([
+    'home' => 'home',
+    'menu' => 'menu',
+    'gallery' => 'gallery',
+    'banquet hall' => 'banquet-hall',
+    'reservation request' => 'reservation-request.create',
+    'order inquiry' => 'order-inquiry.create',
+    'contact' => 'contact.create',
+]);
