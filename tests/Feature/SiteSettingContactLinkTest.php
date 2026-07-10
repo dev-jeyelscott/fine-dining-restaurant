@@ -26,9 +26,9 @@ it('applies field-specific validation to public contact link settings', function
     'malformed URL' => ['tiktok_url', 'not-a-url', false],
 ]);
 
-it('renders valid public contact links', function (): void {
+it('renders valid public contact links with a normalized phone target', function (): void {
     foreach ([
-        'phone' => '+63 917 123 4567',
+        'phone' => '+63 (917) 123-4567',
         'email' => 'hello@example.test',
         'map_link' => 'https://maps.example.test/restaurant',
         'facebook_url' => 'https://facebook.example.test/restaurant',
@@ -44,7 +44,9 @@ it('renders valid public contact links', function (): void {
 
     $this->get(route('contact.create'))
         ->assertOk()
-        ->assertSee('href="tel:+63 917 123 4567"', false)
+        ->assertSee('+63 (917) 123-4567')
+        ->assertSee('href="tel:+639171234567"', false)
+        ->assertDontSee('href="tel:+63 (917) 123-4567"', false)
         ->assertSee('href="mailto:hello@example.test"', false)
         ->assertSee('href="https://maps.example.test/restaurant"', false)
         ->assertSee('href="https://facebook.example.test/restaurant"', false)
