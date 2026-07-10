@@ -4,7 +4,6 @@ namespace App\Rules;
 
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
-use Illuminate\Support\Facades\Validator;
 
 final readonly class ValidSiteSettingValue implements ValidationRule
 {
@@ -22,26 +21,10 @@ final readonly class ValidSiteSettingValue implements ValidationRule
 
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        if (! is_string($value)) {
-            $fail('The :attribute must be a string.');
+        $message = $this->validationMessage($value);
 
-            return;
-        }
-
-        if ($this->key === 'email' && ! $this->isValidEmail($value)) {
-            $fail('The :attribute must be a valid email address.');
-
-            return;
-        }
-
-        if ($this->key === 'phone' && ! $this->isValidPhone($value)) {
-            $fail('The :attribute may only contain digits, spaces, plus signs, hyphens, periods, and parentheses.');
-
-            return;
-        }
-
-        if (in_array($this->key, self::HTTP_URL_KEYS, true) && ! $this->isValidHttpUrl($value)) {
-            $fail('The :attribute must be a valid HTTP or HTTPS URL.');
+        if ($message !== null) {
+            $fail($message);
         }
     }
 
@@ -59,10 +42,31 @@ final readonly class ValidSiteSettingValue implements ValidationRule
 
     public static function accepts(?string $key, mixed $value): bool
     {
-        return Validator::make(
-            ['value' => $value],
-            ['value' => [new self($key)]],
-        )->passes();
+        return (new self($key))->validationMessage($value) === null;
+    }
+
+    private function validationMessage(mixed $value): ?string
+    {
+        if (! is_string($value)) {
+            return 'The :attribute must be a string.';
+        }
+
+        if ($this->key === 'email' && ! $this->isValidEmail($value)) {
+            return 'The :attribute must be a valid email address.';
+        }
+
+        if ($this->key === 'phone' && ! $this->isValidPhone($value)) {
+            return 'The :attribute may only contain digits, spaces, plus signs, hyphens, periods, and parentheses.';
+        }
+
+        if (
+            in_array($this->key, self::HTTP_URL_KEYS, true)
+            && ! $this->isValidHttpUrl($value)
+        ) {
+            return 'The :attribute must be a valid HTTP or HTTPS URL.';
+        }
+
+        return null;
     }
 
     private function isValidEmail(string $value): bool
