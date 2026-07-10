@@ -79,14 +79,14 @@
                     <div>
                         <p class="font-display text-4xl text-brand-ink">{{ $galleryImages->count() }}</p>
                         <p class="mt-2 text-xs font-semibold uppercase tracking-[0.2em] text-brand-gold-dark">
-                            Visible moments
+                            Moments on this page
                         </p>
                     </div>
 
                     <div>
                         <p class="font-display text-4xl text-brand-ink">{{ $categories->count() }}</p>
                         <p class="mt-2 text-xs font-semibold uppercase tracking-[0.2em] text-brand-gold-dark">
-                            Gallery categories
+                            Categories on this page
                         </p>
                     </div>
                 </div>
@@ -195,6 +195,12 @@
                         />
                     @endforeach
                 </div>
+
+                @if ($galleryImages->hasPages())
+                    <div class="mt-14 border-t border-white/10 pt-10">
+                        {{ $galleryImages->links() }}
+                    </div>
+                @endif
             @else
                 <x-public.alert type="warning" class="mt-14">
                     No visible gallery images yet. Add images from the Filament admin panel.

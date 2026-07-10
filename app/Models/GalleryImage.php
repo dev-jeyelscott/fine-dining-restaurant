@@ -66,6 +66,9 @@ class GalleryImage extends Model
     #[Scope]
     protected function ordered(Builder $query): void
     {
-        $query->orderBy('sort_order')->orderByDesc('created_at');
+        $query
+            ->orderBy('sort_order')
+            ->orderByDesc('created_at')
+            ->orderByDesc('id');
     }
 }

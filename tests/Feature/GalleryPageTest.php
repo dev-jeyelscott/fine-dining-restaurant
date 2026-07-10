@@ -2,6 +2,7 @@
 
 use App\Models\GalleryImage;
 use App\Models\Page;
+use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Storage;
 
 beforeEach(function (): void {
@@ -58,6 +59,66 @@ test('gallery page presents visible images in a premium editorial layout', funct
         ->assertSeeText('Signature Dish')
         ->assertSeeText('Celebrations')
         ->assertDontSeeText('Hidden Preparation Area');
+});
+
+test('gallery page bounds visible image rendering with simple pagination', function (): void {
+    foreach (range(1, 14) as $index) {
+        GalleryImage::query()->create([
+            'title' => sprintf('Gallery Moment %02d', $index),
+            'alt_text' => "Gallery moment {$index}",
+            'image_path' => "gallery/gallery-moment-{$index}.jpg",
+            'category' => $index % 2 === 0 ? 'Cuisine' : 'Ambiance',
+            'sort_order' => $index,
+            'is_visible' => true,
+        ]);
+    }
+
+    GalleryImage::query()->create([
+        'title' => 'Hidden Gallery Moment',
+        'alt_text' => 'Hidden gallery moment',
+        'image_path' => 'gallery/hidden-gallery-moment.jpg',
+        'category' => 'Operations',
+        'sort_order' => 0,
+        'is_visible' => false,
+    ]);
+
+    $expectedFirstPageTitles = collect(range(1, 12))
+        ->map(fn (int $index): string => sprintf('Gallery Moment %02d', $index))
+        ->all();
+
+    $this->get(route('gallery', ['view' => 'editorial']))
+        ->assertOk()
+        ->assertViewHas('galleryImages', function (Paginator $galleryImages) use ($expectedFirstPageTitles): bool {
+            return $galleryImages->perPage() === 12
+                && $galleryImages->currentPage() === 1
+                && $galleryImages->count() === 12
+                && $galleryImages->getCollection()->pluck('title')->all() === $expectedFirstPageTitles;
+        })
+        ->assertSeeText('Gallery Moment 01')
+        ->assertSeeText('Gallery Moment 12')
+        ->assertDontSeeText('Gallery Moment 13')
+        ->assertDontSeeText('Gallery Moment 14')
+        ->assertDontSeeText('Hidden Gallery Moment')
+        ->assertSee('aria-label="Pagination Navigation"', false)
+        ->assertSee('rel="next"', false)
+        ->assertSee('view=editorial&amp;page=2#gallery-collection', false);
+
+    $expectedSecondPageTitles = ['Gallery Moment 13', 'Gallery Moment 14'];
+
+    $this->get(route('gallery', ['page' => 2, 'view' => 'editorial']))
+        ->assertOk()
+        ->assertViewHas('galleryImages', function (Paginator $galleryImages) use ($expectedSecondPageTitles): bool {
+            return $galleryImages->perPage() === 12
+                && $galleryImages->currentPage() === 2
+                && $galleryImages->count() === 2
+                && $galleryImages->getCollection()->pluck('title')->all() === $expectedSecondPageTitles;
+        })
+        ->assertSeeText('Gallery Moment 13')
+        ->assertSeeText('Gallery Moment 14')
+        ->assertDontSeeText('Gallery Moment 12')
+        ->assertDontSeeText('Hidden Gallery Moment')
+        ->assertSee('rel="prev"', false)
+        ->assertDontSee('rel="next"', false);
 });
 
 test('gallery page keeps editorial grid tracks aligned with card minimum heights', function (int $imageCount): void {
@@ -142,8 +203,8 @@ test('gallery page handles a single visible image', function (): void {
     $this->get(route('gallery'))
         ->assertOk()
         ->assertSeeText('Intimate Dining Room')
-        ->assertSeeText('Visible moments')
-        ->assertSeeText('Gallery categories');
+        ->assertSeeText('Moments on this page')
+        ->assertSeeText('Categories on this page');
 });
 
 test('gallery page keeps its empty state and scope safe continuation links', function (): void {

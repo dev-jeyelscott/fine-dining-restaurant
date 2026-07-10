@@ -4,3 +4,4 @@
 @source '../views/pages/**/*.blade.php';
 @source '../views/components/public/**/*.blade.php';
 @source '../views/components/layouts/public.blade.php';
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
