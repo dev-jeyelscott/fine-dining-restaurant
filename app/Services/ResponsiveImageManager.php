@@ -143,7 +143,7 @@ final class ResponsiveImageManager
                             $sourceWidth,
                             $sourceHeight,
                             $definition['width'],
-                            $definition['height'] ?? $definition['width'],
+                            $definition['height'],
                         )
                         : $this->resizeToWidth(
                             $source,
@@ -278,13 +278,7 @@ final class ResponsiveImageManager
 
     private function disk(): FilesystemAdapter
     {
-        $disk = Storage::disk('public');
-
-        if (! $disk instanceof FilesystemAdapter) {
-            throw new RuntimeException("The public filesystem disk must use Laravel's filesystem adapter.");
-        }
-
-        return $disk;
+        return Storage::disk('public');
     }
 
     private function hasSafeSourceDimensions(int $width, int $height): bool
@@ -308,7 +302,7 @@ final class ResponsiveImageManager
         $targetHeight = max(1, (int) round($sourceHeight * ($targetWidth / $sourceWidth)));
         $target = $this->createCanvas($targetWidth, $targetHeight);
 
-        if (! imagecopyresampled(
+        imagecopyresampled(
             $target,
             $source,
             0,
@@ -319,11 +313,7 @@ final class ResponsiveImageManager
             $targetHeight,
             $sourceWidth,
             $sourceHeight,
-        )) {
-            imagedestroy($target);
-
-            throw new RuntimeException('Responsive image resize failed.');
-        }
+        );
 
         return $target;
     }
@@ -352,7 +342,7 @@ final class ResponsiveImageManager
 
         $target = $this->createCanvas($targetWidth, $targetHeight);
 
-        if (! imagecopyresampled(
+        imagecopyresampled(
             $target,
             $source,
             0,
@@ -363,17 +353,17 @@ final class ResponsiveImageManager
             $targetHeight,
             $cropWidth,
             $cropHeight,
-        )) {
-            imagedestroy($target);
-
-            throw new RuntimeException('Responsive image crop failed.');
-        }
+        );
 
         return $target;
     }
 
     private function createCanvas(int $width, int $height): GdImage
     {
+        if ($width < 1 || $height < 1) {
+            throw new RuntimeException('Responsive image canvas dimensions must be positive.');
+        }
+
         $canvas = imagecreatetruecolor($width, $height);
 
         if (! $canvas instanceof GdImage) {
@@ -382,11 +372,13 @@ final class ResponsiveImageManager
 
         $background = imagecolorallocate($canvas, 255, 255, 255);
 
-        if ($background === false || ! imagefill($canvas, 0, 0, $background)) {
+        if ($background === false) {
             imagedestroy($canvas);
 
             throw new RuntimeException('Responsive image canvas could not be initialized.');
         }
+
+        imagefill($canvas, 0, 0, $background);
 
         return $canvas;
     }
@@ -398,6 +390,6 @@ final class ResponsiveImageManager
         $encoded = imagejpeg($image, null, $quality);
         $contents = ob_get_clean();
 
-        return $encoded && is_string($contents) ? $contents : null;
+        return $encoded ? $contents : null;
     }
 }
