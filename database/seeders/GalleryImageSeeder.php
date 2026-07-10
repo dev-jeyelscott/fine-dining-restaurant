@@ -23,7 +23,7 @@ class GalleryImageSeeder extends Seeder
      */
     private const IMAGE_EXTENSIONS_BY_MIME_TYPE = [
         'image/jpeg' => 'jpg',
-        'image/png' => 'png',
+        'image/webp' => 'webp',
         'image/webp' => 'webp',
     ];
 
@@ -37,7 +37,7 @@ class GalleryImageSeeder extends Seeder
             [
                 'title' => 'Elegant Dining Room',
                 'alt_text' => 'Elegant fine-dining restaurant interior',
-                'image' => 'dining-room.png',
+                'image' => 'dining-room.webp',
                 'category' => 'interior',
                 'sort_order' => 1,
                 'is_visible' => true,
@@ -45,7 +45,7 @@ class GalleryImageSeeder extends Seeder
             [
                 'title' => 'Signature Dish',
                 'alt_text' => 'Chef-prepared signature dish presentation',
-                'image' => 'Seared-Hokkaido-Scallops.png',
+                'image' => 'Seared-Hokkaido-Scallops.webp',
                 'category' => 'dish',
                 'sort_order' => 2,
                 'is_visible' => true,
@@ -53,7 +53,7 @@ class GalleryImageSeeder extends Seeder
             [
                 'title' => 'Banquet Setup',
                 'alt_text' => 'Banquet hall setup for a private event',
-                'image' => 'banquet-room.png',
+                'image' => 'banquet-room.webp',
                 'category' => 'banquet',
                 'sort_order' => 3,
                 'is_visible' => true,
@@ -61,7 +61,7 @@ class GalleryImageSeeder extends Seeder
             [
                 'title' => 'Warm Restaurant Ambiance',
                 'alt_text' => 'Warm restaurant lighting and ambiance',
-                'image' => 'warm-ambiance.png',
+                'image' => 'warm-ambiance.webp',
                 'category' => 'ambiance',
                 'sort_order' => 4,
                 'is_visible' => true,

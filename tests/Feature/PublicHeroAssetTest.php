@@ -11,11 +11,11 @@ beforeEach(function (): void {
 test('home and order inquiry omit the missing legacy hero asset when no managed image exists', function (): void {
     $this->get(route('home'))
         ->assertOk()
-        ->assertDontSee('/images/bg-hero.png', false);
+        ->assertDontSee('/images/bg-herod.webp', false);
 
     $this->get(route('order-inquiry.create'))
         ->assertOk()
-        ->assertDontSee('/images/bg-hero.png', false);
+        ->assertDontSee('/images/bg-herod.webp', false);
 });
 
 test('home and order inquiry render an existing managed responsive hero image', function (): void {
@@ -42,7 +42,7 @@ test('home and order inquiry render an existing managed responsive hero image', 
         ->assertSee('srcset=', false)
         ->assertSee('loading="eager"', false)
         ->assertSee('fetchpriority="high"', false)
-        ->assertDontSee('/images/bg-hero.png', false);
+        ->assertDontSee('/images/bg-herod.webp', false);
 
     $this->get(route('order-inquiry.create'))
         ->assertOk()
@@ -51,5 +51,5 @@ test('home and order inquiry render an existing managed responsive hero image', 
         ->assertSee('loading="eager"', false)
         ->assertSee('fetchpriority="high"', false)
         ->assertSee('Grand dining room with warm ambient lighting')
-        ->assertDontSee('/images/bg-hero.png', false);
+        ->assertDontSee('/images/bg-herod.webp', false);
 });
