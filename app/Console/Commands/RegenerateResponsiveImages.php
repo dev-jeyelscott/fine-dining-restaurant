@@ -36,21 +36,23 @@ final class RegenerateResponsiveImages extends Command
         $generated = 0;
 
         if (in_array($modelOption, ['all', 'gallery'], true)) {
-            $this->regenerateQuery(
+            $result = $this->regenerateQuery(
                 GalleryImage::query()->whereNotNull('image_path'),
                 $manager,
-                $processed,
-                $generated,
             );
+
+            $processed += $result['processed'];
+            $generated += $result['generated'];
         }
 
         if (in_array($modelOption, ['all', 'menu'], true)) {
-            $this->regenerateQuery(
+            $result = $this->regenerateQuery(
                 MenuItem::query()->whereNotNull('image_path'),
                 $manager,
-                $processed,
-                $generated,
             );
+
+            $processed += $result['processed'];
+            $generated += $result['generated'];
         }
 
         $this->info(sprintf(
@@ -64,29 +66,33 @@ final class RegenerateResponsiveImages extends Command
 
     /**
      * @template TModel of Model
+     *
      * @param  Builder<TModel>  $query
+     * @return array{processed: int, generated: int}
      */
-    private function regenerateQuery(
-        Builder $query,
-        ResponsiveImageManager $manager,
-        int &$processed,
-        int &$generated,
-    ): void {
-        $query->chunkById(100, function ($records) use ($manager, &$processed, &$generated): void {
-            foreach ($records as $record) {
-                $path = $record->getAttribute('image_path');
+    private function regenerateQuery(Builder $query, ResponsiveImageManager $manager): array
+    {
+        $processed = 0;
+        $generated = 0;
 
-                if (! is_string($path) || $path === '') {
-                    continue;
-                }
+        $query->eachById(function (Model $record) use ($manager, &$processed, &$generated): void {
+            $path = $record->getAttribute('image_path');
 
-                $processed++;
-                $manager->deleteVariants($path);
-
-                if ($manager->generate($path) !== []) {
-                    $generated++;
-                }
+            if (! is_string($path) || $path === '') {
+                return;
             }
-        });
+
+            $processed++;
+            $manager->deleteVariants($path);
+
+            if ($manager->generate($path) !== []) {
+                $generated++;
+            }
+        }, 100);
+
+        return [
+            'processed' => $processed,
+            'generated' => $generated,
+        ];
     }
 }
