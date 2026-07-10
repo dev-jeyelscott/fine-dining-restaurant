@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * @property int $id
@@ -18,6 +19,7 @@ use Illuminate\Support\Carbon;
  * @property bool $is_visible
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
+ * @property-read string|null $image_url
  */
 #[Fillable([
     'title',
@@ -38,6 +40,15 @@ class GalleryImage extends Model
             'sort_order' => 'integer',
             'is_visible' => 'boolean',
         ];
+    }
+
+    public function getImageUrlAttribute(): ?string
+    {
+        if (blank($this->image_path)) {
+            return null;
+        }
+
+        return Storage::disk('public')->url($this->image_path);
     }
 
     /**
