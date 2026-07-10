@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Rules\ValidSiteSettingValue;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -36,5 +37,26 @@ class SiteSetting extends Model
         return static::query()
             ->pluck('value', 'key')
             ->all();
+    }
+
+    /**
+     * Return public contact settings while excluding malformed link values.
+     *
+     * @return array<string, string|null>
+     */
+    public static function publicContactMap(): array
+    {
+        $settings = static::keyValueMap();
+
+        foreach (ValidSiteSettingValue::publicLinkKeys() as $key) {
+            if (
+                array_key_exists($key, $settings)
+                && ! ValidSiteSettingValue::accepts($key, $settings[$key])
+            ) {
+                unset($settings[$key]);
+            }
+        }
+
+        return $settings;
     }
 }
