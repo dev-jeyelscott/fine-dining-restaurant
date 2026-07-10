@@ -12,6 +12,8 @@ A customer submitted an order inquiry through {{ config('app.name') }}.
 
 **Fulfillment Preference:** {{ str($orderInquiry->fulfillment_type)->headline() }}
 
+**Quantity:** {{ $orderInquiry->quantity }}
+
 **Preferred Pickup/Delivery Time:** {{ $orderInquiry->preferred_time }}
 
 @if($orderInquiry->delivery_address)
