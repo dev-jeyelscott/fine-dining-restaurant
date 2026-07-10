@@ -175,7 +175,7 @@
             @endif
 
             @if ($galleryImages->isNotEmpty())
-                <div class="mt-14 grid auto-rows-[14rem] gap-4 sm:auto-rows-[16rem] md:grid-cols-2 lg:auto-rows-[18rem] lg:grid-cols-3">
+                <div class="mt-14 grid gap-4 md:auto-rows-[18rem] md:grid-cols-2 lg:grid-cols-3">
                     @foreach ($galleryImages as $image)
                         @php
                             $patternIndex = $loop->index % 8;
