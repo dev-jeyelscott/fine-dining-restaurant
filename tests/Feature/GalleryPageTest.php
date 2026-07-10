@@ -2,6 +2,7 @@
 
 use App\Models\GalleryImage;
 use App\Models\Page;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Storage;
 
@@ -9,11 +10,22 @@ beforeEach(function (): void {
     Storage::fake('public');
 });
 
+function storeGalleryPageTestImage(string $filename): string
+{
+    $path = UploadedFile::fake()
+        ->image($filename, 2400, 1600)
+        ->storeAs('gallery', $filename, 'public');
+
+    expect($path)->toBeString();
+
+    return $path;
+}
+
 test('gallery page presents visible images in a premium editorial layout', function (): void {
     GalleryImage::query()->create([
         'title' => 'Grand Dining Room',
         'alt_text' => 'Warmly lit fine-dining room',
-        'image_path' => 'gallery/grand-dining-room.jpg',
+        'image_path' => storeGalleryPageTestImage('grand-dining-room.jpg'),
         'category' => 'Ambiance',
         'sort_order' => 30,
         'is_visible' => true,
@@ -22,7 +34,7 @@ test('gallery page presents visible images in a premium editorial layout', funct
     GalleryImage::query()->create([
         'title' => 'Golden Truffle Tenderloin',
         'alt_text' => 'Golden truffle beef tenderloin',
-        'image_path' => 'gallery/golden-truffle-tenderloin.jpg',
+        'image_path' => storeGalleryPageTestImage('golden-truffle-tenderloin.jpg'),
         'category' => 'Signature Dish',
         'sort_order' => 20,
         'is_visible' => true,
@@ -31,7 +43,7 @@ test('gallery page presents visible images in a premium editorial layout', funct
     GalleryImage::query()->create([
         'title' => 'Private Celebration',
         'alt_text' => 'Private banquet celebration setup',
-        'image_path' => 'gallery/private-celebration.jpg',
+        'image_path' => storeGalleryPageTestImage('private-celebration.jpg'),
         'category' => 'Celebrations',
         'sort_order' => 10,
         'is_visible' => true,
