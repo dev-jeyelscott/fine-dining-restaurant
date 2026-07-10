@@ -61,8 +61,26 @@ jobs:
       - name: Build Assets
         run: npm run build
 
-      - name: Run Type Analysis
-        run: composer types:check
+      - name: Capture Type Analysis
+        id: phpstan
+        continue-on-error: true
+        run: |
+          vendor/bin/phpstan analyse --error-format=raw > phpstan-${{ matrix.php-version }}.txt 2>&1
+          echo "exit_code=$?" >> "$GITHUB_OUTPUT"
+
+      - name: Upload Type Analysis Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: phpstan-${{ matrix.php-version }}
+          path: phpstan-${{ matrix.php-version }}.txt
+          retention-days: 1
+
+      - name: Enforce Type Analysis
+        if: steps.phpstan.outputs.exit_code != '0'
+        run: |
+          cat phpstan-${{ matrix.php-version }}.txt
+          exit 1
 
       - name: Run Tests
         run: php artisan test
