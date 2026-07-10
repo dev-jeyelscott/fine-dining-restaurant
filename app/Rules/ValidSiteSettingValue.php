@@ -18,9 +18,7 @@ final readonly class ValidSiteSettingValue implements ValidationRule
         'tiktok_url',
     ];
 
-    public function __construct(private ?string $key)
-    {
-    }
+    public function __construct(private ?string $key) {}
 
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
