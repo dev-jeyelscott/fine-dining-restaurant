@@ -1,0 +1,99 @@
+name: frontend benchmark
+
+on:
+  pull_request: {}
+
+permissions:
+  contents: read
+
+jobs:
+  benchmark:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout optimized head
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
+          path: optimized
+
+      - name: Checkout baseline
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
+          ref: feat/luxury-gallery-page
+          path: baseline
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # v2
+        with:
+          php-version: "8.5"
+          tools: composer:v2
+          coverage: none
+
+      - name: Setup Node
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6
+        with:
+          node-version: "25"
+
+      - name: Install baseline dependencies
+        working-directory: baseline
+        run: |
+          composer config http-basic.composer.fluxui.dev "${{ secrets.FLUX_USERNAME }}" "${{ secrets.FLUX_LICENSE_KEY }}"
+          composer install --no-interaction --prefer-dist --optimize-autoloader --quiet
+          npm install --no-audit --no-fund --silent
+
+      - name: Install optimized dependencies
+        working-directory: optimized
+        run: |
+          composer config http-basic.composer.fluxui.dev "${{ secrets.FLUX_USERNAME }}" "${{ secrets.FLUX_LICENSE_KEY }}"
+          composer install --no-interaction --prefer-dist --optimize-autoloader --quiet
+          npm install --no-audit --no-fund --silent
+
+      - name: Measure production builds
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          measure_build() {
+            local directory="$1"
+            local label="$2"
+            local entry="$3"
+
+            rm -rf "$directory/public/build" "$directory/node_modules/.vite"
+
+            local cold_start cold_end warm_start warm_end
+            cold_start=$(date +%s%N)
+            (cd "$directory" && npm run build >/tmp/"$label"-cold.log 2>&1)
+            cold_end=$(date +%s%N)
+
+            local entry_file entry_bytes total_css_bytes
+            entry_file=$(node -e "const manifest=require('./$directory/public/build/manifest.json'); process.stdout.write(manifest['$entry'].file)")
+            entry_bytes=$(stat -c%s "$directory/public/build/$entry_file")
+            total_css_bytes=$(find "$directory/public/build/assets" -type f -name '*.css' -printf '%s\n' | awk '{sum += $1} END {print sum + 0}')
+
+            rm -rf "$directory/public/build"
+            warm_start=$(date +%s%N)
+            (cd "$directory" && npm run build >/tmp/"$label"-warm.log 2>&1)
+            warm_end=$(date +%s%N)
+
+            printf '%s_ENTRY=%s\n' "$label" "$entry"
+            printf '%s_ENTRY_FILE=%s\n' "$label" "$entry_file"
+            printf '%s_ENTRY_BYTES=%s\n' "$label" "$entry_bytes"
+            printf '%s_TOTAL_CSS_BYTES=%s\n' "$label" "$total_css_bytes"
+            printf '%s_COLD_BUILD_MS=%s\n' "$label" "$(((cold_end - cold_start) / 1000000))"
+            printf '%s_WARM_BUILD_MS=%s\n' "$label" "$(((warm_end - warm_start) / 1000000))"
+          }
+
+          {
+            measure_build baseline BASELINE resources/css/app.css
+            measure_build optimized OPTIMIZED resources/css/public.css
+          } | tee frontend-build-metrics.txt
+
+      - name: Upload benchmark evidence
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: frontend-build-metrics
+          path: frontend-build-metrics.txt
+          if-no-files-found: error
+          retention-days: 7
