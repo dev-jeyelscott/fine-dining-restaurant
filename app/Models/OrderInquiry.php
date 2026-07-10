@@ -31,6 +31,7 @@ use Illuminate\Support\Carbon;
     'fulfillment_type',
     'preferred_time',
     'order_details',
+    'quantity',
     'special_instructions',
     'delivery_address',
     'is_read',

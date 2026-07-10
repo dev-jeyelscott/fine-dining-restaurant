@@ -152,6 +152,7 @@ test('admin can view and mark inquiry records as reviewed without editing custom
         'fulfillment_type' => 'pickup',
         'preferred_time' => 'Tomorrow afternoon',
         'order_details' => 'Two pasta trays.',
+        'quantity' => 2,
         'special_instructions' => 'Please call before preparing.',
         'is_read' => false,
     ]);

@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('fulfillment_type', 20)->index(); // pickup or delivery preference only
             $table->string('preferred_time', 80);
             $table->text('order_details')->nullable();
+            $table->unsignedSmallInteger('quantity');
             $table->text('special_instructions')->nullable();
             $table->text('delivery_address')->nullable();
             $table->boolean('is_read')->default(false)->index();

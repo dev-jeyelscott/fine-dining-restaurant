@@ -20,17 +20,19 @@ Route::get('/banquet-hall', [BanquetHallController::class, 'index'])->name('banq
 Route::get('/reservation-request', [ReservationRequestController::class, 'create'])
     ->name('reservation-request.create');
 
-Route::post('/reservation-request', [ReservationRequestController::class, 'store'])
-    ->name('reservation-request.store');
-
 Route::get('/order-inquiry', [OrderInquiryController::class, 'create'])
     ->name('order-inquiry.create');
-
-Route::post('/order-inquiry', [OrderInquiryController::class, 'store'])
-    ->name('order-inquiry.store');
 
 Route::get('/contact', [ContactController::class, 'create'])
     ->name('contact.create');
 
-Route::post('/contact', [ContactController::class, 'store'])
-    ->name('contact.store');
+Route::middleware('throttle:public-forms')->group(function (): void {
+    Route::post('/reservation-requests', [ReservationRequestController::class, 'store'])
+        ->name('reservation-requests.store');
+
+    Route::post('/order-inquiries', [OrderInquiryController::class, 'store'])
+        ->name('order-inquiries.store');
+
+    Route::post('/contact-inquiries', [ContactController::class, 'store'])
+        ->name('contact-inquiries.store');
+});
