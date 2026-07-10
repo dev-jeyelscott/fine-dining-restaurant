@@ -21,13 +21,25 @@
                     Reach out directly or send us a message using the inquiry form. Our team will review your message and follow up as soon as practical.
                 </p>
 
+                @php
+                    $phone = $settings['phone'] ?? null;
+                    $phoneDigits = is_string($phone)
+                        ? preg_replace('/\D+/', '', $phone)
+                        : null;
+                    $phoneTelTarget = is_string($phone)
+                        && is_string($phoneDigits)
+                        && $phoneDigits !== ''
+                            ? (str_starts_with(ltrim($phone), '+') ? '+' : '').$phoneDigits
+                            : null;
+                @endphp
+
                 <dl class="mt-6 space-y-5 text-sm">
-                    @if ($settings['phone'] ?? null)
+                    @if ($phoneTelTarget !== null)
                         <div>
                             <dt class="font-semibold text-stone-300">Phone</dt>
                             <dd class="mt-1 text-stone-400">
-                                <a href="tel:{{ $settings['phone'] }}" class="hover:text-amber-200">
-                                    {{ $settings['phone'] }}
+                                <a href="tel:{{ $phoneTelTarget }}" class="hover:text-amber-200">
+                                    {{ $phone }}
                                 </a>
                             </dd>
                         </div>
