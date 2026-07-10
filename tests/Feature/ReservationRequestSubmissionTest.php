@@ -48,6 +48,18 @@ test('reservation request page renders form', function (): void {
         ->assertSee('name="website"', false);
 });
 
+test('reservation request page uses the luxury homepage design language', function (): void {
+    $this->get(route('reservation-request.create'))
+        ->assertOk()
+        ->assertSeeText('An evening worth anticipating')
+        ->assertSeeText('Your table, thoughtfully prepared')
+        ->assertSeeText('How your request works')
+        ->assertSee('data-reservation-hero', false)
+        ->assertSee('data-reservation-form', false)
+        ->assertSee('bg-brand-ivory', false)
+        ->assertSee('font-display', false);
+});
+
 test('invalid reservation request payload fails validation', function (): void {
     Queue::fake();
 
