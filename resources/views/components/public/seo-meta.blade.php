@@ -10,7 +10,6 @@
         'meta_description',
         'Fine dining restaurant offering menu, reservation requests, order inquiries, banquet hall information, gallery, and contact details.'
     );
-    $canonicalUrl = url()->current();
 @endphp
 
 <meta charset="utf-8">
@@ -18,10 +17,3 @@
 
 <title>{{ $pageTitle }}</title>
 <meta name="description" content="{{ $metaDescription }}">
-<link rel="canonical" href="{{ $canonicalUrl }}">
-
-<meta property="og:type" content="website">
-<meta property="og:site_name" content="{{ $siteName }}">
-<meta property="og:title" content="{{ $pageTitle }}">
-<meta property="og:description" content="{{ $metaDescription }}">
-<meta property="og:url" content="{{ $canonicalUrl }}">
