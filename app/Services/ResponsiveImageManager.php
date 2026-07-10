@@ -278,7 +278,13 @@ final class ResponsiveImageManager
 
     private function disk(): FilesystemAdapter
     {
-        return Storage::disk('public');
+        $disk = Storage::disk('public');
+
+        if (! $disk instanceof FilesystemAdapter) {
+            throw new RuntimeException("The public filesystem disk must use Laravel's filesystem adapter.");
+        }
+
+        return $disk;
     }
 
     private function hasSafeSourceDimensions(int $width, int $height): bool
