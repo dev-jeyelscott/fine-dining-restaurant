@@ -153,6 +153,48 @@ test('public pages render responsive image selection while preserving hero prior
         ->assertSee('fetchpriority="high"', false);
 });
 
+test('menu and reservation heroes use responsive hero candidates with high loading priority', function (): void {
+    $galleryPath = storeResponsiveTestImage('gallery', 'reservation-hero.jpg');
+    $menuPath = storeResponsiveTestImage('menu-items', 'menu-hero.jpg');
+
+    GalleryImage::query()->create([
+        'title' => 'Reservation Hero',
+        'image_path' => $galleryPath,
+        'sort_order' => 1,
+        'is_visible' => true,
+    ]);
+
+    $category = MenuCategory::query()->create([
+        'name' => 'Dinner',
+        'slug' => 'dinner',
+        'sort_order' => 1,
+        'is_visible' => true,
+    ]);
+
+    MenuItem::query()->create([
+        'menu_category_id' => $category->id,
+        'name' => 'Menu Hero',
+        'image_path' => $menuPath,
+        'sort_order' => 1,
+        'is_visible' => true,
+    ]);
+
+    foreach (['menu', 'reservation-request.create'] as $routeName) {
+        $content = $this->get(route($routeName))
+            ->assertOk()
+            ->assertSee('srcset=', false)
+            ->assertSee('sizes="100vw"', false)
+            ->assertSee('480w', false)
+            ->assertSee('1920w', false)
+            ->assertSee('loading="eager"', false)
+            ->assertSee('fetchpriority="high"', false)
+            ->content();
+
+        expect(substr_count($content, 'loading="eager"'))->toBe(1)
+            ->and(substr_count($content, 'fetchpriority="high"'))->toBe(1);
+    }
+});
+
 test('filament image tables resolve dedicated thumbnail variants', function (): void {
     $galleryTable = File::get(app_path('Filament/Resources/GalleryImages/Tables/GalleryImagesTable.php'));
     $menuTable = File::get(app_path('Filament/Resources/MenuItems/Tables/MenuItemsTable.php'));

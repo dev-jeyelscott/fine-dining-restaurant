@@ -9,15 +9,17 @@
 
     <section class="relative isolate flex min-h-[38rem] items-end overflow-hidden bg-brand-ink lg:min-h-[44rem]">
         @if ($heroItem?->image_url)
-            <img
-                src="{{ $heroItem->image_url }}"
+            <x-public.responsive-image
+                :image="$heroItem"
                 alt=""
+                variant="hero"
+                sizes="100vw"
                 width="1920"
                 height="1280"
+                loading="eager"
                 fetchpriority="high"
-                decoding="async"
-                class="absolute inset-0 -z-30 h-full w-full object-cover"
-            >
+                img-class="absolute inset-0 -z-30 h-full w-full object-cover"
+            />
         @else
             <div class="absolute inset-0 -z-30 bg-[radial-gradient(circle_at_72%_28%,rgba(201,164,93,0.28),transparent_25%),linear-gradient(135deg,#2f302a,#171916_62%)]"></div>
         @endif
