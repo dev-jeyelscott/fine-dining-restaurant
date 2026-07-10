@@ -1,10 +1,11 @@
 <?php
 
-use App\Mail\ReservationRequestSubmitted;
+use App\Jobs\SendReservationRequestNotification;
 use App\Models\ReservationRequest;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Queue;
 
 uses(RefreshDatabase::class);
 
@@ -47,7 +48,7 @@ test('reservation request page renders form', function (): void {
 });
 
 test('invalid reservation request payload fails validation', function (): void {
-    Mail::fake();
+    Queue::fake();
 
     $this->from(route('reservation-request.create'))
         ->post(route('reservation-requests.store'), [])
@@ -63,11 +64,11 @@ test('invalid reservation request payload fails validation', function (): void {
 
     $this->assertDatabaseCount('reservation_requests', 0);
 
-    Mail::assertNothingSent();
+    Queue::assertNothingPushed();
 });
 
 test('valid reservation request payload stores database record', function (): void {
-    Mail::fake();
+    Queue::fake();
 
     $payload = reservationRequestSubmissionTestPayload([
         'preferred_date' => now()->addDays(7)->toDateString(),
@@ -96,19 +97,29 @@ test('valid reservation request payload stores database record', function (): vo
         ->toBe($payload['preferred_date']);
 });
 
-test('valid reservation request payload sends email', function (): void {
-    Mail::fake();
+test('valid reservation request payload queues notification', function (): void {
+    Queue::fake();
 
     $this->from(route('reservation-request.create'))
         ->post(route('reservation-requests.store'), reservationRequestSubmissionTestPayload())
         ->assertRedirect(route('reservation-request.create'))
         ->assertSessionHasNoErrors();
 
-    Mail::assertSent(ReservationRequestSubmitted::class, 1);
+    $reservationRequest = ReservationRequest::query()->firstOrFail();
+
+    Queue::assertPushed(
+        SendReservationRequestNotification::class,
+        fn (SendReservationRequestNotification $job): bool => (
+            $job->reservationRequestId === $reservationRequest->id
+            && $job->recipient === 'restaurant@example.test'
+        ),
+    );
+
+    expect($reservationRequest->notification_sent_at)->toBeNull();
 });
 
 test('reservation request success message does not imply confirmed booking', function (): void {
-    Mail::fake();
+    Queue::fake();
 
     $this->from(route('reservation-request.create'))
         ->post(route('reservation-requests.store'), reservationRequestSubmissionTestPayload())
@@ -136,7 +147,7 @@ test('reservation request success message does not imply confirmed booking', fun
 });
 
 test('honeypot reservation request submission is rejected', function (): void {
-    Mail::fake();
+    Queue::fake();
 
     $this->from(route('reservation-request.create'))
         ->post(route('reservation-requests.store'), reservationRequestSubmissionTestPayload([
@@ -147,5 +158,34 @@ test('honeypot reservation request submission is rejected', function (): void {
 
     $this->assertDatabaseCount('reservation_requests', 0);
 
-    Mail::assertNothingSent();
+    Queue::assertNothingPushed();
+});
+
+test('reservation request is stored when the notification recipient is missing', function (): void {
+    Queue::fake();
+    Log::spy();
+
+    config([
+        'mail.inquiries_to' => null,
+    ]);
+
+    $this->from(route('reservation-request.create'))
+        ->post(route('reservation-requests.store'), reservationRequestSubmissionTestPayload())
+        ->assertRedirect(route('reservation-request.create'))
+        ->assertSessionHasNoErrors();
+
+    $reservationRequest = ReservationRequest::query()->firstOrFail();
+
+    expect($reservationRequest->exists)->toBeTrue();
+
+    Queue::assertNothingPushed();
+
+    Log::shouldHaveReceived('warning')
+        ->once()
+        ->with(
+            'Reservation request notification recipient is not configured.',
+            [
+                'reservation_request_id' => $reservationRequest->id,
+            ],
+        );
 });

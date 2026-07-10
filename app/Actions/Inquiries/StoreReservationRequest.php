@@ -2,16 +2,15 @@
 
 namespace App\Actions\Inquiries;
 
-use App\Mail\ReservationRequestSubmitted;
+use App\Jobs\SendReservationRequestNotification;
 use App\Models\ReservationRequest;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Mail;
 use Throwable;
 
 class StoreReservationRequest
 {
     /**
-     * Store a reservation request and attempt to notify the restaurant.
+     * Store a reservation request and queue the restaurant notification.
      *
      * @param  array<string, mixed>  $data
      */
@@ -33,14 +32,12 @@ class StoreReservationRequest
         }
 
         try {
-            Mail::to($recipient)
-                ->send(new ReservationRequestSubmitted($reservationRequest));
-
-            $reservationRequest->forceFill([
-                'notification_sent_at' => now(),
-            ])->save();
+            SendReservationRequestNotification::dispatch(
+                reservationRequestId: $reservationRequest->id,
+                recipient: $recipient,
+            );
         } catch (Throwable $exception) {
-            Log::error('Reservation request notification failed.', [
+            Log::error('Reservation request notification could not be queued.', [
                 'reservation_request_id' => $reservationRequest->id,
                 'exception' => $exception::class,
                 'message' => $exception->getMessage(),

@@ -1,9 +1,9 @@
 <?php
 
-use App\Mail\OrderInquirySubmitted;
+use App\Jobs\SendOrderInquiryNotification;
 use App\Models\OrderInquiry;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Queue;
 
 uses(RefreshDatabase::class);
 
@@ -14,7 +14,7 @@ beforeEach(function (): void {
 });
 
 test('invalid payload fails validation', function (): void {
-    Mail::fake();
+    Queue::fake();
 
     $response = $this->from(route('order-inquiry.create'))
         ->post(route('order-inquiries.store'), []);
@@ -33,11 +33,11 @@ test('invalid payload fails validation', function (): void {
 
     $this->assertDatabaseCount('order_inquiries', 0);
 
-    Mail::assertNothingSent();
+    Queue::assertNothingPushed();
 });
 
 test('delivery requires delivery address', function (): void {
-    Mail::fake();
+    Queue::fake();
 
     $payload = validOrderInquirySubmissionPayload([
         'fulfillment_type' => 'delivery',
@@ -55,11 +55,11 @@ test('delivery requires delivery address', function (): void {
 
     $this->assertDatabaseCount('order_inquiries', 0);
 
-    Mail::assertNothingSent();
+    Queue::assertNothingPushed();
 });
 
 test('pickup does not require delivery address', function (): void {
-    Mail::fake();
+    Queue::fake();
 
     $payload = validOrderInquirySubmissionPayload([
         'fulfillment_type' => 'pickup',
@@ -84,11 +84,11 @@ test('pickup does not require delivery address', function (): void {
         'special_instructions' => 'Please separate the salad dressing.',
     ]);
 
-    Mail::assertSent(OrderInquirySubmitted::class);
+    Queue::assertPushed(SendOrderInquiryNotification::class);
 });
 
 test('valid payload stores database record', function (): void {
-    Mail::fake();
+    Queue::fake();
 
     $payload = validOrderInquirySubmissionPayload([
         'fulfillment_type' => 'delivery',
@@ -115,8 +115,8 @@ test('valid payload stores database record', function (): void {
     ]);
 });
 
-test('valid payload sends email', function (): void {
-    Mail::fake();
+test('valid payload queues notification', function (): void {
+    Queue::fake();
 
     $payload = validOrderInquirySubmissionPayload([
         'fulfillment_type' => 'delivery',
@@ -130,11 +130,21 @@ test('valid payload sends email', function (): void {
 
     expect(OrderInquiry::query()->count())->toBe(1);
 
-    Mail::assertSent(OrderInquirySubmitted::class, 1);
+    $orderInquiry = OrderInquiry::query()->firstOrFail();
+
+    Queue::assertPushed(
+        SendOrderInquiryNotification::class,
+        fn (SendOrderInquiryNotification $job): bool => (
+            $job->orderInquiryId === $orderInquiry->id
+            && $job->recipient === 'restaurant@example.test'
+        ),
+    );
+
+    expect($orderInquiry->notification_sent_at)->toBeNull();
 });
 
 test('success message explains manual review', function (): void {
-    Mail::fake();
+    Queue::fake();
 
     $payload = validOrderInquirySubmissionPayload();
 

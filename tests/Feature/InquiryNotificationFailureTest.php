@@ -4,25 +4,27 @@ use App\Actions\Inquiries\StoreContactInquiry;
 use App\Actions\Inquiries\StoreOrderInquiry;
 use App\Actions\Inquiries\StoreReservationRequest;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Mail;
-use RuntimeException;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Queue;
 
 uses(RefreshDatabase::class);
 
-beforeEach(function (): void {
+function simulateInquiryQueueFailure(): void
+{
     config()->set('mail.inquiries_to', 'restaurant@example.test');
 
-    Mail::shouldReceive('to')
+    Queue::shouldReceive('connection')
         ->once()
-        ->with('restaurant@example.test')
-        ->andReturnSelf();
+        ->andThrow(new RuntimeException('Simulated queue failure.'));
+}
 
-    Mail::shouldReceive('send')
+test('reservation request remains stored when notification queue dispatch fails', function (): void {
+    config()->set('mail.inquiries_to', 'restaurant@example.test');
+    Log::spy();
+    Queue::shouldReceive('connection')
         ->once()
-        ->andThrow(new RuntimeException('Simulated SMTP failure.'));
-});
+        ->andThrow(new RuntimeException('Simulated queue failure.'));
 
-test('reservation request remains stored when notification email fails', function (): void {
     $reservationRequest = app(StoreReservationRequest::class)->handle([
         'customer_name' => 'Maria Santos',
         'phone' => '09171234567',
@@ -41,9 +43,20 @@ test('reservation request remains stored when notification email fails', functio
     ]);
 
     expect($reservationRequest->fresh()->notification_sent_at)->toBeNull();
+
+    Log::shouldHaveReceived('error')
+        ->once()
+        ->withArgs(function (string $message, array $context) use ($reservationRequest): bool {
+            return $message === 'Reservation request notification could not be queued.'
+                && $context['reservation_request_id'] === $reservationRequest->id
+                && $context['exception'] === RuntimeException::class
+                && $context['message'] === 'Simulated queue failure.';
+        });
 });
 
 test('order inquiry remains stored when notification email fails', function (): void {
+    simulateInquiryQueueFailure();
+
     $orderInquiry = app(StoreOrderInquiry::class)->handle([
         'customer_name' => 'Maria Santos',
         'phone' => '09171234567',
@@ -66,6 +79,8 @@ test('order inquiry remains stored when notification email fails', function (): 
 });
 
 test('contact inquiry remains stored when notification email fails', function (): void {
+    simulateInquiryQueueFailure();
+
     $contactInquiry = app(StoreContactInquiry::class)->handle([
         'customer_name' => 'Maria Santos',
         'email' => 'maria@example.test',

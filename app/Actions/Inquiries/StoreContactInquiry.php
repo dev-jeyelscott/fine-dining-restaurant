@@ -2,16 +2,15 @@
 
 namespace App\Actions\Inquiries;
 
-use App\Mail\ContactInquirySubmitted;
+use App\Jobs\SendContactInquiryNotification;
 use App\Models\ContactInquiry;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Mail;
 use Throwable;
 
 class StoreContactInquiry
 {
     /**
-     * Store a contact inquiry and attempt to notify the restaurant.
+     * Store a contact inquiry and queue the restaurant notification.
      *
      * @param  array<string, mixed>  $data
      */
@@ -33,14 +32,12 @@ class StoreContactInquiry
         }
 
         try {
-            Mail::to($recipient)
-                ->send(new ContactInquirySubmitted($contactInquiry));
-
-            $contactInquiry->forceFill([
-                'notification_sent_at' => now(),
-            ])->save();
+            SendContactInquiryNotification::dispatch(
+                contactInquiryId: $contactInquiry->id,
+                recipient: $recipient,
+            );
         } catch (Throwable $exception) {
-            Log::error('Contact inquiry notification failed.', [
+            Log::error('Contact inquiry notification could not be queued.', [
                 'contact_inquiry_id' => $contactInquiry->id,
                 'exception' => $exception::class,
                 'message' => $exception->getMessage(),

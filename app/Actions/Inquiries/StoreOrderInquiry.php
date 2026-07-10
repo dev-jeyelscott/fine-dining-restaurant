@@ -2,16 +2,15 @@
 
 namespace App\Actions\Inquiries;
 
-use App\Mail\OrderInquirySubmitted;
+use App\Jobs\SendOrderInquiryNotification;
 use App\Models\OrderInquiry;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Mail;
 use Throwable;
 
 class StoreOrderInquiry
 {
     /**
-     * Store an order inquiry and attempt to notify the restaurant.
+     * Store an order inquiry and queue the restaurant notification.
      *
      * @param  array<string, mixed>  $data
      */
@@ -33,14 +32,12 @@ class StoreOrderInquiry
         }
 
         try {
-            Mail::to($recipient)
-                ->send(new OrderInquirySubmitted($orderInquiry));
-
-            $orderInquiry->forceFill([
-                'notification_sent_at' => now(),
-            ])->save();
+            SendOrderInquiryNotification::dispatch(
+                orderInquiryId: $orderInquiry->id,
+                recipient: $recipient,
+            );
         } catch (Throwable $exception) {
-            Log::error('Order inquiry notification failed.', [
+            Log::error('Order inquiry notification could not be queued.', [
                 'order_inquiry_id' => $orderInquiry->id,
                 'exception' => $exception::class,
                 'message' => $exception->getMessage(),

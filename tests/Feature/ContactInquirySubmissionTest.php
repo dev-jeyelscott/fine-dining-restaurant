@@ -1,8 +1,9 @@
 <?php
 
-use App\Mail\ContactInquirySubmitted;
+use App\Jobs\SendContactInquiryNotification;
+use App\Models\ContactInquiry;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Queue;
 
 uses(RefreshDatabase::class);
 
@@ -18,7 +19,7 @@ $validPayload = static function (array $overrides = []): array {
 };
 
 test('invalid payload fails validation', function (): void {
-    Mail::fake();
+    Queue::fake();
 
     $response = $this
         ->from(route('contact.create'))
@@ -34,11 +35,11 @@ test('invalid payload fails validation', function (): void {
 
     $this->assertDatabaseCount('contact_inquiries', 0);
 
-    Mail::assertNothingSent();
+    Queue::assertNothingPushed();
 });
 
 test('valid payload stores database record', function () use ($validPayload): void {
-    Mail::fake();
+    Queue::fake();
 
     $response = $this
         ->from(route('contact.create'))
@@ -59,8 +60,8 @@ test('valid payload stores database record', function () use ($validPayload): vo
     ]);
 });
 
-test('valid payload sends email', function () use ($validPayload): void {
-    Mail::fake();
+test('valid payload queues notification', function () use ($validPayload): void {
+    Queue::fake();
 
     config([
         'mail.inquiries_to' => 'restaurant@example.test',
@@ -74,16 +75,21 @@ test('valid payload sends email', function () use ($validPayload): void {
         ->assertRedirect(route('contact.create'))
         ->assertSessionHasNoErrors();
 
-    Mail::assertSent(
-        ContactInquirySubmitted::class,
-        fn (ContactInquirySubmitted $mail): bool => $mail->hasTo(
-            'restaurant@example.test',
+    $contactInquiry = ContactInquiry::query()->firstOrFail();
+
+    Queue::assertPushed(
+        SendContactInquiryNotification::class,
+        fn (SendContactInquiryNotification $job): bool => (
+            $job->contactInquiryId === $contactInquiry->id
+            && $job->recipient === 'restaurant@example.test'
         ),
     );
+
+    expect($contactInquiry->notification_sent_at)->toBeNull();
 });
 
 test('success message appears', function () use ($validPayload): void {
-    Mail::fake();
+    Queue::fake();
 
     $response = $this
         ->from(route('contact.create'))
