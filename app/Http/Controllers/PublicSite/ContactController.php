@@ -6,7 +6,6 @@ use App\Actions\Inquiries\StoreContactInquiry;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreContactInquiryRequest;
 use App\Models\Page;
-use App\Models\SiteSetting;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 
@@ -19,8 +18,6 @@ class ContactController extends Controller
                 ->where('slug', 'contact')
                 ->where('is_published', true)
                 ->first(),
-
-            'settings' => SiteSetting::publicContactMap(),
         ]);
     }
 
