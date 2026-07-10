@@ -96,85 +96,11 @@ final class ResponsiveImageManager
 
         try {
             $contents = $disk->get($originalPath);
-            $dimensions = @getimagesizefromstring($contents);
+            $encodedVariants = $this->encodeVariants($contents, $originalPath);
 
-            if ($dimensions === false) {
-                Log::warning('Responsive image generation skipped because image dimensions could not be read.', [
-                    'path' => $originalPath,
-                ]);
-
-                return [];
-            }
-
-            $sourceWidth = (int) $dimensions[0];
-            $sourceHeight = (int) $dimensions[1];
-
-            if (! $this->hasSafeSourceDimensions($sourceWidth, $sourceHeight)) {
-                Log::warning('Responsive image generation skipped because source dimensions exceed the safety budget.', [
-                    'path' => $originalPath,
-                    'width' => $sourceWidth,
-                    'height' => $sourceHeight,
-                ]);
-
-                return [];
-            }
-
-            $source = @imagecreatefromstring($contents);
-
-            if (! $source instanceof GdImage) {
-                Log::warning('Responsive image generation skipped because the source image could not be decoded.', [
-                    'path' => $originalPath,
-                ]);
-
-                return [];
-            }
-
-            $generated = [];
-
-            try {
-                foreach (self::VARIANTS as $name => $definition) {
-                    if (! $definition['crop'] && $sourceWidth < $definition['width']) {
-                        continue;
-                    }
-
-                    $variant = $definition['crop']
-                        ? $this->resizeToCover(
-                            $source,
-                            $sourceWidth,
-                            $sourceHeight,
-                            $definition['width'],
-                            $definition['height'],
-                        )
-                        : $this->resizeToWidth(
-                            $source,
-                            $sourceWidth,
-                            $sourceHeight,
-                            $definition['width'],
-                        );
-
-                    try {
-                        $encoded = $this->encodeJpeg($variant, $definition['quality']);
-                    } finally {
-                        imagedestroy($variant);
-                    }
-
-                    if ($encoded === null) {
-                        continue;
-                    }
-
-                    $variantPath = $this->variantPath($originalPath, $name);
-
-                    if ($disk->put($variantPath, $encoded, ['visibility' => 'public'])) {
-                        $generated[$name] = $variantPath;
-                    }
-                }
-            } finally {
-                imagedestroy($source);
-            }
-
-            return $generated;
+            return $this->replaceVariantSet($disk, $originalPath, $encodedVariants);
         } catch (Throwable $exception) {
-            Log::warning('Responsive image generation failed; the original image remains available.', [
+            Log::warning('Responsive image generation failed; the original image and any existing derivatives remain available.', [
                 'path' => $originalPath,
                 'exception' => $exception,
             ]);
@@ -189,12 +115,7 @@ final class ResponsiveImageManager
             return;
         }
 
-        $this->disk()->delete(
-            array_map(
-                fn (string $variant): string => $this->variantPath($originalPath, $variant),
-                array_keys(self::VARIANTS),
-            ),
-        );
+        $this->disk()->delete($this->variantPaths($originalPath));
     }
 
     public function resolvePath(string $originalPath, string $preferredVariant): ?string
@@ -279,6 +200,225 @@ final class ResponsiveImageManager
     private function disk(): FilesystemAdapter
     {
         return Storage::disk('public');
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    private function encodeVariants(string $contents, string $originalPath): array
+    {
+        $dimensions = @getimagesizefromstring($contents);
+
+        if ($dimensions === false) {
+            throw new RuntimeException('Responsive image dimensions could not be read.');
+        }
+
+        $sourceWidth = (int) $dimensions[0];
+        $sourceHeight = (int) $dimensions[1];
+
+        if (! $this->hasSafeSourceDimensions($sourceWidth, $sourceHeight)) {
+            throw new RuntimeException(sprintf(
+                'Responsive image source dimensions exceed the safety budget for [%s].',
+                $originalPath,
+            ));
+        }
+
+        $source = @imagecreatefromstring($contents);
+
+        if (! $source instanceof GdImage) {
+            throw new RuntimeException('Responsive image source could not be decoded.');
+        }
+
+        $encodedVariants = [];
+
+        try {
+            foreach (self::VARIANTS as $name => $definition) {
+                if (! $definition['crop'] && $sourceWidth < $definition['width']) {
+                    continue;
+                }
+
+                $variant = $definition['crop']
+                    ? $this->resizeToCover(
+                        $source,
+                        $sourceWidth,
+                        $sourceHeight,
+                        $definition['width'],
+                        $definition['height'],
+                    )
+                    : $this->resizeToWidth(
+                        $source,
+                        $sourceWidth,
+                        $sourceHeight,
+                        $definition['width'],
+                    );
+
+                try {
+                    $encoded = $this->encodeJpeg($variant, $definition['quality']);
+                } finally {
+                    imagedestroy($variant);
+                }
+
+                if ($encoded === null) {
+                    throw new RuntimeException("Responsive image variant [{$name}] could not be encoded.");
+                }
+
+                $encodedVariants[$name] = $encoded;
+            }
+        } finally {
+            imagedestroy($source);
+        }
+
+        if ($encodedVariants === []) {
+            throw new RuntimeException('Responsive image generation did not produce any variants.');
+        }
+
+        return $encodedVariants;
+    }
+
+    /**
+     * @param  array<string, string>  $encodedVariants
+     * @return array<string, string>
+     */
+    private function replaceVariantSet(
+        FilesystemAdapter $disk,
+        string $originalPath,
+        array $encodedVariants,
+    ): array {
+        $transactionId = bin2hex(random_bytes(16));
+        $variantPaths = $this->variantPaths($originalPath);
+        $stagedPaths = [];
+        $backupPaths = [];
+        $promotionStarted = false;
+
+        try {
+            foreach ($encodedVariants as $variant => $encoded) {
+                $targetPath = $this->variantPath($originalPath, $variant);
+                $temporaryPath = $this->transactionPath($targetPath, 'staged', $transactionId);
+
+                if (! $disk->put($temporaryPath, $encoded)) {
+                    throw new RuntimeException("Responsive image variant [{$variant}] could not be staged.");
+                }
+
+                $stagedPaths[$targetPath] = $temporaryPath;
+            }
+
+            foreach ($variantPaths as $targetPath) {
+                if (! $disk->exists($targetPath)) {
+                    continue;
+                }
+
+                $backupPath = $this->transactionPath($targetPath, 'backup', $transactionId);
+
+                if (! $disk->copy($targetPath, $backupPath)) {
+                    throw new RuntimeException("Responsive image variant [{$targetPath}] could not be backed up.");
+                }
+
+                $backupPaths[$targetPath] = $backupPath;
+            }
+
+            $promotionStarted = true;
+
+            foreach ($stagedPaths as $targetPath => $temporaryPath) {
+                if (! $disk->put($targetPath, $disk->get($temporaryPath), ['visibility' => 'public'])) {
+                    throw new RuntimeException("Responsive image variant [{$targetPath}] could not be promoted.");
+                }
+            }
+
+            $obsoletePaths = array_values(array_diff($variantPaths, array_keys($stagedPaths)));
+
+            if ($obsoletePaths !== [] && ! $disk->delete($obsoletePaths)) {
+                throw new RuntimeException('Obsolete responsive image variants could not be removed.');
+            }
+
+            $this->cleanupTransactionFiles($disk, [...array_values($stagedPaths), ...array_values($backupPaths)]);
+
+            $generated = [];
+
+            foreach (array_keys($encodedVariants) as $variant) {
+                $generated[$variant] = $this->variantPath($originalPath, $variant);
+            }
+
+            return $generated;
+        } catch (Throwable $exception) {
+            if ($promotionStarted) {
+                $this->restoreVariantSet($disk, $variantPaths, $backupPaths);
+            }
+
+            $this->cleanupTransactionFiles($disk, [...array_values($stagedPaths), ...array_values($backupPaths)]);
+
+            throw $exception;
+        }
+    }
+
+    /**
+     * @param  list<string>  $variantPaths
+     * @param  array<string, string>  $backupPaths
+     */
+    private function restoreVariantSet(
+        FilesystemAdapter $disk,
+        array $variantPaths,
+        array $backupPaths,
+    ): void {
+        foreach ($variantPaths as $targetPath) {
+            try {
+                if (isset($backupPaths[$targetPath])) {
+                    if (! $disk->put($targetPath, $disk->get($backupPaths[$targetPath]), ['visibility' => 'public'])) {
+                        throw new RuntimeException("Responsive image variant [{$targetPath}] could not be restored.");
+                    }
+
+                    continue;
+                }
+
+                $disk->delete($targetPath);
+            } catch (Throwable $exception) {
+                Log::error('Responsive image rollback could not restore the previous derivative set.', [
+                    'path' => $targetPath,
+                    'exception' => $exception,
+                ]);
+            }
+        }
+    }
+
+    /**
+     * @param  list<string>  $paths
+     */
+    private function cleanupTransactionFiles(FilesystemAdapter $disk, array $paths): void
+    {
+        if ($paths === []) {
+            return;
+        }
+
+        try {
+            if (! $disk->delete($paths)) {
+                Log::warning('Responsive image transaction files could not be fully removed.', [
+                    'paths' => $paths,
+                ]);
+            }
+        } catch (Throwable $exception) {
+            Log::warning('Responsive image transaction file cleanup failed.', [
+                'paths' => $paths,
+                'exception' => $exception,
+            ]);
+        }
+    }
+
+    /**
+     * @return list<string>
+     */
+    private function variantPaths(string $originalPath): array
+    {
+        return array_map(
+            fn (string $variant): string => $this->variantPath($originalPath, $variant),
+            array_keys(self::VARIANTS),
+        );
+    }
+
+    private function transactionPath(string $variantPath, string $type, string $transactionId): string
+    {
+        $directory = pathinfo($variantPath, PATHINFO_DIRNAME);
+        $filename = pathinfo($variantPath, PATHINFO_BASENAME);
+
+        return sprintf('%s/.responsive-image-%s/%s-%s', $directory, $type, $transactionId, $filename);
     }
 
     private function hasSafeSourceDimensions(int $width, int $height): bool
