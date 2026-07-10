@@ -32,13 +32,15 @@
             aria-label="{{ $restaurantName }} home"
         >
             <span class="truncate">{{ $restaurantName }}</span>
-            <span class="size-1.5 shrink-0 rounded-full bg-brand-gold transition duration-300 group-hover:scale-150" aria-hidden="true"></span>
+            <span
+                class="size-1.5 shrink-0 rounded-full bg-brand-gold transition duration-300 group-hover:scale-150"
+                aria-hidden="true"
+            ></span>
         </a>
 
         <nav class="hidden items-center gap-4 xl:flex" aria-label="Primary navigation">
             @foreach ($links as $link)
                 @php
-                    $isPrimaryAction = $link['route'] === 'reservation-request.create';
                     $isActive = request()->routeIs($link['route']);
                 @endphp
 
@@ -46,9 +48,8 @@
                     href="{{ route($link['route']) }}"
                     @class([
                         'whitespace-nowrap text-[0.68rem] font-semibold uppercase tracking-[0.16em] transition duration-300',
-                        'border border-brand-gold bg-brand-gold px-4 py-2.5 text-brand-ink hover:bg-brand-gold-dark hover:text-brand-ivory' => $isPrimaryAction,
-                        'text-brand-gold' => ! $isPrimaryAction && $isActive,
-                        'text-stone-200 hover:text-brand-gold' => ! $isPrimaryAction && ! $isActive,
+                        'text-brand-gold' => $isActive,
+                        'text-stone-200 hover:text-brand-gold' => ! $isActive,
                     ])
                     @if ($isActive) aria-current="page" @endif
                 >
@@ -60,15 +61,33 @@
         <button
             type="button"
             class="inline-flex size-11 items-center justify-center border border-white/20 text-brand-ivory transition hover:border-brand-gold hover:text-brand-gold xl:hidden"
-            @click="open = !open"
+            @click="open = ! open"
             :aria-expanded="open.toString()"
             aria-controls="mobile-navigation"
             aria-label="Toggle navigation"
         >
-            <svg x-show="! open" class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
+            <svg
+                x-show="! open"
+                class="size-5"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.75"
+                aria-hidden="true"
+            >
                 <path stroke-linecap="round" d="M4 7h16M4 12h16M4 17h16" />
             </svg>
-            <svg x-show="open" x-cloak class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
+
+            <svg
+                x-show="open"
+                x-cloak
+                class="size-5"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.75"
+                aria-hidden="true"
+            >
                 <path stroke-linecap="round" d="m6 6 12 12M18 6 6 18" />
             </svg>
         </button>
@@ -90,7 +109,6 @@
         <div class="mx-auto flex max-w-7xl flex-col">
             @foreach ($links as $link)
                 @php
-                    $isPrimaryAction = $link['route'] === 'reservation-request.create';
                     $isActive = request()->routeIs($link['route']);
                 @endphp
 
@@ -101,7 +119,6 @@
                         'border-b border-white/10 py-4 text-sm font-semibold uppercase tracking-[0.18em] transition',
                         'text-brand-gold' => $isActive,
                         'text-stone-200 hover:text-brand-gold' => ! $isActive,
-                        'mt-4 border border-brand-gold bg-brand-gold px-5 text-center text-brand-ink hover:bg-brand-gold-dark hover:text-brand-ivory' => $isPrimaryAction,
                     ])
                     @if ($isActive) aria-current="page" @endif
                 >
