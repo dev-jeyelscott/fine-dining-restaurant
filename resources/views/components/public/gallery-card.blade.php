@@ -12,15 +12,15 @@
         'group relative isolate min-h-72 overflow-hidden bg-brand-ink-soft',
     ]) }}>
         @if ($image->image_url)
-            <img
-                src="{{ $image->image_url }}"
-                alt="{{ $image->alt_text ?: $image->title ?: 'Restaurant gallery image' }}"
+            <x-public.responsive-image
+                :image="$image"
+                :alt="$image->alt_text ?: $image->title ?: 'Restaurant gallery image'"
+                variant="large"
+                sizes="(min-width: 1024px) 66vw, (min-width: 768px) 50vw, 100vw"
                 width="1200"
                 height="900"
-                class="absolute inset-0 -z-20 h-full w-full object-cover transition duration-700 ease-out group-hover:scale-105"
-                loading="lazy"
-                decoding="async"
-            >
+                img-class="absolute inset-0 -z-20 h-full w-full object-cover transition duration-700 ease-out group-hover:scale-105"
+            />
         @else
             <div class="absolute inset-0 -z-20 bg-[radial-gradient(circle_at_28%_22%,rgba(201,164,93,0.3),transparent_32%),linear-gradient(145deg,#4d4437,#171916)]"></div>
         @endif
@@ -50,15 +50,15 @@
     ]) }}>
         @if ($image->image_url)
             <div class="overflow-hidden">
-                <img
-                    src="{{ $image->image_url }}"
-                    alt="{{ $image->alt_text ?: $image->title ?: 'Restaurant gallery image' }}"
+                <x-public.responsive-image
+                    :image="$image"
+                    :alt="$image->alt_text ?: $image->title ?: 'Restaurant gallery image'"
+                    variant="card"
+                    sizes="(min-width: 1024px) 30vw, (min-width: 768px) 45vw, 100vw"
                     width="960"
                     height="720"
-                    class="h-64 w-full object-cover transition duration-500 group-hover:scale-105"
-                    loading="lazy"
-                    decoding="async"
-                >
+                    img-class="h-64 w-full object-cover transition duration-500 group-hover:scale-105"
+                />
             </div>
         @endif
 

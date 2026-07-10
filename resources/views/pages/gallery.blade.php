@@ -14,16 +14,17 @@
 
     <section class="relative isolate flex min-h-[38rem] items-end overflow-hidden bg-brand-ink sm:min-h-[44rem] lg:min-h-[48rem]">
         @if ($heroImage?->image_url)
-            <img
-                src="{{ $heroImage->image_url }}"
-                alt="{{ $heroImage->alt_text ?: $heroImage->title ?: 'Elegant restaurant dining experience' }}"
+            <x-public.responsive-image
+                :image="$heroImage"
+                :alt="$heroImage->alt_text ?: $heroImage->title ?: 'Elegant restaurant dining experience'"
+                variant="hero"
+                sizes="100vw"
                 width="1920"
                 height="1280"
-                class="absolute inset-0 -z-30 h-full w-full object-cover object-center"
                 loading="eager"
                 fetchpriority="high"
-                decoding="async"
-            >
+                img-class="absolute inset-0 -z-30 h-full w-full object-cover object-center"
+            />
         @else
             <div class="absolute inset-0 -z-30 bg-[radial-gradient(circle_at_70%_28%,rgba(201,164,93,0.25),transparent_34%),linear-gradient(145deg,#4d4437,#171916_68%)]"></div>
         @endif
@@ -103,15 +104,15 @@
                             'bottom-0 right-0 h-[52%] w-[52%] border-8 border-brand-ivory' => $loop->last,
                         ])>
                             @if ($image->image_url)
-                                <img
-                                    src="{{ $image->image_url }}"
-                                    alt="{{ $image->alt_text ?: $image->title ?: 'Restaurant gallery image' }}"
+                                <x-public.responsive-image
+                                    :image="$image"
+                                    :alt="$image->alt_text ?: $image->title ?: 'Restaurant gallery image'"
+                                    variant="large"
+                                    sizes="(min-width: 1024px) 40vw, 75vw"
                                     width="1200"
                                     height="900"
-                                    class="h-full w-full object-cover"
-                                    loading="lazy"
-                                    decoding="async"
-                                >
+                                    img-class="h-full w-full object-cover"
+                                />
                             @else
                                 <div class="h-full w-full bg-[radial-gradient(circle_at_28%_22%,rgba(201,164,93,0.3),transparent_32%),linear-gradient(145deg,#d8cfbd,#8b7960)]"></div>
                             @endif
@@ -124,30 +125,30 @@
 
                     <figure class="absolute bottom-0 right-0 h-[88%] w-[88%] overflow-hidden bg-brand-paper shadow-[0_28px_70px_rgba(23,25,22,0.18)]">
                         @if ($supportingImage?->image_url)
-                            <img
-                                src="{{ $supportingImage->image_url }}"
-                                alt="{{ $supportingImage->alt_text ?: $supportingImage->title ?: 'Restaurant gallery image' }}"
+                            <x-public.responsive-image
+                                :image="$supportingImage"
+                                :alt="$supportingImage->alt_text ?: $supportingImage->title ?: 'Restaurant gallery image'"
+                                variant="large"
+                                sizes="(min-width: 1024px) 45vw, 88vw"
                                 width="1200"
                                 height="900"
-                                class="h-full w-full object-cover"
-                                loading="lazy"
-                                decoding="async"
-                            >
+                                img-class="h-full w-full object-cover"
+                            />
                         @else
                             <div class="h-full w-full bg-[radial-gradient(circle_at_28%_22%,rgba(201,164,93,0.3),transparent_32%),linear-gradient(145deg,#d8cfbd,#8b7960)]"></div>
                         @endif
                     </figure>
                 @elseif ($heroImage?->image_url)
                     <figure class="absolute bottom-0 right-0 h-[88%] w-[88%] overflow-hidden bg-brand-paper shadow-[0_28px_70px_rgba(23,25,22,0.18)]">
-                        <img
-                            src="{{ $heroImage->image_url }}"
-                            alt="{{ $heroImage->alt_text ?: $heroImage->title ?: 'Restaurant gallery image' }}"
+                        <x-public.responsive-image
+                            :image="$heroImage"
+                            :alt="$heroImage->alt_text ?: $heroImage->title ?: 'Restaurant gallery image'"
+                            variant="large"
+                            sizes="(min-width: 1024px) 45vw, 88vw"
                             width="1200"
                             height="900"
-                            class="h-full w-full object-cover"
-                            loading="lazy"
-                            decoding="async"
-                        >
+                            img-class="h-full w-full object-cover"
+                        />
                     </figure>
                 @else
                     <div class="absolute bottom-0 right-0 h-[88%] w-[88%] bg-[radial-gradient(circle_at_65%_28%,rgba(201,164,93,0.3),transparent_34%),linear-gradient(145deg,#d8cfbd,#8b7960)] shadow-[0_28px_70px_rgba(23,25,22,0.18)]"></div>
@@ -212,15 +213,15 @@
     <section class="grid lg:grid-cols-2">
         <article class="relative isolate flex min-h-[30rem] items-center overflow-hidden bg-brand-ink-soft px-5 py-20 sm:px-10 lg:px-16">
             @if ($heroImage?->image_url)
-                <img
-                    src="{{ $heroImage->image_url }}"
+                <x-public.responsive-image
+                    :image="$heroImage"
                     alt=""
+                    variant="large"
+                    sizes="(min-width: 1024px) 50vw, 100vw"
                     width="1200"
                     height="900"
-                    class="absolute inset-0 -z-20 h-full w-full object-cover opacity-30"
-                    loading="lazy"
-                    decoding="async"
-                >
+                    img-class="absolute inset-0 -z-20 h-full w-full object-cover opacity-30"
+                />
             @endif
             <div class="absolute inset-0 -z-10 bg-brand-ink/78"></div>
 
