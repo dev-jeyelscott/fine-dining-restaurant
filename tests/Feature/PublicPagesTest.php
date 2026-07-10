@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\SiteSetting;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Route;
 
@@ -60,6 +62,81 @@ test('approved public pages render successfully', function (string $routeName): 
     'order inquiry' => 'order-inquiry.create',
     'contact' => 'contact.create',
 ]);
+
+test('representative public pages execute one site settings query on a cold cache', function (string $routeName): void {
+    foreach ([
+        'restaurant_name' => 'Shared Query Bistro',
+        'phone' => '+63 912 345 6789',
+        'email' => 'hello@example.com',
+        'address' => '123 Dining Avenue',
+    ] as $key => $value) {
+        SiteSetting::query()->create([
+            'key' => $key,
+            'value' => $value,
+            'group' => 'contact',
+        ]);
+    }
+
+    SiteSetting::forgetCachedValues();
+    DB::flushQueryLog();
+    DB::enableQueryLog();
+
+    $this->get(route($routeName))
+        ->assertOk()
+        ->assertSeeText('Shared Query Bistro');
+
+    $siteSettingQueries = collect(DB::getQueryLog())
+        ->filter(fn (array $query): bool => str_contains(strtolower($query['query']), 'site_settings'));
+
+    DB::disableQueryLog();
+
+    expect($siteSettingQueries)->toHaveCount(1);
+})->with([
+    'home' => 'home',
+    'menu' => 'menu',
+    'contact' => 'contact.create',
+]);
+
+test('site setting updates and deletes invalidate cached public values', function (): void {
+    $setting = SiteSetting::query()->create([
+        'key' => 'restaurant_name',
+        'value' => 'Original Restaurant Name',
+        'group' => 'general',
+    ]);
+
+    $this->get(route('home'))
+        ->assertOk()
+        ->assertSeeText('Original Restaurant Name');
+
+    $setting->update(['value' => 'Updated Restaurant Name']);
+
+    $this->get(route('menu'))
+        ->assertOk()
+        ->assertSeeText('Updated Restaurant Name')
+        ->assertDontSeeText('Original Restaurant Name');
+
+    $setting->delete();
+
+    $this->get(route('contact.create'))
+        ->assertOk()
+        ->assertDontSeeText('Updated Restaurant Name');
+
+    expect(SiteSetting::value('restaurant_name', 'Fallback Restaurant Name'))
+        ->toBe('Fallback Restaurant Name');
+});
+
+test('shared public settings keep malformed public links out of rendered pages', function (): void {
+    SiteSetting::query()->create([
+        'key' => 'map_link',
+        'value' => 'javascript:alert(1)',
+        'group' => 'contact',
+    ]);
+
+    $this->get(route('contact.create'))
+        ->assertOk()
+        ->assertDontSee('javascript:alert(1)', false)
+        ->assertDontSeeText('Open location map');
+});
 
 test('public navigation uses the approved workflow labels', function (): void {
     $this->get(route('home'))
