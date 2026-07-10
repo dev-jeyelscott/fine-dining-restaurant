@@ -52,9 +52,10 @@ Route::get('/sitemap.xml', function (): Response {
         route('contact.create'),
     ];
 
-    $entries = collect($urls)
-        ->map(fn (string $url): string => '    <url><loc>'.e($url).'</loc></url>')
-        ->implode("\n");
+    $entries = implode("\n", array_map(
+        static fn (string $url): string => '    <url><loc>'.e($url).'</loc></url>',
+        $urls,
+    ));
 
     $content = <<<XML
 <?xml version="1.0" encoding="UTF-8"?>
