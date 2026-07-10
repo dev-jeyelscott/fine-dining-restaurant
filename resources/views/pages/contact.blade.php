@@ -3,11 +3,17 @@
     :description="$page?->meta_description ?: 'Contact us for reservations, order inquiries, banquet inquiries, location, and general questions.'"
 >
     <section data-contact-hero class="relative isolate flex min-h-[38rem] items-end overflow-hidden bg-brand-ink sm:min-h-[44rem] lg:min-h-[48rem]">
-        @if ($heroImage?->image_url)
-            <img src="{{ $heroImage->image_url }}" alt="{{ $heroImage->alt_text ?: $heroImage->title ?: 'Elegant restaurant interior' }}" width="1920" height="1280" fetchpriority="high" decoding="async" class="absolute inset-0 -z-30 h-full w-full object-cover object-center">
-        @else
-            <div class="absolute inset-0 -z-30 bg-[radial-gradient(circle_at_70%_25%,rgba(201,164,93,0.3),transparent_26%),linear-gradient(135deg,#353126,#171916_68%)]"></div>
-        @endif
+        <x-public.responsive-image
+            :image="$heroImage"
+            :alt="$heroImage?->alt_text ?: $heroImage?->title ?: 'Elegant restaurant interior'"
+            variant="hero"
+            sizes="100vw"
+            width="1920"
+            height="1280"
+            loading="eager"
+            fetchpriority="high"
+            img-class="absolute inset-0 -z-30 h-full w-full object-cover object-center"
+        />
 
         <div class="absolute inset-0 -z-20 bg-[linear-gradient(to_bottom,rgba(23,25,22,0.5),rgba(23,25,22,0.42)_35%,rgba(23,25,22,0.96))]"></div>
         <div class="absolute inset-0 -z-10 bg-gradient-to-r from-brand-ink/85 via-brand-ink/30 to-transparent"></div>
