@@ -228,9 +228,22 @@ test('responsive derivatives reduce representative page image weight budgets', f
         ],
     ];
 
+    $evidence = [];
+
     foreach ($budgets as $page => $budget) {
         expect($budget['after'])->toBeLessThan($budget['before'], "Expected {$page} responsive image budget to be lower.");
+
+        $evidence[$page] = [
+            ...$budget,
+            'reduction_percent' => round((1 - ($budget['after'] / $budget['before'])) * 100, 1),
+        ];
     }
 
-    fwrite(STDOUT, PHP_EOL.'Responsive image page-weight evidence: '.json_encode($budgets, JSON_THROW_ON_ERROR).PHP_EOL);
+    fwrite(
+        STDERR,
+        PHP_EOL.'Responsive image page-weight evidence: '.json_encode(
+            $evidence,
+            JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR,
+        ).PHP_EOL,
+    );
 });
