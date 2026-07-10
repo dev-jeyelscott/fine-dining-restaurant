@@ -64,5 +64,8 @@ jobs:
       - name: Run Type Analysis
         run: composer types:check
 
-      - name: Run Tests
-        run: php artisan test tests/Feature/GalleryPageTest.php tests/Feature/PublicPagesTest.php
+      - name: Run Gallery Page Tests
+        run: php artisan test tests/Feature/GalleryPageTest.php
+
+      - name: Run Public Pages Tests
+        run: php artisan test tests/Feature/PublicPagesTest.php
