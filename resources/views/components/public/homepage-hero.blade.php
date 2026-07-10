@@ -11,7 +11,7 @@
     'secondaryUrl' => null,
 ])
 
-<section class="relative isolate flex min-h-[44rem] items-center overflow-hidden bg-brand-ink lg:min-h-screen">
+<section data-public-hero class="relative isolate flex min-h-[44rem] items-center overflow-hidden bg-brand-ink lg:min-h-screen">
     <x-public.responsive-image
         :image="$image"
         :fallback-url="$imageUrl"

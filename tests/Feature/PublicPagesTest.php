@@ -77,6 +77,23 @@ test('approved public pages render successfully', function (string $routeName): 
     'contact' => 'contact.create',
 ]);
 
+test('all public pages share the homepage navigation and hero contract', function (string $routeName): void {
+    $this->get(route($routeName))
+        ->assertOk()
+        ->assertSee('class="fixed inset-x-0 top-0 z-50', false)
+        ->assertSee('data-public-hero', false)
+        ->assertSee('min-h-[44rem] items-center', false)
+        ->assertSee('lg:min-h-screen', false);
+})->with([
+    'home' => 'home',
+    'menu' => 'menu',
+    'gallery' => 'gallery',
+    'banquet hall' => 'banquet-hall',
+    'reservation request' => 'reservation-request.create',
+    'order inquiry' => 'order-inquiry.create',
+    'contact' => 'contact.create',
+]);
+
 test('representative public pages execute one site settings query on a cold cache', function (string $routeName): void {
     foreach ([
         'restaurant_name' => 'Shared Query Bistro',

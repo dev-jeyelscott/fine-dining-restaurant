@@ -1,7 +1,5 @@
 @php
     $restaurantName = $settings['restaurant_name'] ?? config('app.name');
-    $isHome = request()->routeIs('home');
-
     $links = [
         ['label' => 'Home', 'route' => 'home'],
         ['label' => 'Menu', 'route' => 'menu'],
@@ -14,16 +12,14 @@
 @endphp
 
 <header
-    x-data="{ open: false, scrolled: @js(! $isHome) }"
-    @if ($isHome)
-        @scroll.window="scrolled = window.scrollY > 40"
-    @endif
+    x-data="{ open: false, scrolled: window.scrollY > 40 }"
+    @scroll.window="scrolled = window.scrollY > 40"
     x-effect="document.body.classList.toggle('overflow-hidden', open)"
     @keydown.escape.window="open = false"
     :class="(scrolled || open)
         ? 'border-white/10 bg-brand-ink/95 shadow-[0_18px_50px_rgba(0,0,0,0.22)] backdrop-blur-md'
         : 'border-transparent bg-transparent'"
-    class="{{ $isHome ? 'fixed' : 'sticky bg-brand-ink/95' }} inset-x-0 top-0 z-50 border-b transition duration-500"
+    class="fixed inset-x-0 top-0 z-50 border-b transition duration-500"
 >
     <div class="mx-auto flex max-w-7xl items-center justify-between gap-6 px-5 py-4 sm:px-6 lg:px-10">
         <a

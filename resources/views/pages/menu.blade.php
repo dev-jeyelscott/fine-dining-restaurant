@@ -7,7 +7,7 @@
         $heroItem = $menuItems->first(fn ($item) => filled($item->image_url));
     @endphp
 
-    <section class="relative isolate flex min-h-[38rem] items-end overflow-hidden bg-brand-ink lg:min-h-[44rem]">
+    <section data-public-hero class="relative isolate flex min-h-[44rem] items-center overflow-hidden bg-brand-ink lg:min-h-screen">
         @if ($heroItem?->image_url)
             <x-public.responsive-image
                 :image="$heroItem"
@@ -27,10 +27,10 @@
         <div class="absolute inset-0 -z-20 bg-[linear-gradient(to_bottom,rgba(23,25,22,0.42),rgba(23,25,22,0.62)_45%,rgba(23,25,22,0.98))]"></div>
         <div class="absolute inset-0 -z-10 bg-gradient-to-r from-brand-ink/90 via-brand-ink/55 to-brand-ink/20"></div>
 
-        <div class="mx-auto w-full max-w-7xl px-5 pb-20 pt-32 sm:px-6 sm:pb-24 lg:px-10 lg:pb-28">
+        <div class="mx-auto w-full max-w-7xl px-5 pb-20 pt-36 sm:px-6 lg:px-10 lg:pb-28 lg:pt-44">
             <div class="max-w-4xl">
                 <p class="text-xs font-semibold uppercase tracking-[0.38em] text-brand-gold">Our Menu</p>
-                <h1 class="mt-6 max-w-3xl font-display text-5xl leading-[0.98] text-white sm:text-6xl lg:text-7xl">
+                <h1 class="mt-6 max-w-4xl font-display text-5xl leading-[0.98] text-white sm:text-6xl lg:text-8xl">
                     {{ $page?->title ?: 'A thoughtful expression of the season' }}
                 </h1>
                 <p class="mt-7 max-w-2xl text-base leading-8 text-stone-200 sm:text-lg">

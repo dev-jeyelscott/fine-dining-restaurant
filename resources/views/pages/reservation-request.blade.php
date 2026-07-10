@@ -2,7 +2,7 @@
     :title="$page?->meta_title ?: 'Reservation Request'"
     :description="$page?->meta_description ?: 'Submit a reservation request for manual restaurant review and confirmation.'"
 >
-    <section data-reservation-hero class="relative isolate flex min-h-[38rem] items-end overflow-hidden bg-brand-ink sm:min-h-[44rem] lg:min-h-[48rem]">
+    <section data-reservation-hero data-public-hero class="relative isolate flex min-h-[44rem] items-center overflow-hidden bg-brand-ink lg:min-h-screen">
         @if ($heroImage?->image_url)
             <x-public.responsive-image
                 :image="$heroImage"
@@ -22,13 +22,13 @@
         <div class="absolute inset-0 -z-20 bg-[linear-gradient(to_bottom,rgba(23,25,22,0.5),rgba(23,25,22,0.42)_35%,rgba(23,25,22,0.96))]"></div>
         <div class="absolute inset-0 -z-10 bg-gradient-to-r from-brand-ink/85 via-brand-ink/30 to-transparent"></div>
 
-        <div class="mx-auto w-full max-w-7xl px-5 pb-16 pt-40 sm:px-6 sm:pb-20 lg:px-10 lg:pb-24">
-            <div class="max-w-3xl">
-                <p class="text-xs font-semibold uppercase tracking-[0.36em] text-brand-gold sm:text-sm">An evening worth anticipating</p>
-                <h1 class="mt-5 font-display text-5xl leading-[1.02] text-white sm:text-6xl lg:text-7xl">
+        <div class="mx-auto w-full max-w-7xl px-5 pb-20 pt-36 sm:px-6 lg:px-10 lg:pb-28 lg:pt-44">
+            <div class="max-w-4xl">
+                <p class="text-xs font-semibold uppercase tracking-[0.38em] text-brand-gold sm:text-sm">An evening worth anticipating</p>
+                <h1 class="mt-6 max-w-4xl font-display text-5xl leading-[0.98] text-white sm:text-6xl lg:text-8xl">
                     {{ $page?->title ?: 'Request a table' }}
                 </h1>
-                <p class="mt-6 max-w-2xl text-base leading-8 text-stone-200 sm:text-lg">
+                <p class="mt-7 max-w-2xl text-base leading-8 text-stone-200 sm:text-lg">
                     {{ $page?->excerpt ?: 'Share your preferred date, time, and party size. Our team will personally review the details and contact you to confirm availability.' }}
                 </p>
                 <a href="#reservation-form" class="group mt-9 inline-flex items-center gap-4 text-xs font-semibold uppercase tracking-[0.22em] text-white transition hover:text-brand-gold">

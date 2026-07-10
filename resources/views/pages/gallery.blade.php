@@ -12,7 +12,7 @@
             ->values();
     @endphp
 
-    <section class="relative isolate flex min-h-[38rem] items-end overflow-hidden bg-brand-ink sm:min-h-[44rem] lg:min-h-[48rem]">
+    <section data-public-hero class="relative isolate flex min-h-[44rem] items-center overflow-hidden bg-brand-ink lg:min-h-screen">
         @if ($heroImage?->image_url)
             <x-public.responsive-image
                 :image="$heroImage"
@@ -32,7 +32,7 @@
         <div class="absolute inset-0 -z-20 bg-[linear-gradient(to_bottom,rgba(23,25,22,0.38),rgba(23,25,22,0.28)_32%,rgba(23,25,22,0.94))]"></div>
         <div class="absolute inset-0 -z-10 bg-gradient-to-r from-brand-ink/88 via-brand-ink/35 to-transparent"></div>
 
-        <div class="mx-auto w-full max-w-7xl px-5 pb-20 pt-40 sm:px-6 sm:pb-24 lg:px-10 lg:pb-28">
+        <div class="mx-auto w-full max-w-7xl px-5 pb-20 pt-36 sm:px-6 lg:px-10 lg:pb-28 lg:pt-44">
             <div class="max-w-4xl">
                 <p class="text-xs font-semibold uppercase tracking-[0.38em] text-brand-gold sm:text-sm">
                     Gallery
