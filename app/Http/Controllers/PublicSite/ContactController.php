@@ -20,7 +20,7 @@ class ContactController extends Controller
                 ->where('is_published', true)
                 ->first(),
 
-            'settings' => SiteSetting::keyValueMap(),
+            'settings' => SiteSetting::publicContactMap(),
         ]);
     }
 
