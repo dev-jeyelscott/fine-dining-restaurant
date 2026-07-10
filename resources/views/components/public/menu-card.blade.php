@@ -13,15 +13,15 @@
     <article class="group">
         <div class="relative aspect-[4/5] overflow-hidden bg-brand-ink-soft">
             @if ($item->image_url)
-                <img
-                    src="{{ $item->image_url }}"
-                    alt="{{ $item->name }}"
+                <x-public.responsive-image
+                    :image="$item"
+                    :alt="$item->name"
+                    variant="card"
+                    sizes="(min-width: 1024px) 30vw, (min-width: 768px) 45vw, 100vw"
                     width="720"
                     height="900"
-                    class="h-full w-full object-cover transition duration-700 group-hover:scale-105"
-                    loading="lazy"
-                    decoding="async"
-                >
+                    img-class="h-full w-full object-cover transition duration-700 group-hover:scale-105"
+                />
             @else
                 <div class="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(201,164,93,0.22),transparent_32%),linear-gradient(145deg,#2b2e28,#171916)]"></div>
                 <div class="absolute inset-x-6 bottom-6 border-t border-white/15 pt-4 text-xs uppercase tracking-[0.24em] text-white/55">
@@ -61,15 +61,15 @@
 @else
     <article class="rounded-2xl border border-white/10 bg-white/[0.03] p-5">
         @if ($item->image_url)
-            <img
-                src="{{ $item->image_url }}"
-                alt="{{ $item->name }}"
+            <x-public.responsive-image
+                :image="$item"
+                :alt="$item->name"
+                variant="card"
+                sizes="(min-width: 1024px) 30vw, (min-width: 768px) 45vw, 100vw"
                 width="720"
                 height="480"
-                class="mb-4 h-48 w-full rounded-xl object-cover"
-                loading="lazy"
-                decoding="async"
-            >
+                img-class="mb-4 h-48 w-full rounded-xl object-cover"
+            />
         @endif
 
         <div class="flex items-start justify-between gap-4">
