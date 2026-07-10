@@ -14,12 +14,14 @@ class ContactController extends Controller
 {
     public function create(): View
     {
-        $heroImage = GalleryImage::query()
+        $heroImages = GalleryImage::query()
             ->visible()
             ->ordered()
-            ->where('category', 'interior')
-            ->first()
-            ?? GalleryImage::query()->visible()->ordered()->first();
+            ->limit(6)
+            ->get();
+
+        $heroImage = $heroImages->firstWhere('category', 'interior')
+            ?? $heroImages->first();
 
         return view('pages.contact', [
             'page' => Page::query()
