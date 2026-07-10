@@ -1,9 +1,12 @@
 <?php
 
+use App\Models\GalleryImage;
 use App\Models\SiteSetting;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Storage;
 
 test('approved public page routes are registered with stable paths', function (): void {
     $expectedRoutes = [
@@ -174,6 +177,34 @@ test('contact page uses the reservation request design language while preserving
         ->assertSee(route('contact-inquiries.store'), false)
         ->assertSee(route('reservation-request.create'), false)
         ->assertSee(route('order-inquiry.create'), false);
+});
+
+test('contact hero uses managed responsive image derivatives', function (): void {
+    Storage::fake('public');
+
+    $imagePath = UploadedFile::fake()
+        ->image('contact-dining-room.jpg', 2400, 1600)
+        ->storeAs('gallery', 'contact-dining-room.jpg', 'public');
+
+    expect($imagePath)->toBeString();
+
+    GalleryImage::query()->create([
+        'title' => 'Contact Dining Room',
+        'alt_text' => 'Elegant dining room prepared for evening service',
+        'image_path' => $imagePath,
+        'category' => 'interior',
+        'sort_order' => 1,
+        'is_visible' => true,
+    ]);
+
+    $this->get(route('contact.create'))
+        ->assertOk()
+        ->assertSee('/storage/gallery/variants/contact-dining-room-hero.jpg', false)
+        ->assertSee('srcset=', false)
+        ->assertSee('sizes="100vw"', false)
+        ->assertSee('loading="eager"', false)
+        ->assertSee('fetchpriority="high"', false)
+        ->assertSee('Elegant dining room prepared for evening service');
 });
 
 test('public pages do not expose out of scope ecommerce or live booking calls to action', function (string $routeName): void {
