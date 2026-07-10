@@ -1,8 +1,8 @@
 @php
-    $restaurantName = \App\Models\SiteSetting::value('restaurant_name', config('app.name'));
-    $phone = \App\Models\SiteSetting::value('phone');
-    $email = \App\Models\SiteSetting::value('email');
-    $address = \App\Models\SiteSetting::value('address');
+    $restaurantName = $settings['restaurant_name'] ?? config('app.name');
+    $phone = $settings['phone'] ?? null;
+    $email = $settings['email'] ?? null;
+    $address = $settings['address'] ?? null;
 @endphp
 
 <footer class="border-t border-white/10 bg-stone-950">
