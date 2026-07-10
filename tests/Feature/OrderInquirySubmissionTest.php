@@ -7,6 +7,12 @@ use Illuminate\Support\Facades\Mail;
 
 uses(RefreshDatabase::class);
 
+beforeEach(function (): void {
+    config([
+        'mail.inquiries_to' => 'restaurant@example.test',
+    ]);
+});
+
 test('invalid payload fails validation', function (): void {
     Mail::fake();
 
