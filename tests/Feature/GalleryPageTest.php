@@ -59,6 +59,23 @@ test('gallery page presents visible images in a premium editorial layout', funct
         ->assertDontSeeText('Hidden Preparation Area');
 });
 
+test('gallery page handles a single visible image', function (): void {
+    GalleryImage::query()->create([
+        'title' => 'Intimate Dining Room',
+        'alt_text' => 'Intimate dining room with warm lighting',
+        'image_path' => 'gallery/intimate-dining-room.jpg',
+        'category' => 'Ambiance',
+        'sort_order' => 10,
+        'is_visible' => true,
+    ]);
+
+    $this->get(route('gallery'))
+        ->assertOk()
+        ->assertSeeText('Intimate Dining Room')
+        ->assertSeeText('Visible moments')
+        ->assertSeeText('Gallery categories');
+});
+
 test('gallery page keeps its empty state and scope safe continuation links', function (): void {
     $this->get(route('gallery'))
         ->assertOk()
