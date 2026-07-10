@@ -2,13 +2,13 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\HasResponsiveImages;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Storage;
 
 /**
  * @property int $id
@@ -37,6 +37,8 @@ use Illuminate\Support\Facades\Storage;
 ])]
 class MenuItem extends Model
 {
+    use HasResponsiveImages;
+
     /**
      * @return array<string, string>
      */
@@ -55,15 +57,6 @@ class MenuItem extends Model
     public function menuCategory(): BelongsTo
     {
         return $this->belongsTo(MenuCategory::class);
-    }
-
-    public function getImageUrlAttribute(): ?string
-    {
-        if (blank($this->image_path)) {
-            return null;
-        }
-
-        return Storage::disk('public')->url($this->image_path);
     }
 
     /**
