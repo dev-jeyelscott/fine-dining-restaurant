@@ -25,14 +25,8 @@ final class RegenerateResponsiveImages extends Command
         }
 
         $modelOption = strtolower((string) $this->option('model'));
-        $models = match ($modelOption) {
-            'all' => [GalleryImage::class, MenuItem::class],
-            'gallery' => [GalleryImage::class],
-            'menu' => [MenuItem::class],
-            default => [],
-        };
 
-        if ($models === []) {
+        if (! in_array($modelOption, ['all', 'gallery', 'menu'], true)) {
             $this->error('The --model option must be one of: all, gallery, menu.');
 
             return self::INVALID;
@@ -41,26 +35,22 @@ final class RegenerateResponsiveImages extends Command
         $processed = 0;
         $generated = 0;
 
-        foreach ($models as $modelClass) {
-            /** @var Builder<Model> $query */
-            $query = $modelClass::query()->whereNotNull('image_path');
+        if (in_array($modelOption, ['all', 'gallery'], true)) {
+            $this->regenerateQuery(
+                GalleryImage::query()->whereNotNull('image_path'),
+                $manager,
+                $processed,
+                $generated,
+            );
+        }
 
-            $query->chunkById(100, function ($records) use ($manager, &$processed, &$generated): void {
-                foreach ($records as $record) {
-                    $path = $record->getAttribute('image_path');
-
-                    if (! is_string($path) || $path === '') {
-                        continue;
-                    }
-
-                    $processed++;
-                    $manager->deleteVariants($path);
-
-                    if ($manager->generate($path) !== []) {
-                        $generated++;
-                    }
-                }
-            });
+        if (in_array($modelOption, ['all', 'menu'], true)) {
+            $this->regenerateQuery(
+                MenuItem::query()->whereNotNull('image_path'),
+                $manager,
+                $processed,
+                $generated,
+            );
         }
 
         $this->info(sprintf(
@@ -70,5 +60,33 @@ final class RegenerateResponsiveImages extends Command
         ));
 
         return self::SUCCESS;
+    }
+
+    /**
+     * @template TModel of Model
+     * @param  Builder<TModel>  $query
+     */
+    private function regenerateQuery(
+        Builder $query,
+        ResponsiveImageManager $manager,
+        int &$processed,
+        int &$generated,
+    ): void {
+        $query->chunkById(100, function ($records) use ($manager, &$processed, &$generated): void {
+            foreach ($records as $record) {
+                $path = $record->getAttribute('image_path');
+
+                if (! is_string($path) || $path === '') {
+                    continue;
+                }
+
+                $processed++;
+                $manager->deleteVariants($path);
+
+                if ($manager->generate($path) !== []) {
+                    $generated++;
+                }
+            }
+        });
     }
 }
