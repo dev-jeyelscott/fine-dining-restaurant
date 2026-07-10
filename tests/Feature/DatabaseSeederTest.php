@@ -11,20 +11,34 @@ use App\Models\Page;
 use App\Models\ReservationRequest;
 use App\Models\SiteSetting;
 use App\Models\User;
+use Database\Seeders\AdminUserSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Hash;
+use RuntimeException;
 use Tests\TestCase;
 
 class DatabaseSeederTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_database_seeders_create_demo_records(): void
+    public function test_database_seeders_create_demo_records_with_configured_admin_credentials(): void
     {
+        $credentials = [
+            'name' => 'Configured Admin',
+            'email' => 'configured-admin@example.test',
+            'password' => 'a-strong-test-password',
+        ];
+
+        config()->set('admin.seed_user', $credentials);
+
         $this->seed();
 
-        $this->assertDatabaseHas(User::class, [
-            'email' => 'admin@example.com',
-        ]);
+        $admin = User::query()
+            ->where('email', $credentials['email'])
+            ->firstOrFail();
+
+        $this->assertSame($credentials['name'], $admin->name);
+        $this->assertTrue(Hash::check($credentials['password'], $admin->password));
 
         $this->assertDatabaseHas(SiteSetting::class, [
             'key' => 'restaurant_name',
@@ -41,5 +55,19 @@ class DatabaseSeederTest extends TestCase
         $this->assertGreaterThanOrEqual(2, ReservationRequest::query()->count('*'));
         $this->assertGreaterThanOrEqual(2, OrderInquiry::query()->count('*'));
         $this->assertGreaterThanOrEqual(2, ContactInquiry::query()->count('*'));
+    }
+
+    public function test_admin_user_seeder_rejects_a_missing_password(): void
+    {
+        config()->set('admin.seed_user', [
+            'name' => 'Configured Admin',
+            'email' => 'configured-admin@example.test',
+            'password' => null,
+        ]);
+
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('ADMIN_USER_PASSWORD must be configured before seeding the admin user.');
+
+        $this->seed(AdminUserSeeder::class);
     }
 }

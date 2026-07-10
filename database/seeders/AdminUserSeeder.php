@@ -15,20 +15,16 @@ class AdminUserSeeder extends Seeder
         $email = config('admin.seed_user.email');
         $password = config('admin.seed_user.password');
 
-        if (! is_string($name) || $name === '') {
-            $name = 'Restaurant Admin';
+        if (! is_string($name) || trim($name) === '') {
+            throw new RuntimeException('ADMIN_USER_NAME must be configured before seeding the admin user.');
         }
 
-        if (! is_string($email) || $email === '') {
-            $email = 'admin@example.com';
+        if (! is_string($email) || filter_var($email, FILTER_VALIDATE_EMAIL) === false) {
+            throw new RuntimeException('ADMIN_USER_EMAIL must contain a valid email address before seeding the admin user.');
         }
 
-        if (! is_string($password) || $password === '') {
-            if (app()->isProduction()) {
-                throw new RuntimeException('ADMIN_USER_PASSWORD must be configured before seeding the production admin user.');
-            }
-
-            $password = 'password';
+        if (! is_string($password) || trim($password) === '') {
+            throw new RuntimeException('ADMIN_USER_PASSWORD must be configured before seeding the admin user.');
         }
 
         User::query()->updateOrCreate(
