@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * @property int $id
@@ -21,6 +22,8 @@ use Illuminate\Support\Carbon;
  * @property bool $is_visible
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
+ * @property-read string|null $image_url
+ * @property-read MenuCategory $menuCategory
  */
 #[Fillable([
     'menu_category_id',
@@ -52,6 +55,15 @@ class MenuItem extends Model
     public function menuCategory(): BelongsTo
     {
         return $this->belongsTo(MenuCategory::class);
+    }
+
+    public function getImageUrlAttribute(): ?string
+    {
+        if (blank($this->image_path)) {
+            return null;
+        }
+
+        return Storage::disk('public')->url($this->image_path);
     }
 
     /**
