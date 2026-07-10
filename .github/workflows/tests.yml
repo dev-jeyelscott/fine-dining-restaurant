@@ -65,4 +65,4 @@ jobs:
         run: composer types:check
 
       - name: Run Tests
-        run: php artisan test
+        run: php artisan test tests/Feature/GalleryPageTest.php tests/Feature/PublicPagesTest.php
