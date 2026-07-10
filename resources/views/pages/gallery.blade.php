@@ -95,7 +95,7 @@
             <div class="relative min-h-[27rem] sm:min-h-[34rem]">
                 <div class="absolute left-0 top-0 h-[82%] w-[78%] border border-brand-gold/60" aria-hidden="true"></div>
 
-                @if ($supportingImages->isNotEmpty())
+                @if ($supportingImages->count() >= 2)
                     @foreach ($supportingImages as $image)
                         <figure @class([
                             'absolute overflow-hidden bg-brand-paper shadow-[0_28px_70px_rgba(23,25,22,0.18)]',
@@ -117,6 +117,26 @@
                             @endif
                         </figure>
                     @endforeach
+                @elseif ($supportingImages->isNotEmpty())
+                    @php
+                        $supportingImage = $supportingImages->first();
+                    @endphp
+
+                    <figure class="absolute bottom-0 right-0 h-[88%] w-[88%] overflow-hidden bg-brand-paper shadow-[0_28px_70px_rgba(23,25,22,0.18)]">
+                        @if ($supportingImage?->image_url)
+                            <img
+                                src="{{ $supportingImage->image_url }}"
+                                alt="{{ $supportingImage->alt_text ?: $supportingImage->title ?: 'Restaurant gallery image' }}"
+                                width="1200"
+                                height="900"
+                                class="h-full w-full object-cover"
+                                loading="lazy"
+                                decoding="async"
+                            >
+                        @else
+                            <div class="h-full w-full bg-[radial-gradient(circle_at_28%_22%,rgba(201,164,93,0.3),transparent_32%),linear-gradient(145deg,#d8cfbd,#8b7960)]"></div>
+                        @endif
+                    </figure>
                 @elseif ($heroImage?->image_url)
                     <figure class="absolute bottom-0 right-0 h-[88%] w-[88%] overflow-hidden bg-brand-paper shadow-[0_28px_70px_rgba(23,25,22,0.18)]">
                         <img
