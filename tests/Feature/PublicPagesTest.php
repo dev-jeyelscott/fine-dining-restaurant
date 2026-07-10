@@ -41,6 +41,7 @@ test('public pages use an isolated Vite stylesheet without Flux sources', functi
     expect($appStyles)
         ->toContain('../../vendor/livewire/flux/dist/flux.css')
         ->toContain('../../vendor/livewire/flux/stubs/**/*.blade.php');
+    expect(str_contains($appStyles, 'flux-pro'))->toBeFalse();
 
     expect($viteConfig)
         ->toContain("'resources/css/app.css'")
