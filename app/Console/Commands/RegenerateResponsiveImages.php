@@ -32,34 +32,48 @@ final class RegenerateResponsiveImages extends Command
             return self::INVALID;
         }
 
-        $processed = 0;
-        $generated = 0;
+        $totals = [
+            'processed' => 0,
+            'succeeded' => 0,
+            'skipped' => 0,
+            'failed' => 0,
+        ];
 
         if (in_array($modelOption, ['all', 'gallery'], true)) {
-            $result = $this->regenerateQuery(
-                GalleryImage::query()->whereNotNull('image_path'),
-                $manager,
+            $totals = $this->mergeResults(
+                $totals,
+                $this->regenerateQuery(
+                    GalleryImage::query()->whereNotNull('image_path'),
+                    $manager,
+                ),
             );
-
-            $processed += $result['processed'];
-            $generated += $result['generated'];
         }
 
         if (in_array($modelOption, ['all', 'menu'], true)) {
-            $result = $this->regenerateQuery(
-                MenuItem::query()->whereNotNull('image_path'),
-                $manager,
+            $totals = $this->mergeResults(
+                $totals,
+                $this->regenerateQuery(
+                    MenuItem::query()->whereNotNull('image_path'),
+                    $manager,
+                ),
             );
-
-            $processed += $result['processed'];
-            $generated += $result['generated'];
         }
 
-        $this->info(sprintf(
-            'Processed %d image records; generated derivatives for %d existing originals.',
-            $processed,
-            $generated,
-        ));
+        $summary = sprintf(
+            'Processed %d image records; succeeded %d; skipped %d; failed %d.',
+            $totals['processed'],
+            $totals['succeeded'],
+            $totals['skipped'],
+            $totals['failed'],
+        );
+
+        if ($totals['failed'] > 0) {
+            $this->error($summary);
+
+            return self::FAILURE;
+        }
+
+        $this->info($summary);
 
         return self::SUCCESS;
     }
@@ -68,31 +82,57 @@ final class RegenerateResponsiveImages extends Command
      * @template TModel of Model
      *
      * @param  Builder<TModel>  $query
-     * @return array{processed: int, generated: int}
+     * @return array{processed: int, succeeded: int, skipped: int, failed: int}
      */
     private function regenerateQuery(Builder $query, ResponsiveImageManager $manager): array
     {
-        $processed = 0;
-        $generated = 0;
+        $result = [
+            'processed' => 0,
+            'succeeded' => 0,
+            'skipped' => 0,
+            'failed' => 0,
+        ];
 
-        $query->eachById(function (Model $record) use ($manager, &$processed, &$generated): void {
+        $query->eachById(function (Model $record) use ($manager, &$result): void {
+            $result['processed']++;
             $path = $record->getAttribute('image_path');
 
             if (! is_string($path) || $path === '') {
+                $result['skipped']++;
+
                 return;
             }
 
-            $processed++;
-            $manager->deleteVariants($path);
+            if ($manager->generate($path) === []) {
+                $result['failed']++;
+                $this->warn(sprintf(
+                    'Responsive image regeneration failed for %s record [%s] at [%s].',
+                    $record::class,
+                    (string) $record->getKey(),
+                    $path,
+                ));
 
-            if ($manager->generate($path) !== []) {
-                $generated++;
+                return;
             }
+
+            $result['succeeded']++;
         }, 100);
 
+        return $result;
+    }
+
+    /**
+     * @param  array{processed: int, succeeded: int, skipped: int, failed: int}  $left
+     * @param  array{processed: int, succeeded: int, skipped: int, failed: int}  $right
+     * @return array{processed: int, succeeded: int, skipped: int, failed: int}
+     */
+    private function mergeResults(array $left, array $right): array
+    {
         return [
-            'processed' => $processed,
-            'generated' => $generated,
+            'processed' => $left['processed'] + $right['processed'],
+            'succeeded' => $left['succeeded'] + $right['succeeded'],
+            'skipped' => $left['skipped'] + $right['skipped'],
+            'failed' => $left['failed'] + $right['failed'],
         ];
     }
 }
