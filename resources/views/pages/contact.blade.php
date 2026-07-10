@@ -3,7 +3,7 @@
     :description="$page?->meta_description ?: 'Contact us for reservations, order inquiries, banquet inquiries, location, and general questions.'"
 >
     <section data-contact-hero class="relative isolate flex min-h-[38rem] items-end overflow-hidden bg-brand-ink sm:min-h-[44rem] lg:min-h-[48rem]">
-        @if ($heroImage)
+        @if ($heroImage?->image_url)
             <x-public.responsive-image
                 :image="$heroImage"
                 :alt="$heroImage->alt_text ?: $heroImage->title ?: 'Elegant restaurant interior'"
