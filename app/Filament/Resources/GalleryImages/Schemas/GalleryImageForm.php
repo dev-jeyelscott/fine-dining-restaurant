@@ -22,6 +22,11 @@ class GalleryImageForm
 
                 FileUpload::make('image_path')
                     ->image()
+                    ->acceptedFileTypes([
+                        'image/jpeg',
+                        'image/png',
+                        'image/webp',
+                    ])
                     ->required()
                     ->disk('public')
                     ->directory('gallery')
