@@ -1,0 +1,6 @@
+@import "tailwindcss" source(none);
+@import "./theme.css";
+
+@source '../views/pages/**/*.blade.php';
+@source '../views/components/public/**/*.blade.php';
+@source '../views/components/layouts/public.blade.php';
