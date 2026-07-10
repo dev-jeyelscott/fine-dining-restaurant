@@ -164,6 +164,18 @@ test('reservation and order pages explain manual review boundaries', function ()
         ->assertSeeText('manually confirm availability');
 });
 
+test('contact page uses the reservation request design language while preserving inquiry actions', function (): void {
+    $this->get(route('contact.create'))
+        ->assertOk()
+        ->assertSee('data-contact-hero', false)
+        ->assertSee('data-contact-form', false)
+        ->assertSeeText('A warm response, thoughtfully given')
+        ->assertSeeText('Send Inquiry')
+        ->assertSee(route('contact-inquiries.store'), false)
+        ->assertSee(route('reservation-request.create'), false)
+        ->assertSee(route('order-inquiry.create'), false);
+});
+
 test('public pages do not expose out of scope ecommerce or live booking calls to action', function (string $routeName): void {
     $response = $this->get(route($routeName))->assertOk();
 

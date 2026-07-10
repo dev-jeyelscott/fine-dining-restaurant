@@ -5,6 +5,7 @@ namespace App\Http\Controllers\PublicSite;
 use App\Actions\Inquiries\StoreContactInquiry;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreContactInquiryRequest;
+use App\Models\GalleryImage;
 use App\Models\Page;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
@@ -13,11 +14,19 @@ class ContactController extends Controller
 {
     public function create(): View
     {
+        $heroImage = GalleryImage::query()
+            ->visible()
+            ->ordered()
+            ->where('category', 'interior')
+            ->first()
+            ?? GalleryImage::query()->visible()->ordered()->first();
+
         return view('pages.contact', [
             'page' => Page::query()
                 ->where('slug', 'contact')
                 ->where('is_published', true)
                 ->first(),
+            'heroImage' => $heroImage,
         ]);
     }
 
