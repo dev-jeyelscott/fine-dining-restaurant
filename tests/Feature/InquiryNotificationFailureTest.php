@@ -54,7 +54,7 @@ test('reservation request remains stored when notification queue dispatch fails'
         });
 });
 
-test('order inquiry remains stored when notification email fails', function (): void {
+test('order inquiry remains stored when notification queue dispatch fails', function (): void {
     simulateInquiryQueueFailure();
 
     $orderInquiry = app(StoreOrderInquiry::class)->handle([
@@ -78,7 +78,7 @@ test('order inquiry remains stored when notification email fails', function (): 
     expect($orderInquiry->fresh()->notification_sent_at)->toBeNull();
 });
 
-test('contact inquiry remains stored when notification email fails', function (): void {
+test('contact inquiry remains stored when notification queue dispatch fails', function (): void {
     simulateInquiryQueueFailure();
 
     $contactInquiry = app(StoreContactInquiry::class)->handle([
