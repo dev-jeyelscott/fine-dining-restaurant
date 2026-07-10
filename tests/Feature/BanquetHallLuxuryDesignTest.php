@@ -1,12 +1,27 @@
 <?php
 
 use App\Models\GalleryImage;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
+
+function storeBanquetHallTestImage(string $filename): string
+{
+    $path = UploadedFile::fake()
+        ->image($filename, 2400, 1600)
+        ->storeAs('gallery', $filename, 'public');
+
+    expect($path)->toBeString();
+
+    return $path;
+}
 
 test('banquet hall follows the luxury homepage design language and preserves inquiry actions', function (): void {
+    Storage::fake('public');
+
     GalleryImage::query()->create([
         'title' => 'Grand Banquet Room',
         'alt_text' => 'Elegant banquet room prepared for dinner',
-        'image_path' => 'gallery/grand-banquet-room.webp',
+        'image_path' => storeBanquetHallTestImage('grand-banquet-room.jpg'),
         'category' => 'banquet',
         'sort_order' => 1,
         'is_visible' => true,
@@ -15,7 +30,7 @@ test('banquet hall follows the luxury homepage design language and preserves inq
     GalleryImage::query()->create([
         'title' => 'Intimate Celebration',
         'alt_text' => 'A banquet table set for an intimate celebration',
-        'image_path' => 'gallery/intimate-celebration.webp',
+        'image_path' => storeBanquetHallTestImage('intimate-celebration.jpg'),
         'category' => 'banquet',
         'sort_order' => 2,
         'is_visible' => true,
@@ -34,7 +49,7 @@ test('banquet hall follows the luxury homepage design language and preserves inq
         ->assertSeeText('Request a Reservation')
         ->assertSee(route('contact.create'), false)
         ->assertSee(route('reservation-request.create'), false)
-        ->assertSee('/storage/gallery/grand-banquet-room.webp', false)
+        ->assertSee('/storage/gallery/variants/grand-banquet-room-hero.jpg', false)
         ->assertSee('Elegant banquet room prepared for dinner');
 });
 
