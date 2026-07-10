@@ -13,6 +13,23 @@ class HomeController extends Controller
 {
     public function index(): View
     {
+        $galleryImages = GalleryImage::query()
+            ->visible()
+            ->ordered()
+            ->limit(6)
+            ->get();
+
+        $heroImage = $galleryImages->firstWhere('category', 'interior')
+            ?? $galleryImages->first();
+
+        $storyImage = $galleryImages->firstWhere('category', 'dish')
+            ?? $galleryImages->skip(1)->first()
+            ?? $heroImage;
+
+        $banquetImage = $galleryImages->firstWhere('category', 'banquet')
+            ?? $galleryImages->skip(2)->first()
+            ?? $heroImage;
+
         return view('pages.home', [
             'page' => Page::query()
                 ->where('slug', 'home')
@@ -25,15 +42,13 @@ class HomeController extends Controller
                 ->with('menuCategory')
                 ->visible()
                 ->ordered()
-                ->limit(6)
+                ->limit(3)
                 ->get(),
 
-            'galleryImages' => GalleryImage::query()
-                ->where('is_visible', true)
-                ->orderBy('sort_order', 'desc')
-                ->orderByDesc('created_at')
-                ->limit(6)
-                ->get(),
+            'galleryImages' => $galleryImages,
+            'heroImage' => $heroImage,
+            'storyImage' => $storyImage,
+            'banquetImage' => $banquetImage,
         ]);
     }
 }
