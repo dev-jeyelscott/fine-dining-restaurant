@@ -3,6 +3,7 @@
 use App\Jobs\SendOrderInquiryNotification;
 use App\Models\OrderInquiry;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Queue;
 
 uses(RefreshDatabase::class);
@@ -34,6 +35,23 @@ test('invalid payload fails validation', function (): void {
     $this->assertDatabaseCount('order_inquiries', 0);
 
     Queue::assertNothingPushed();
+});
+
+test('honeypot order inquiry submission is rejected', function (): void {
+    Mail::fake();
+    Queue::fake();
+
+    $this->from(route('order-inquiry.create'))
+        ->post(route('order-inquiries.store'), validOrderInquirySubmissionPayload([
+            'website' => 'https://spam.example',
+        ]))
+        ->assertRedirect(route('order-inquiry.create'))
+        ->assertSessionHasErrors(['website']);
+
+    $this->assertDatabaseCount('order_inquiries', 0);
+
+    Queue::assertNothingPushed();
+    Mail::assertNothingSent();
 });
 
 test('delivery requires delivery address', function (): void {
