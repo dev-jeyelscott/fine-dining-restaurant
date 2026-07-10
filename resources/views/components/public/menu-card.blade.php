@@ -3,6 +3,12 @@
     'variant' => 'default',
 ])
 
+@php
+    $menuCategory = $item->relationLoaded('menuCategory')
+        ? $item->menuCategory
+        : null;
+@endphp
+
 @if ($variant === 'luxury')
     <article class="group">
         <div class="relative aspect-[4/5] overflow-hidden bg-brand-ink-soft">
@@ -27,9 +33,9 @@
         </div>
 
         <div class="pt-6">
-            @if ($item->menuCategory)
+            @if ($menuCategory)
                 <p class="text-[0.68rem] font-semibold uppercase tracking-[0.24em] text-brand-gold">
-                    {{ $item->menuCategory->name }}
+                    {{ $menuCategory->name }}
                 </p>
             @endif
 
@@ -70,9 +76,9 @@
             <div>
                 <h3 class="text-lg font-semibold text-white">{{ $item->name }}</h3>
 
-                @if ($item->menuCategory)
+                @if ($menuCategory)
                     <p class="mt-1 text-xs uppercase tracking-widest text-amber-300">
-                        {{ $item->menuCategory->name }}
+                        {{ $menuCategory->name }}
                     </p>
                 @endif
             </div>
