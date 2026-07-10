@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\GalleryImages\Schemas;
 
+use App\Rules\SafeImageDimensions;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -22,11 +23,14 @@ class GalleryImageForm
 
                 FileUpload::make('image_path')
                     ->image()
+                    ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/webp'])
+                    ->rules([new SafeImageDimensions])
                     ->required()
                     ->disk('public')
                     ->directory('gallery')
                     ->visibility('public')
-                    ->maxSize(2048),
+                    ->maxSize(2048)
+                    ->helperText('JPEG, PNG, or WebP up to 2 MB. Responsive derivatives are generated automatically.'),
 
                 Select::make('category')
                     ->options([
