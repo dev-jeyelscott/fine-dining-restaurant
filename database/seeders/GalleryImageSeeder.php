@@ -4,19 +4,40 @@ namespace Database\Seeders;
 
 use App\Models\GalleryImage;
 use Illuminate\Database\Seeder;
+use Illuminate\Filesystem\FilesystemAdapter;
+use Illuminate\Http\File as HttpFile;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
+use RuntimeException;
 
 class GalleryImageSeeder extends Seeder
 {
+    private const IMAGE_SOURCE_DIRECTORY = 'seeders/images/menu';
+
+    private const IMAGE_STORAGE_DIRECTORY = 'gallery';
+
+    private const MAX_IMAGE_SIZE_IN_BYTES = 2 * 1024 * 1024;
+
+    /**
+     * @var array<string, string>
+     */
+    private const IMAGE_EXTENSIONS_BY_MIME_TYPE = [
+        'image/jpeg' => 'jpg',
+        'image/png' => 'png',
+        'image/webp' => 'webp',
+    ];
+
     public function run(): void
     {
-        $this->ensurePlaceholderImageExists();
+        $disk = Storage::disk('public');
+
+        $disk->makeDirectory(self::IMAGE_STORAGE_DIRECTORY);
 
         $images = [
             [
                 'title' => 'Elegant Dining Room',
                 'alt_text' => 'Elegant fine-dining restaurant interior',
-                'image_path' => 'gallery/placeholders/dining-room.png',
+                'image' => 'dining-room.png',
                 'category' => 'interior',
                 'sort_order' => 1,
                 'is_visible' => true,
@@ -24,7 +45,7 @@ class GalleryImageSeeder extends Seeder
             [
                 'title' => 'Signature Dish',
                 'alt_text' => 'Chef-prepared signature dish presentation',
-                'image_path' => 'gallery/placeholders/signature-dish.png',
+                'image' => 'Seared-Hokkaido-Scallops.png',
                 'category' => 'dish',
                 'sort_order' => 2,
                 'is_visible' => true,
@@ -32,7 +53,7 @@ class GalleryImageSeeder extends Seeder
             [
                 'title' => 'Banquet Setup',
                 'alt_text' => 'Banquet hall setup for a private event',
-                'image_path' => 'gallery/placeholders/banquet-setup.png',
+                'image' => 'banquet-room.png',
                 'category' => 'banquet',
                 'sort_order' => 3,
                 'is_visible' => true,
@@ -40,38 +61,93 @@ class GalleryImageSeeder extends Seeder
             [
                 'title' => 'Warm Restaurant Ambiance',
                 'alt_text' => 'Warm restaurant lighting and ambiance',
-                'image_path' => 'gallery/placeholders/ambiance.png',
+                'image' => 'warm-ambiance.png',
                 'category' => 'ambiance',
                 'sort_order' => 4,
                 'is_visible' => true,
             ],
         ];
 
-        foreach ($images as $image) {
+        foreach ($images as $imageData) {
+            $imageFilename = $imageData['image'];
+
+            unset($imageData['image']);
+
             GalleryImage::updateOrCreate(
-                ['image_path' => $image['image_path']],
-                $image,
+                ['title' => $imageData['title']],
+                [
+                    ...$imageData,
+                    'image_path' => $this->storeSeedImage(
+                        disk: $disk,
+                        sourceFilename: $imageFilename,
+                    ),
+                ],
             );
         }
     }
 
-    private function ensurePlaceholderImageExists(): void
-    {
-        $placeholderPng = base64_decode(
-            'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+/p9sAAAAASUVORK5CYII='
+    private function storeSeedImage(
+        FilesystemAdapter $disk,
+        string $sourceFilename,
+    ): string {
+        $sourcePath = database_path(self::IMAGE_SOURCE_DIRECTORY.'/'.$sourceFilename);
+
+        if (! File::isFile($sourcePath)) {
+            throw new RuntimeException("Gallery seed image does not exist: {$sourcePath}");
+        }
+
+        if (! File::isReadable($sourcePath)) {
+            throw new RuntimeException("Gallery seed image is not readable: {$sourcePath}");
+        }
+
+        $size = File::size($sourcePath);
+
+        if ($size > self::MAX_IMAGE_SIZE_IN_BYTES) {
+            throw new RuntimeException(
+                sprintf(
+                    'Gallery seed image exceeds the 2 MB upload limit (%d bytes): %s',
+                    $size,
+                    $sourcePath,
+                ),
+            );
+        }
+
+        $mimeType = File::mimeType($sourcePath);
+
+        if (! is_string($mimeType) || ! array_key_exists($mimeType, self::IMAGE_EXTENSIONS_BY_MIME_TYPE)) {
+            throw new RuntimeException(
+                sprintf(
+                    'Unsupported gallery seed image type "%s" for file: %s',
+                    $mimeType ?: 'unknown',
+                    $sourcePath,
+                ),
+            );
+        }
+
+        $contentHash = hash_file('sha256', $sourcePath);
+
+        if (! is_string($contentHash)) {
+            throw new RuntimeException("Unable to hash gallery seed image: {$sourcePath}");
+        }
+
+        $destinationFilename = $contentHash.'.'.self::IMAGE_EXTENSIONS_BY_MIME_TYPE[$mimeType];
+        $destinationPath = self::IMAGE_STORAGE_DIRECTORY.'/'.$destinationFilename;
+
+        if ($disk->exists($destinationPath)) {
+            return $destinationPath;
+        }
+
+        $storedPath = $disk->putFileAs(
+            self::IMAGE_STORAGE_DIRECTORY,
+            new HttpFile($sourcePath),
+            $destinationFilename,
+            ['visibility' => 'public'],
         );
 
-        foreach (
-            [
-                'gallery/placeholders/dining-room.png',
-                'gallery/placeholders/signature-dish.png',
-                'gallery/placeholders/banquet-setup.png',
-                'gallery/placeholders/ambiance.png',
-            ] as $path
-        ) {
-            if (! Storage::disk('public')->exists($path)) {
-                Storage::disk('public')->put($path, $placeholderPng);
-            }
+        if ($storedPath === false) {
+            throw new RuntimeException("Unable to store gallery seed image: {$destinationPath}");
         }
+
+        return $storedPath;
     }
 }
