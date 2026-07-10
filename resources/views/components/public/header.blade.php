@@ -1,5 +1,5 @@
 @php
-    $restaurantName = \App\Models\SiteSetting::value('restaurant_name', config('app.name'));
+    $restaurantName = $settings['restaurant_name'] ?? config('app.name');
     $isHome = request()->routeIs('home');
 
     $links = [
