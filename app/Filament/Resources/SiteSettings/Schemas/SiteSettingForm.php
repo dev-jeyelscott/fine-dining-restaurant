@@ -2,8 +2,10 @@
 
 namespace App\Filament\Resources\SiteSettings\Schemas;
 
+use App\Rules\ValidSiteSettingValue;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
+use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Schema;
 
 class SiteSettingForm
@@ -19,6 +21,13 @@ class SiteSettingForm
 
                 Textarea::make('value')
                     ->rows(4)
+                    ->rules(static function (Get $get): array {
+                        $key = $get('key');
+
+                        return [
+                            new ValidSiteSettingValue(is_string($key) ? $key : null),
+                        ];
+                    })
                     ->columnSpanFull(),
 
                 TextInput::make('group')
