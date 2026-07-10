@@ -17,7 +17,7 @@
         eyebrow="Fine dining, thoughtfully served"
         title="{{ $page?->title ?: 'An elevated dining experience for every occasion' }}"
         description="{{ $page?->excerpt ?: 'Discover carefully prepared dishes, warm hospitality, and an elegant atmosphere for family dinners, intimate celebrations, and memorable events.' }}"
-        :image-url="$heroImage?->image_url"
+        :image="$heroImage"
         :image-alt="$heroImage?->alt_text ?: $heroImage?->title ?: 'Elegant restaurant dining room'"
         primary-label="Request a Reservation"
         :primary-url="route('reservation-request.create')"
@@ -32,15 +32,15 @@
 
                 <div class="relative aspect-[4/5] overflow-hidden bg-brand-paper shadow-[0_30px_80px_rgba(23,25,22,0.18)]">
                     @if ($storyImage?->image_url)
-                        <img
-                            src="{{ $storyImage->image_url }}"
-                            alt="{{ $storyImage->alt_text ?: $storyImage->title ?: 'Chef-prepared fine-dining dish' }}"
+                        <x-public.responsive-image
+                            :image="$storyImage"
+                            :alt="$storyImage->alt_text ?: $storyImage->title ?: 'Chef-prepared fine-dining dish'"
+                            variant="large"
+                            sizes="(min-width: 1024px) 45vw, 100vw"
                             width="960"
                             height="1200"
-                            class="h-full w-full object-cover"
-                            loading="lazy"
-                            decoding="async"
-                        >
+                            img-class="h-full w-full object-cover"
+                        />
                     @else
                         <div class="absolute inset-0 bg-[radial-gradient(circle_at_30%_25%,rgba(201,164,93,0.28),transparent_32%),linear-gradient(145deg,#d8cfbd,#8b7960)]"></div>
                         <p class="absolute inset-x-8 bottom-8 border-t border-white/45 pt-4 text-xs font-semibold uppercase tracking-[0.24em] text-white/80">
@@ -106,15 +106,15 @@
     <section class="grid lg:grid-cols-2">
         <article class="relative isolate flex min-h-[32rem] items-center overflow-hidden bg-brand-ink px-5 py-20 sm:px-10 lg:px-16">
             @if ($heroImage?->image_url)
-                <img
-                    src="{{ $heroImage->image_url }}"
+                <x-public.responsive-image
+                    :image="$heroImage"
                     alt=""
+                    variant="large"
+                    sizes="(min-width: 1024px) 50vw, 100vw"
                     width="1200"
                     height="900"
-                    class="absolute inset-0 -z-20 h-full w-full object-cover"
-                    loading="lazy"
-                    decoding="async"
-                >
+                    img-class="absolute inset-0 -z-20 h-full w-full object-cover"
+                />
             @endif
             <div class="absolute inset-0 -z-10 bg-brand-ink/82"></div>
 
@@ -135,15 +135,15 @@
 
         <article class="relative isolate flex min-h-[32rem] items-center overflow-hidden bg-brand-paper px-5 py-20 text-brand-ink sm:px-10 lg:px-16">
             @if ($storyImage?->image_url)
-                <img
-                    src="{{ $storyImage->image_url }}"
+                <x-public.responsive-image
+                    :image="$storyImage"
                     alt=""
+                    variant="large"
+                    sizes="(min-width: 1024px) 50vw, 100vw"
                     width="1200"
                     height="900"
-                    class="absolute inset-0 -z-20 h-full w-full object-cover opacity-15 grayscale"
-                    loading="lazy"
-                    decoding="async"
-                >
+                    img-class="absolute inset-0 -z-20 h-full w-full object-cover opacity-15 grayscale"
+                />
             @endif
             <div class="absolute inset-0 -z-10 bg-brand-paper/88"></div>
 
@@ -191,15 +191,15 @@
                 <div class="absolute -left-7 -top-7 hidden h-full w-full border border-brand-gold/70 lg:block" aria-hidden="true"></div>
                 <div class="relative aspect-[4/3] overflow-hidden bg-brand-paper shadow-[0_30px_80px_rgba(23,25,22,0.16)]">
                     @if ($banquetImage?->image_url)
-                        <img
-                            src="{{ $banquetImage->image_url }}"
-                            alt="{{ $banquetImage->alt_text ?: $banquetImage->title ?: 'Elegant banquet hall setting' }}"
+                        <x-public.responsive-image
+                            :image="$banquetImage"
+                            :alt="$banquetImage->alt_text ?: $banquetImage->title ?: 'Elegant banquet hall setting'"
+                            variant="large"
+                            sizes="(min-width: 1024px) 45vw, 100vw"
                             width="1200"
                             height="900"
-                            class="h-full w-full object-cover"
-                            loading="lazy"
-                            decoding="async"
-                        >
+                            img-class="h-full w-full object-cover"
+                        />
                     @else
                         <div class="absolute inset-0 bg-[radial-gradient(circle_at_65%_30%,rgba(201,164,93,0.32),transparent_35%),linear-gradient(145deg,#4d4437,#171916)]"></div>
                     @endif
@@ -224,15 +224,15 @@
                             'md:row-span-2 lg:col-span-2' => $loop->first,
                         ])>
                             @if ($image->image_url)
-                                <img
-                                    src="{{ $image->image_url }}"
-                                    alt="{{ $image->alt_text ?: $image->title ?: 'Restaurant gallery image' }}"
+                                <x-public.responsive-image
+                                    :image="$image"
+                                    :alt="$image->alt_text ?: $image->title ?: 'Restaurant gallery image'"
+                                    :variant="$loop->first ? 'large' : 'card'"
+                                    :sizes="$loop->first ? '(min-width: 1024px) 66vw, 100vw' : '(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw'"
                                     width="1200"
                                     height="900"
-                                    class="h-full w-full object-cover transition duration-700 group-hover:scale-105"
-                                    loading="lazy"
-                                    decoding="async"
-                                >
+                                    img-class="h-full w-full object-cover transition duration-700 group-hover:scale-105"
+                                />
                             @endif
 
                             <div class="absolute inset-0 bg-gradient-to-t from-brand-ink/80 via-transparent to-transparent opacity-75 transition group-hover:opacity-95"></div>
