@@ -26,6 +26,47 @@ Route::get('/order-inquiry', [OrderInquiryController::class, 'create'])
 Route::get('/contact', [ContactController::class, 'create'])
     ->name('contact.create');
 
+Route::get('/robots.txt', function () {
+    $content = implode("\n", [
+        'User-agent: *',
+        'Allow: /',
+        'Disallow: /admin',
+        'Sitemap: '.route('sitemap'),
+        '',
+    ]);
+
+    return response($content, 200, [
+        'Content-Type' => 'text/plain; charset=UTF-8',
+    ]);
+})->name('robots');
+
+Route::get('/sitemap.xml', function () {
+    $urls = [
+        route('home'),
+        route('menu'),
+        route('reservation-request.create'),
+        route('order-inquiry.create'),
+        route('gallery'),
+        route('banquet-hall'),
+        route('contact.create'),
+    ];
+
+    $entries = collect($urls)
+        ->map(fn (string $url): string => '    <url><loc>'.e($url).'</loc></url>')
+        ->implode("\n");
+
+    $content = <<<XML
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+{$entries}
+</urlset>
+XML;
+
+    return response($content, 200, [
+        'Content-Type' => 'application/xml; charset=UTF-8',
+    ]);
+})->name('sitemap');
+
 Route::middleware('throttle:public-forms')->group(function (): void {
     Route::post('/reservation-requests', [ReservationRequestController::class, 'store'])
         ->name('reservation-requests.store');
