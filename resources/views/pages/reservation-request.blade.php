@@ -128,7 +128,7 @@
                         name="guest_count"
                         type="number"
                         min="1"
-                        max="100"
+                        max="200"
                         step="1"
                         value="{{ old('guest_count', 2) }}"
                         required

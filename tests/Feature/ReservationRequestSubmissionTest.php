@@ -43,6 +43,7 @@ test('reservation request page renders form', function (): void {
         ->assertSee('name="preferred_date"', false)
         ->assertSee('name="preferred_time"', false)
         ->assertSee('name="guest_count"', false)
+        ->assertSee('max="200"', false)
         ->assertSee('name="special_requests"', false)
         ->assertSee('name="website"', false);
 });
@@ -61,6 +62,21 @@ test('invalid reservation request payload fails validation', function (): void {
             'preferred_time',
             'guest_count',
         ]);
+
+    $this->assertDatabaseCount('reservation_requests', 0);
+
+    Queue::assertNothingPushed();
+});
+
+test('reservation request accepts no more than 200 guests', function (): void {
+    Queue::fake();
+
+    $this->from(route('reservation-request.create'))
+        ->post(route('reservation-requests.store'), reservationRequestSubmissionTestPayload([
+            'guest_count' => 201,
+        ]))
+        ->assertRedirect(route('reservation-request.create'))
+        ->assertSessionHasErrors(['guest_count']);
 
     $this->assertDatabaseCount('reservation_requests', 0);
 
