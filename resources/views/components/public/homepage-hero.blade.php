@@ -2,6 +2,7 @@
     'eyebrow' => null,
     'title',
     'description' => null,
+    'image' => null,
     'imageUrl' => asset('images/bg-hero.png'),
     'imageAlt' => '',
     'primaryLabel' => null,
@@ -11,15 +12,18 @@
 ])
 
 <section class="relative isolate flex min-h-[44rem] items-center overflow-hidden bg-brand-ink lg:min-h-screen">
-    <img
-        src="{{ $imageUrl }}"
-        alt="{{ $imageAlt }}"
+    <x-public.responsive-image
+        :image="$image"
+        :fallback-url="$imageUrl"
+        :alt="$imageAlt"
+        variant="hero"
+        sizes="100vw"
         width="1920"
         height="1280"
+        loading="eager"
         fetchpriority="high"
-        decoding="async"
-        class="absolute inset-0 -z-30 h-full w-full object-cover object-center"
-    >
+        img-class="absolute inset-0 -z-30 h-full w-full object-cover object-center"
+    />
 
     <div class="absolute inset-0 -z-20 bg-[radial-gradient(circle_at_70%_35%,rgba(201,164,93,0.14),transparent_36%),linear-gradient(to_bottom,rgba(23,25,22,0.82),rgba(23,25,22,0.46)_45%,rgba(23,25,22,0.92))]"></div>
     <div class="absolute inset-0 -z-10 bg-gradient-to-r from-brand-ink/85 via-brand-ink/35 to-transparent"></div>
