@@ -24,7 +24,6 @@ class GalleryImageSeeder extends Seeder
     private const IMAGE_EXTENSIONS_BY_MIME_TYPE = [
         'image/jpeg' => 'jpg',
         'image/webp' => 'webp',
-        'image/webp' => 'webp',
     ];
 
     public function run(): void

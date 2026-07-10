@@ -134,7 +134,7 @@ final class ResponsiveImageManager
             }
         }
 
-        return $originalPath;
+        return $disk->exists($originalPath) ? $originalPath : null;
     }
 
     public function resolveUrl(string $originalPath, string $preferredVariant): ?string

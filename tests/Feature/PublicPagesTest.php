@@ -8,6 +8,17 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
 
+function storePublicPageTestImage(string $filename): string
+{
+    $path = UploadedFile::fake()
+        ->image($filename, 2400, 1600)
+        ->storeAs('gallery', $filename, 'public');
+
+    expect($path)->toBeString();
+
+    return $path;
+}
+
 test('approved public page routes are registered with stable paths', function (): void {
     $expectedRoutes = [
         'home' => '/',
@@ -210,7 +221,30 @@ test('contact hero uses managed responsive image derivatives', function (): void
         ->assertSee('Elegant dining room prepared for evening service');
 });
 
+test('contact hero renders its fallback for a stale managed image path', function (): void {
+    Storage::fake('public');
+
+    $missingPath = 'gallery/missing-contact-hero.jpg';
+
+    GalleryImage::query()->create([
+        'title' => 'Missing Contact Hero',
+        'alt_text' => 'Missing contact hero image',
+        'image_path' => $missingPath,
+        'category' => 'interior',
+        'sort_order' => 1,
+        'is_visible' => true,
+    ]);
+
+    $this->get(route('contact.create'))
+        ->assertOk()
+        ->assertSee('data-contact-hero-fallback', false)
+        ->assertDontSee(Storage::disk('public')->url($missingPath), false)
+        ->assertDontSee('Missing contact hero image', false);
+});
+
 test('contact hero prefers an interior image beyond the first six ordered records', function (): void {
+    Storage::fake('public');
+
     foreach (range(1, 6) as $position) {
         GalleryImage::query()->create([
             'title' => "Earlier non-interior image {$position}",
@@ -225,7 +259,7 @@ test('contact hero prefers an interior image beyond the first six ordered record
     GalleryImage::query()->create([
         'title' => 'Preferred later interior image',
         'alt_text' => 'Preferred later interior alt',
-        'image_path' => 'gallery/preferred-later-interior.jpg',
+        'image_path' => storePublicPageTestImage('preferred-later-interior.jpg'),
         'category' => 'interior',
         'sort_order' => 7,
         'is_visible' => true,
@@ -238,6 +272,8 @@ test('contact hero prefers an interior image beyond the first six ordered record
 });
 
 test('contact hero falls back to the first visible ordered image when no interior image exists', function (): void {
+    Storage::fake('public');
+
     GalleryImage::query()->create([
         'title' => 'Second fallback image',
         'alt_text' => 'Second fallback alt',
@@ -250,7 +286,7 @@ test('contact hero falls back to the first visible ordered image when no interio
     GalleryImage::query()->create([
         'title' => 'First fallback image',
         'alt_text' => 'First fallback alt',
-        'image_path' => 'gallery/first-fallback.jpg',
+        'image_path' => storePublicPageTestImage('first-fallback.jpg'),
         'category' => 'dish',
         'sort_order' => 1,
         'is_visible' => true,
