@@ -14,14 +14,15 @@ class ContactController extends Controller
 {
     public function create(): View
     {
-        $heroImages = GalleryImage::query()
+        $heroImage = GalleryImage::query()
             ->visible()
+            ->where('category', 'interior')
             ->ordered()
-            ->limit(6)
-            ->get();
-
-        $heroImage = $heroImages->firstWhere('category', 'interior')
-            ?? $heroImages->first();
+            ->first()
+            ?? GalleryImage::query()
+                ->visible()
+                ->ordered()
+                ->first();
 
         return view('pages.contact', [
             'page' => Page::query()
@@ -38,9 +39,11 @@ class ContactController extends Controller
     ): RedirectResponse {
         $storeContactInquiry->handle($request->validated());
 
-        return back()->with(
-            'success',
-            'Your message has been received. Our team will review it and contact you if a response is needed.',
-        );
+        return redirect()
+            ->to(route('contact.create').'#contact-inquiry')
+            ->with(
+                'success',
+                'Your message has been received. Our team will review it and contact you if a response is needed.',
+            );
     }
 }
