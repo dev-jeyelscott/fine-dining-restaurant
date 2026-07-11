@@ -1,6 +1,9 @@
 import Alpine from "alpinejs";
+import inquiryForm from "./forms/inquiry-form";
 
 window.Alpine = Alpine;
+
+Alpine.data("inquiryForm", inquiryForm);
 
 Alpine.start();
 
