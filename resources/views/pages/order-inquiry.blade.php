@@ -85,7 +85,7 @@
                         </div>
                     @endif
 
-                    <form method="POST" action="{{ route('order-inquiries.store') }}" class="border border-brand-gold/30 bg-white p-6 shadow-[0_28px_80px_rgba(23,25,22,0.1)] sm:p-9 lg:p-12" x-data="{ fulfillmentType: @js(old('fulfillment_type', 'pickup')) }" x-effect="$dispatch('order-inquiry:fulfillment-change', { fulfillmentType })" novalidate>
+                    <form method="POST" action="{{ route('order-inquiries.store') }}" data-initial-fulfillment="{{ old('fulfillment_type', 'pickup') }}" class="border border-brand-gold/30 bg-white p-6 shadow-[0_28px_80px_rgba(23,25,22,0.1)] sm:p-9 lg:p-12" x-data="inquiryForm" x-effect="$dispatch('order-inquiry:fulfillment-change', { fulfillmentType })" @order-inquiry:reset.window="fulfillmentType = 'pickup'" @submit.prevent="submit" novalidate x-bind:aria-busy="submitting">
                         @csrf
                         <input type="hidden" name="source_page" value="order-inquiry">
 
@@ -175,9 +175,14 @@
                         </div>
 
                         <div class="mt-9 border-t border-brand-gold/25 pt-8">
-                            <button type="submit" class="inline-flex min-h-12 w-full items-center justify-center bg-brand-ink px-8 py-3 text-xs font-semibold uppercase tracking-[0.2em] text-white transition duration-300 hover:bg-brand-gold-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-gold sm:w-auto">
-                                Submit Order Inquiry
+                            <button type="submit" x-bind:disabled="submitting" class="inline-flex min-h-12 w-full items-center justify-center bg-brand-ink px-8 py-3 text-xs font-semibold uppercase tracking-[0.2em] text-white transition duration-300 hover:bg-brand-gold-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-gold disabled:cursor-wait disabled:opacity-60 sm:w-auto">
+                                <span x-text="submitting ? 'Sending inquiry…' : 'Submit Order Inquiry'">Submit Order Inquiry</span>
                             </button>
+                        </div>
+
+                        <div x-show="popup" x-ref="popup" x-cloak tabindex="-1" role="alertdialog" aria-live="assertive" class="mt-6 border p-5 text-sm leading-7" x-bind:class="popup?.type === 'success' ? 'border-emerald-700/25 bg-emerald-50 text-emerald-900' : 'border-brand-burgundy/25 bg-red-50 text-brand-burgundy'">
+                            <p class="font-semibold" x-text="popup?.title"></p>
+                            <p class="mt-1" x-text="popup?.message"></p>
                         </div>
                     </form>
                 </div>

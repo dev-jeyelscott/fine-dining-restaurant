@@ -8,6 +8,7 @@ use App\Http\Requests\StoreOrderInquiryRequest;
 use App\Models\GalleryImage;
 use App\Models\Page;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 
 class OrderInquiryController extends Controller
@@ -35,12 +36,21 @@ class OrderInquiryController extends Controller
     public function store(
         StoreOrderInquiryRequest $request,
         StoreOrderInquiry $storeOrderInquiry
-    ): RedirectResponse {
+    ): RedirectResponse|JsonResponse {
         $storeOrderInquiry->handle($request->validated());
+
+        $message = 'Your Order Inquiry has been received. Our team will review your inquiry and contact you to confirm availability, the final total, payment, and pickup or delivery arrangements.';
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => $message,
+            ]);
+        }
 
         return back()->with(
             'status',
-            'Your order inquiry has been received. Our team will review your request, confirm availability, confirm the final total, and arrange payment or pickup/delivery details directly with you.'
+            $message,
         );
     }
 }

@@ -161,6 +161,39 @@ test('valid payload queues notification', function (): void {
     expect($orderInquiry->notification_sent_at)->toBeNull();
 });
 
+test('valid JSON payload stores once and returns inquiry success message', function (): void {
+    Queue::fake();
+
+    $response = $this
+        ->withHeader('Accept', 'application/json')
+        ->postJson(route('order-inquiries.store'), validOrderInquirySubmissionPayload());
+
+    $response
+        ->assertOk()
+        ->assertJsonPath('success', true)
+        ->assertJsonPath('message', fn (string $message): bool => str_contains($message, 'Order Inquiry'));
+
+    $this->assertDatabaseCount('order_inquiries', 1);
+});
+
+test('invalid JSON payload returns field errors without storing', function (): void {
+    Queue::fake();
+
+    $response = $this
+        ->withHeader('Accept', 'application/json')
+        ->postJson(route('order-inquiries.store'), [
+            'customer_name' => 'Maria Santos',
+            'email' => 'invalid',
+            'fulfillment_type' => 'delivery',
+        ]);
+
+    $response
+        ->assertStatus(422)
+        ->assertJsonValidationErrors(['phone', 'email', 'preferred_time', 'order_details', 'quantity', 'delivery_address']);
+
+    $this->assertDatabaseCount('order_inquiries', 0);
+});
+
 test('success message explains manual review', function (): void {
     Queue::fake();
 
@@ -205,6 +238,10 @@ test('no cart payment order status wording appears', function (): void {
 test('order inquiry conditional address keeps delivery validation and accessibility state in Alpine', function (): void {
     $this->get(route('order-inquiry.create'))
         ->assertOk()
+        ->assertSee('x-data="inquiryForm"', false)
+        ->assertSee('@submit.prevent="submit"', false)
+        ->assertSee('x-bind:aria-busy="submitting"', false)
+        ->assertSee('role="alertdialog"', false)
         ->assertSee('x-bind:required="fulfillmentType === \'delivery\'"', false)
         ->assertSee('x-bind:disabled="fulfillmentType !== \'delivery\'"', false)
         ->assertSee('x-bind:inert="fulfillmentType !== \'delivery\'"', false)
