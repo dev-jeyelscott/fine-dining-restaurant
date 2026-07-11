@@ -8,6 +8,7 @@ use App\Http\Requests\StoreReservationRequestRequest;
 use App\Models\GalleryImage;
 use App\Models\Page;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 
 class ReservationRequestController extends Controller
@@ -33,12 +34,21 @@ class ReservationRequestController extends Controller
     public function store(
         StoreReservationRequestRequest $request,
         StoreReservationRequest $storeReservationRequest
-    ): RedirectResponse {
+    ): RedirectResponse|JsonResponse {
         $storeReservationRequest->handle($request->validated());
+
+        $message = 'Your reservation request has been received. Our team will review your request and contact you to confirm availability. This is not yet a confirmed reservation.';
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => $message,
+            ]);
+        }
 
         return back()->with(
             'status',
-            'Your reservation request has been received. Our team will review your request and contact you to confirm availability. This is not yet a confirmed reservation.'
+            $message,
         );
     }
 }
