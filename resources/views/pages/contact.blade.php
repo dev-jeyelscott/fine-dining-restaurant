@@ -38,7 +38,7 @@
             </div>
         </section>
 
-        <section id="contact-inquiry" data-gsap="section" class="overflow-hidden bg-brand-ivory py-20 text-brand-ink sm:py-24 lg:py-32">
+        <section id="contact-inquiry" data-gsap="section" class="scroll-mt-20 overflow-hidden bg-brand-ivory py-20 text-brand-ink sm:py-24 lg:py-32">
         @php
             $phone = $settings['phone'] ?? null;
             $phoneDigits = is_string($phone) ? preg_replace('/\D+/', '', $phone) : null;
