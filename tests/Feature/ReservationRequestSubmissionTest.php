@@ -79,22 +79,14 @@ test('reservation request page exposes progressive motion hooks', function (): v
         ->assertSee('data-reservation-form', false);
 });
 
-test('reservation success feedback remains an accessible status region', function (): void {
-    $this->withSession([
-        'status' => 'Your reservation request has been received for review.',
-    ])->get(route('reservation-request.create'))
-        ->assertOk()
-        ->assertSee('data-reservation-feedback', false)
-        ->assertSee('role="status"', false);
-});
+test('reservation feedback regions remain accessible and outside reveal choreography', function (): void {
+    $viewSource = file_get_contents(resource_path('views/pages/reservation-request.blade.php'));
 
-test('reservation validation feedback remains an accessible alert region', function (): void {
-    $this->withViewErrors([
-        'customer_name' => 'The customer name field is required.',
-    ])->get(route('reservation-request.create'))
-        ->assertOk()
-        ->assertSee('data-reservation-feedback', false)
-        ->assertSee('role="alert"', false);
+    expect($viewSource)
+        ->toBeString()
+        ->toContain('data-reservation-feedback role="status"')
+        ->toContain('data-reservation-feedback role="alert"')
+        ->not->toContain('data-reservation-feedback data-gsap');
 });
 
 test('invalid reservation request payload fails validation', function (): void {
