@@ -212,6 +212,18 @@ test('order inquiry conditional address keeps delivery validation and accessibil
         ->assertSee('data-gsap="delivery-address"', false);
 });
 
+test('order inquiry motion owns its choreography and cleanup lifecycle', function (): void {
+    $animationSource = file_get_contents(resource_path('js/public-animations.js'));
+
+    expect($animationSource)
+        ->toBeString()
+        ->toContain('const form = root.querySelector')
+        ->toContain('revealTimeline(form, { start: "top 84%", stagger: 0.08 })')
+        ->toContain('root.removeEventListener("order-inquiry:fulfillment-change", handleFulfillmentChange)')
+        ->toContain('{ animate: false }')
+        ->toContain('return initializeOrderInquiryMotion(root, { desktop, reducedMotion })');
+});
+
 function validOrderInquirySubmissionPayload(array $overrides = []): array
 {
     return array_merge([
