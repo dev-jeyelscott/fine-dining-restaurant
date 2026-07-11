@@ -76,9 +76,14 @@ test('reservation request page exposes accessible motion hooks without hiding fo
         ->assertSee('data-reservation-field-group="event"', false)
         ->assertSee('data-reservation-field-group="notes"', false)
         ->assertSee('data-reservation-field-group="submit"', false)
-        ->assertSee('role="status"', false)
-        ->assertSee('role="alert"', false)
         ->assertSee('data-reservation-form', false);
+
+    $viewSource = file_get_contents(resource_path('views/pages/reservation-request.blade.php'));
+
+    expect($viewSource)
+        ->toBeString()
+        ->toContain('data-reservation-feedback role="status"')
+        ->toContain('data-reservation-feedback role="alert"');
 });
 
 test('invalid reservation request payload fails validation', function (): void {
