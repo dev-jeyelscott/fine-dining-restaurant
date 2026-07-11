@@ -13,7 +13,7 @@
     $isRichDescription = strip_tags($descriptionText) !== $descriptionText;
 @endphp
 
-<div @class([
+<div data-gsap-reveal @class([
     'max-w-3xl',
     'mx-auto text-center' => $isCentered,
 ])>

@@ -8,7 +8,7 @@
 @endphp
 
 @if ($isEditorial)
-    <article {{ $attributes->class([
+    <article data-gsap="tile" {{ $attributes->class([
         'group relative isolate min-h-72 overflow-hidden bg-brand-ink-soft',
     ]) }}>
         @if ($image->image_url)
