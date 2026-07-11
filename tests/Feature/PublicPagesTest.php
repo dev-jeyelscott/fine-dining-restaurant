@@ -201,7 +201,13 @@ test('reservation and order pages explain manual review boundaries', function ()
         ->assertOk()
         ->assertSeeText('Order Inquiry')
         ->assertSeeText('not checkout or online payment')
-        ->assertSeeText('manually confirm availability');
+        ->assertSeeText('manually confirm availability')
+        ->assertSee('data-home-motion', false)
+        ->assertSee('data-order-inquiry-motion', false)
+        ->assertSee('data-gsap="fulfillment-cards"', false)
+        ->assertSee('order-inquiry:fulfillment-change', false)
+        ->assertSee('x-bind:disabled="fulfillmentType !== \'delivery\'"', false)
+        ->assertSee('x-bind:aria-hidden="fulfillmentType !== \'delivery\'"', false);
 });
 
 test('contact page uses the reservation request design language while preserving inquiry actions', function (): void {
