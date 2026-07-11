@@ -6,8 +6,6 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Queue;
-use Illuminate\Support\MessageBag;
-use Illuminate\Support\ViewErrorBag;
 
 uses(RefreshDatabase::class);
 
@@ -91,12 +89,9 @@ test('reservation success feedback remains an accessible status region', functio
 });
 
 test('reservation validation feedback remains an accessible alert region', function (): void {
-    $errors = (new ViewErrorBag)->put('default', new MessageBag([
-        'customer_name' => ['The customer name field is required.'],
-    ]));
-
-    $this->withSession(['errors' => $errors])
-        ->get(route('reservation-request.create'))
+    $this->withViewErrors([
+        'customer_name' => 'The customer name field is required.',
+    ])->get(route('reservation-request.create'))
         ->assertOk()
         ->assertSee('data-reservation-feedback', false)
         ->assertSee('role="alert"', false);
