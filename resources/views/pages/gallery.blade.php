@@ -12,9 +12,10 @@
             ->values();
     @endphp
 
+    <div data-home-motion data-gallery-motion>
     <section data-public-hero class="relative isolate flex min-h-[44rem] items-center overflow-hidden bg-brand-ink lg:min-h-screen">
         @if ($heroImage?->image_url)
-            <x-public.responsive-image
+            <div data-gsap="hero-image" class="absolute inset-0 -z-30"><x-public.responsive-image
                 :image="$heroImage"
                 :alt="$heroImage->alt_text ?: $heroImage->title ?: 'Elegant restaurant dining experience'"
                 variant="hero"
@@ -23,8 +24,8 @@
                 height="1280"
                 loading="eager"
                 fetchpriority="high"
-                img-class="absolute inset-0 -z-30 h-full w-full object-cover object-center"
-            />
+                img-class="h-full w-full object-cover object-center"
+            /></div>
         @else
             <div class="absolute inset-0 -z-30 bg-[radial-gradient(circle_at_70%_28%,rgba(201,164,93,0.25),transparent_34%),linear-gradient(145deg,#4d4437,#171916_68%)]"></div>
         @endif
@@ -33,20 +34,20 @@
         <div class="absolute inset-0 -z-10 bg-gradient-to-r from-brand-ink/88 via-brand-ink/35 to-transparent"></div>
 
         <div class="mx-auto w-full max-w-7xl px-5 pb-20 pt-36 sm:px-6 lg:px-10 lg:pb-28 lg:pt-44">
-            <div class="max-w-4xl">
-                <p class="text-xs font-semibold uppercase tracking-[0.38em] text-brand-gold sm:text-sm">
+            <div data-gsap="hero-content" class="max-w-4xl">
+                <p data-gsap-reveal class="text-xs font-semibold uppercase tracking-[0.38em] text-brand-gold sm:text-sm">
                     Gallery
                 </p>
 
-                <h1 class="mt-6 max-w-4xl font-display text-5xl leading-[0.98] text-white sm:text-6xl lg:text-8xl">
+                <h1 data-gsap-reveal class="mt-6 max-w-4xl font-display text-5xl leading-[0.98] text-white sm:text-6xl lg:text-8xl">
                     {{ $page?->title ?: 'Ambiance, dishes, and memorable occasions' }}
                 </h1>
 
-                <p class="mt-7 max-w-2xl text-base leading-8 text-stone-200 sm:text-lg">
+                <p data-gsap-reveal class="mt-7 max-w-2xl text-base leading-8 text-stone-200 sm:text-lg">
                     {{ $page?->excerpt ?: 'Step inside the restaurant through a curated collection of dining spaces, signature plates, private gatherings, and details that shape the guest experience.' }}
                 </p>
 
-                <div class="mt-10 flex flex-col gap-4 sm:flex-row">
+                <div data-gsap-reveal class="mt-10 flex flex-col gap-4 sm:flex-row">
                     <a
                         href="#gallery-collection"
                         class="inline-flex min-h-12 items-center justify-center bg-brand-gold px-7 py-3 text-xs font-semibold uppercase tracking-[0.2em] text-brand-ink transition duration-300 hover:bg-brand-gold-dark hover:text-white"
@@ -65,7 +66,7 @@
         </div>
     </section>
 
-    <section class="overflow-hidden bg-brand-ivory py-24 text-brand-ink lg:py-32">
+    <section data-gsap="section" class="overflow-hidden bg-brand-ivory py-24 text-brand-ink lg:py-32">
         <div class="mx-auto grid max-w-7xl items-center gap-16 px-5 sm:px-6 lg:grid-cols-[0.9fr_1.1fr] lg:px-10">
             <div>
                 <x-public.section-heading
@@ -76,16 +77,16 @@
                     theme="light"
                 />
 
-                <div class="mt-10 grid max-w-xl grid-cols-2 gap-8 border-t border-brand-gold/35 pt-8">
-                    <div>
-                        <p class="font-display text-4xl text-brand-ink">{{ $galleryImages->count() }}</p>
+                <div data-gsap-reveal class="mt-10 grid max-w-xl grid-cols-2 gap-8 border-t border-brand-gold/35 pt-8">
+                    <div data-gsap-counter data-count-value="{{ $galleryImages->count() }}">
+                        <p data-gsap-count class="font-display text-4xl text-brand-ink">{{ $galleryImages->count() }}</p>
                         <p class="mt-2 text-xs font-semibold uppercase tracking-[0.2em] text-brand-gold-dark">
                             Moments on this page
                         </p>
                     </div>
 
-                    <div>
-                        <p class="font-display text-4xl text-brand-ink">{{ $categories->count() }}</p>
+                    <div data-gsap-counter data-count-value="{{ $categories->count() }}">
+                        <p data-gsap-count class="font-display text-4xl text-brand-ink">{{ $categories->count() }}</p>
                         <p class="mt-2 text-xs font-semibold uppercase tracking-[0.2em] text-brand-gold-dark">
                             Categories on this page
                         </p>
@@ -94,11 +95,11 @@
             </div>
 
             <div class="relative min-h-[27rem] sm:min-h-[34rem]">
-                <div class="absolute left-0 top-0 h-[82%] w-[78%] border border-brand-gold/60" aria-hidden="true"></div>
+                <div data-gsap="frame" class="absolute left-0 top-0 h-[82%] w-[78%] border border-brand-gold/60" aria-hidden="true"></div>
 
                 @if ($supportingImages->count() >= 2)
                     @foreach ($supportingImages as $image)
-                        <figure @class([
+                        <figure data-gsap="image" @class([
                             'absolute overflow-hidden bg-brand-paper shadow-[0_28px_70px_rgba(23,25,22,0.18)]',
                             'left-5 top-5 h-[72%] w-[72%]' => $loop->first,
                             'bottom-0 right-0 h-[52%] w-[52%] border-8 border-brand-ivory' => $loop->last,
@@ -123,7 +124,7 @@
                         $supportingImage = $supportingImages->first();
                     @endphp
 
-                    <figure class="absolute bottom-0 right-0 h-[88%] w-[88%] overflow-hidden bg-brand-paper shadow-[0_28px_70px_rgba(23,25,22,0.18)]">
+                    <figure data-gsap="image" class="absolute bottom-0 right-0 h-[88%] w-[88%] overflow-hidden bg-brand-paper shadow-[0_28px_70px_rgba(23,25,22,0.18)]">
                         @if ($supportingImage?->image_url)
                             <x-public.responsive-image
                                 :image="$supportingImage"
@@ -139,7 +140,7 @@
                         @endif
                     </figure>
                 @elseif ($heroImage?->image_url)
-                    <figure class="absolute bottom-0 right-0 h-[88%] w-[88%] overflow-hidden bg-brand-paper shadow-[0_28px_70px_rgba(23,25,22,0.18)]">
+                    <figure data-gsap="image" class="absolute bottom-0 right-0 h-[88%] w-[88%] overflow-hidden bg-brand-paper shadow-[0_28px_70px_rgba(23,25,22,0.18)]">
                         <x-public.responsive-image
                             :image="$heroImage"
                             :alt="$heroImage->alt_text ?: $heroImage->title ?: 'Restaurant gallery image'"
@@ -157,7 +158,7 @@
         </div>
     </section>
 
-    <section id="gallery-collection" class="scroll-mt-24 bg-brand-ink py-24 lg:py-32">
+    <section id="gallery-collection" data-gsap="gallery" class="scroll-mt-24 bg-brand-ink py-24 lg:py-32">
         <div class="mx-auto max-w-7xl px-5 sm:px-6 lg:px-10">
             <x-public.section-heading
                 eyebrow="The Collection"
@@ -168,7 +169,7 @@
             @if ($categories->isNotEmpty())
                 <ul class="mt-10 flex flex-wrap justify-center gap-3" aria-label="Gallery categories">
                     @foreach ($categories as $category)
-                        <li class="border border-white/15 px-4 py-2 text-[0.65rem] font-semibold uppercase tracking-[0.22em] text-stone-300">
+                        <li data-gsap-reveal class="border border-white/15 px-4 py-2 text-[0.65rem] font-semibold uppercase tracking-[0.22em] text-stone-300">
                             {{ $category }}
                         </li>
                     @endforeach
@@ -176,7 +177,7 @@
             @endif
 
             @if ($galleryImages->isNotEmpty())
-                <div class="mt-14 grid gap-4 md:auto-rows-[18rem] md:grid-cols-2 lg:grid-cols-3">
+                <div data-gsap="gallery-collection" class="mt-14 grid gap-4 md:auto-rows-[18rem] md:grid-cols-2 lg:grid-cols-3">
                     @foreach ($galleryImages as $image)
                         @php
                             $patternIndex = $loop->index % 8;
@@ -198,7 +199,7 @@
                 </div>
 
                 @if ($galleryImages->hasPages())
-                    <div class="mt-14 border-t border-white/10 pt-10">
+                    <div data-gsap="section" class="mt-14 border-t border-white/10 pt-10">
                         {{ $galleryImages->links() }}
                     </div>
                 @endif
@@ -211,21 +212,21 @@
     </section>
 
     <section class="grid lg:grid-cols-2">
-        <article class="relative isolate flex min-h-[30rem] items-center overflow-hidden bg-brand-ink-soft px-5 py-20 sm:px-10 lg:px-16">
+        <article data-gsap="panel" class="relative isolate flex min-h-[30rem] items-center overflow-hidden bg-brand-ink-soft px-5 py-20 sm:px-10 lg:px-16">
             @if ($heroImage?->image_url)
-                <x-public.responsive-image
+                <div data-gsap="parallax" class="absolute inset-0 -z-20"><x-public.responsive-image
                     :image="$heroImage"
                     alt=""
                     variant="large"
                     sizes="(min-width: 1024px) 50vw, 100vw"
                     width="1200"
                     height="900"
-                    img-class="absolute inset-0 -z-20 h-full w-full object-cover opacity-30"
-                />
+                    img-class="h-full w-full object-cover opacity-30"
+                /></div>
             @endif
             <div class="absolute inset-0 -z-10 bg-brand-ink/78"></div>
 
-            <div class="mx-auto max-w-lg text-center">
+            <div data-gsap-reveal class="mx-auto max-w-lg text-center">
                 <p class="text-xs font-semibold uppercase tracking-[0.3em] text-brand-gold">Private Celebrations</p>
                 <h2 class="mt-5 font-display text-4xl leading-tight text-white sm:text-5xl">A setting worthy of the occasion</h2>
                 <p class="mt-6 text-base leading-8 text-stone-300">
@@ -240,10 +241,10 @@
             </div>
         </article>
 
-        <article class="relative isolate flex min-h-[30rem] items-center overflow-hidden bg-brand-paper px-5 py-20 text-brand-ink sm:px-10 lg:px-16">
+        <article data-gsap="panel" class="relative isolate flex min-h-[30rem] items-center overflow-hidden bg-brand-paper px-5 py-20 text-brand-ink sm:px-10 lg:px-16">
             <div class="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_75%_22%,rgba(201,164,93,0.18),transparent_35%)]"></div>
 
-            <div class="mx-auto max-w-lg text-center">
+            <div data-gsap-reveal class="mx-auto max-w-lg text-center">
                 <p class="text-xs font-semibold uppercase tracking-[0.3em] text-brand-gold-dark">Plan Your Visit</p>
                 <h2 class="mt-5 font-display text-4xl leading-tight sm:text-5xl">Questions about the dining experience?</h2>
                 <p class="mt-6 text-base leading-8 text-brand-muted">
@@ -258,4 +259,5 @@
             </div>
         </article>
     </section>
+    </div>
 </x-layouts.public>
