@@ -5,13 +5,13 @@ test('shared Alpine inquiry controller keeps page-specific success titles', func
 
     expect($script)
         ->not->toBeFalse()
-        ->toContain("contact: 'Contact Inquiry received'")
-        ->toContain("'order-inquiry': 'Order Inquiry received'")
-        ->toContain("'reservation-request': 'Reservation Request received'")
+        ->toContain('contact: \'Contact Inquiry received\'')
+        ->toContain('\'order-inquiry\': \'Order Inquiry received\'')
+        ->toContain('\'reservation-request\': \'Reservation Request received\'')
         ->toContain('resetAfterSuccess()')
-        ->toContain("'Unable to connect'")
-        ->toContain("'Unable to process inquiry'")
-        ->toContain("aria-describedby");
+        ->toContain('\'Unable to connect\'')
+        ->toContain('\'Unable to process inquiry\'')
+        ->toContain('aria-describedby');
 });
 
 test('public notification center provides distinct accessible success and error semantics', function (): void {
@@ -19,8 +19,8 @@ test('public notification center provides distinct accessible success and error 
 
     expect($component)
         ->not->toBeFalse()
-        ->toContain("notification?.type === 'success' ? 'status' : 'alert'")
-        ->toContain("notification?.type === 'success' ? 'polite' : 'assertive'")
+        ->toContain('notification?.type === \'success\' ? \'status\' : \'alert\'')
+        ->toContain('notification?.type === \'success\' ? \'polite\' : \'assertive\'')
         ->toContain('aria-atomic="true"')
         ->toContain('@keydown.escape.window="close()"')
         ->toContain('aria-label="Dismiss notification"');
