@@ -250,7 +250,7 @@ test('gallery page handles a single visible image', function (): void {
 test('gallery page keeps its empty state and scope safe continuation links', function (): void {
     $this->get(route('gallery'))
         ->assertOk()
-        ->assertSeeText('No visible gallery images yet. Add images from the Filament admin panel.')
+        ->assertSeeText('Our gallery is currently being curated. Please return soon for a glimpse of Le Jardin.')
         ->assertSeeText('Explore Banquet Hall')
         ->assertSeeText('Contact Us')
         ->assertDontSeeText('Book Now')

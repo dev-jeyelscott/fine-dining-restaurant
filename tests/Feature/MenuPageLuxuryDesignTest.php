@@ -29,7 +29,7 @@ test('menu page presents visible categories and items in the luxury menu layout'
         ->assertSee('href="#category-chef-selections"', false)
         ->assertSee('id="category-chef-selections"', false)
         ->assertSeeTextInOrder([
-            'A menu composed with intention',
+            'The Le Jardin Menu',
             'Chef Selections',
             'Truffle-Crusted Beef Tenderloin',
             'Submit Order Inquiry',
@@ -66,5 +66,5 @@ test('menu page exposes progressive motion hooks without hiding native content',
         ->assertSee('data-menu-motion="card-image"', false)
         ->assertSee('data-menu-motion="closing-cta"', false)
         ->assertSeeText('Roasted Garden Vegetables')
-        ->assertSeeText('personally review the details with you');
+        ->assertSeeText('personally review your request and confirm availability with you');
 });
