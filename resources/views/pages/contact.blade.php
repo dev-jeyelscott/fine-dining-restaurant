@@ -38,7 +38,7 @@
             </div>
         </section>
 
-        <section id="contact-inquiry" data-gsap="section" class="overflow-hidden bg-brand-ivory py-20 text-brand-ink sm:py-24 lg:py-32">
+        <section id="contact-inquiry" data-gsap="section" class="scroll-mt-20 overflow-hidden bg-brand-ivory py-20 text-brand-ink sm:py-24 lg:py-32">
         @php
             $phone = $settings['phone'] ?? null;
             $phoneDigits = is_string($phone) ? preg_replace('/\D+/', '', $phone) : null;
@@ -103,7 +103,7 @@
                     <div role="alert" class="mb-6 border border-brand-burgundy/25 bg-red-50 p-5 text-sm leading-7 text-brand-burgundy"><p class="font-semibold">Please review the highlighted fields and try again.</p></div>
                 @endif
 
-                <form data-contact-form data-gsap="panel" method="POST" action="{{ route('contact-inquiries.store') }}" class="border border-brand-gold/30 bg-white p-6 shadow-[0_28px_80px_rgba(23,25,22,0.1)] sm:p-9 lg:p-12" novalidate>
+                <form data-contact-form data-gsap="panel" method="POST" action="{{ route('contact-inquiries.store') }}" class="border border-brand-gold/30 bg-white p-6 shadow-[0_28px_80px_rgba(23,25,22,0.1)] sm:p-9 lg:p-12" x-data="inquiryForm" @submit.prevent="submit" novalidate x-bind:aria-busy="submitting">
                     @csrf
                     <input type="hidden" name="source_page" value="contact">
                     <div class="hidden" aria-hidden="true"><label for="website">Website</label><input id="website" name="website" type="text" tabindex="-1" autocomplete="off" value="{{ old('website') }}"></div>
@@ -124,7 +124,7 @@
 
                     <div data-gsap-reveal class="mt-9 border-t border-brand-gold/25 pt-8">
                         <p class="max-w-xl text-sm leading-7 text-brand-muted">Your message will receive our personal attention. For table requests or Order Inquiries, use the dedicated forms so we have every detail needed to assist you.</p>
-                        <button type="submit" class="mt-6 inline-flex min-h-12 w-full items-center justify-center bg-brand-ink px-7 py-3 text-xs font-semibold uppercase tracking-[0.2em] text-white transition duration-300 hover:bg-brand-gold-dark focus-visible:outline-brand-gold sm:w-auto">Send Inquiry</button>
+                        <button type="submit" x-bind:disabled="submitting" class="mt-6 inline-flex min-h-12 w-full items-center justify-center bg-brand-ink px-7 py-3 text-xs font-semibold uppercase tracking-[0.2em] text-white transition duration-300 hover:bg-brand-gold-dark disabled:cursor-wait disabled:opacity-60 focus-visible:outline-brand-gold sm:w-auto"><span x-text="submitting ? 'Submitting…' : 'Send Inquiry'">Send Inquiry</span></button>
                     </div>
                 </form>
             </div>

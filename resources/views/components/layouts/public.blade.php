@@ -12,6 +12,8 @@
     <div class="min-h-screen">
         <x-public.header />
 
+        <x-public.notification-center />
+
         <main>
             {{ $slot }}
         </main>

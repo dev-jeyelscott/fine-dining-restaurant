@@ -65,6 +65,37 @@ test('valid payload stores database record', function () use ($contactFormUrl, $
     ]);
 });
 
+test('valid JSON payload stores once and returns a safe success response', function () use ($validPayload): void {
+    Queue::fake();
+
+    $response = $this
+        ->withHeader('Accept', 'application/json')
+        ->postJson(route('contact-inquiries.store'), $validPayload());
+
+    $response
+        ->assertOk()
+        ->assertJsonPath('success', true)
+        ->assertJsonPath('message', fn (string $message): bool => str_contains($message, 'Contact Inquiry'));
+
+    $this->assertDatabaseCount('contact_inquiries', 1);
+});
+
+test('invalid JSON payload returns field errors without storing', function (): void {
+    Queue::fake();
+
+    $response = $this
+        ->withHeader('Accept', 'application/json')
+        ->postJson(route('contact-inquiries.store'), [
+            'email' => 'invalid',
+        ]);
+
+    $response
+        ->assertStatus(422)
+        ->assertJsonValidationErrors(['customer_name', 'email', 'message']);
+
+    $this->assertDatabaseCount('contact_inquiries', 0);
+});
+
 test('valid payload queues notification', function () use ($contactFormUrl, $validPayload): void {
     Queue::fake();
 
