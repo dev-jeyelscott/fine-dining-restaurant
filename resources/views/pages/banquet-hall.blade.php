@@ -71,7 +71,7 @@
                     @if ($page?->content)
                         {!! str($page->content)->sanitizeHtml() !!}
                     @else
-                        <p>Our banquet hall is suited for family celebrations, private dining, corporate meals, and other special gatherings.</p>
+                        <p>Our banquet hall offers a refined setting for family celebrations, private dining, corporate meals, and life’s most meaningful gatherings.</p>
                         <p>Please contact our team for capacity, availability, menu options, and event details. All banquet inquiries are manually reviewed.</p>
                     @endif
                 </div>

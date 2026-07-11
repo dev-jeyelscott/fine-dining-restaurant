@@ -1,6 +1,6 @@
 <x-layouts.public
     :title="$page?->meta_title ?: ($settings['meta_title'] ?? 'Home')"
-    :description="$page?->meta_description ?: ($settings['meta_description'] ?? 'Fine dining restaurant for families, guests, events, reservation requests, and order inquiries.')"
+    :description="$page?->meta_description ?: ($settings['meta_description'] ?? 'An elevated dining destination for considered cuisine, gracious hospitality, and memorable occasions.')"
 >
     @php
         $restaurantName = $settings['restaurant_name'] ?? config('app.name');
@@ -15,9 +15,9 @@
 
     <div data-home-motion>
     <x-public.homepage-hero
-        eyebrow="Fine dining, thoughtfully served"
-        title="{{ $page?->title ?: 'An elevated dining experience for every occasion' }}"
-        description="{{ $page?->excerpt ?: 'Discover carefully prepared dishes, warm hospitality, and an elegant atmosphere for family dinners, intimate celebrations, and memorable events.' }}"
+        eyebrow="A table worth remembering"
+        title="{{ $page?->title ?: 'Where every occasion is beautifully considered' }}"
+        description="{{ $page?->excerpt ?: 'Savour considered cuisine, gracious service, and an atmosphere designed for lingering—whether marking a milestone or simply making an evening memorable.' }}"
         :image="$heroImage"
         :image-alt="$heroImage?->alt_text ?: $heroImage?->title ?: 'Elegant restaurant dining room'"
         primary-label="Request a Reservation"
@@ -54,21 +54,21 @@
             <div>
                 <x-public.section-heading
                     eyebrow="Our Story"
-                    title="Fine dining made warm and welcoming"
-                    :description="$page?->content ?: 'Our restaurant brings thoughtful preparation, gracious service, and a refined atmosphere together for meals that feel both special and comfortable.'"
+                    title="An invitation to linger"
+                    :description="$page?->content ?: 'We bring considered preparation, gracious service, and a quietly refined atmosphere together to make every visit feel personal.'"
                     align="left"
                     theme="light"
                 />
 
                 <p class="mt-8 max-w-xl text-base leading-8 text-brand-muted">
-                    Whether you are planning a family dinner, an intimate celebration, or an important gathering, our team is here to create a memorable experience from the first welcome to the final course.
+                    From intimate dinners to milestone celebrations, every detail is thoughtfully composed—from the first welcome to the final course.
                 </p>
 
                 <a
                     href="{{ route('gallery') }}"
                     class="group mt-9 inline-flex items-center gap-3 text-xs font-semibold uppercase tracking-[0.2em] text-brand-ink transition hover:text-brand-gold-dark"
                 >
-                    Explore the experience
+                    Enter the world of {{ $restaurantName }}
                     <span class="transition duration-300 group-hover:translate-x-2" aria-hidden="true">&rarr;</span>
                 </a>
             </div>
@@ -79,8 +79,8 @@
         <div class="mx-auto max-w-7xl px-5 sm:px-6 lg:px-10">
             <x-public.section-heading
                 eyebrow="The Menu"
-                title="Signature selections"
-                description="A curated preview of visible menu items managed by the restaurant team."
+                title="The art of the menu"
+                description="Discover a curated selection of dishes shaped by season, craft, and the pleasure of the table."
             />
 
             <div class="mt-14 grid gap-10 md:grid-cols-2 lg:grid-cols-3 lg:gap-8">
@@ -121,9 +121,9 @@
 
             <div class="mx-auto max-w-lg text-center">
                 <p class="text-xs font-semibold uppercase tracking-[0.3em] text-brand-gold">Dining With Us</p>
-                <h2 class="mt-5 font-display text-4xl leading-tight text-white sm:text-5xl">Plan your dining experience</h2>
+                <h2 class="mt-5 font-display text-4xl leading-tight text-white sm:text-5xl">Make an evening of it</h2>
                 <p class="mt-6 text-base leading-8 text-stone-300">
-                    Share your preferred date, time, and party size. Our team will review your request and contact you to confirm availability.
+                    Share the details of your preferred visit. Our team will personally review your request and be in touch regarding availability.
                 </p>
                 <a
                     href="{{ route('reservation-request.create') }}"
@@ -150,9 +150,9 @@
 
             <div class="mx-auto max-w-lg text-center">
                 <p class="text-xs font-semibold uppercase tracking-[0.3em] text-brand-gold-dark">Dining Beyond Our Tables</p>
-                <h2 class="mt-5 font-display text-4xl leading-tight sm:text-5xl">Bring the experience home</h2>
+                <h2 class="mt-5 font-display text-4xl leading-tight sm:text-5xl">A taste of the house, at home</h2>
                 <p class="mt-6 text-base leading-8 text-brand-muted">
-                    Tell us what you would like for pickup or delivery. Our team will review availability, confirm the final total, and arrange the details directly with you.
+                    Tell us what you are craving for pickup or delivery. We will curate the details with you and confirm availability and the final total personally.
                 </p>
                 <a
                     href="{{ route('order-inquiry.create') }}"
@@ -169,14 +169,14 @@
             <div>
                 <x-public.section-heading
                     eyebrow="Banquet Hall"
-                    title="A refined setting for meaningful occasions"
-                    description="Host family gatherings, private dining, celebrations, and corporate events in an elegant space supported by attentive restaurant service."
+                    title="A setting for life’s finest gatherings"
+                    description="Gather for intimate celebrations, private dining, and meaningful occasions in a room shaped by warmth, elegance, and attentive service."
                     align="left"
                     theme="light"
                 />
 
                 <p class="mt-8 max-w-xl text-base leading-8 text-brand-muted">
-                    Share your event requirements with our team to discuss the space, menu options, guest needs, and availability. All banquet arrangements are reviewed and confirmed directly by the restaurant.
+                    Tell us about your occasion and we will help shape the setting, menu, and details around it. Every arrangement is personally reviewed and confirmed by our team.
                 </p>
 
                 <a
@@ -213,8 +213,8 @@
         <div class="mx-auto max-w-7xl px-5 sm:px-6 lg:px-10">
             <x-public.section-heading
                 eyebrow="Gallery"
-                title="Ambiance, dishes, and celebrations"
-                description="A visual preview of the dining experience, managed through the restaurant admin panel."
+                title="A glimpse of the experience"
+                description="Step into the rooms, plates, and celebrations that define the world of {{ $restaurantName }}."
             />
 
             @if ($galleryImages->isNotEmpty())
@@ -264,7 +264,7 @@
                     href="{{ route('gallery') }}"
                     class="inline-flex min-h-12 items-center justify-center border border-brand-gold px-7 py-3 text-xs font-semibold uppercase tracking-[0.2em] text-brand-gold transition hover:bg-brand-gold hover:text-brand-ink"
                 >
-                    View the Gallery
+                    Discover the Gallery
                 </a>
             </div>
         </div>
@@ -273,12 +273,12 @@
     <section data-gsap="section" class="bg-brand-paper py-24 text-brand-ink lg:py-28">
         <div class="mx-auto grid max-w-7xl gap-12 px-5 sm:px-6 lg:grid-cols-[1.1fr_0.9fr] lg:px-10">
             <div>
-                <p data-gsap-reveal class="text-xs font-semibold uppercase tracking-[0.3em] text-brand-gold-dark">Plan Your Visit</p>
+                <p data-gsap-reveal class="text-xs font-semibold uppercase tracking-[0.3em] text-brand-gold-dark">Your next occasion</p>
                 <h2 data-gsap-reveal class="mt-5 max-w-2xl font-display text-4xl leading-tight sm:text-5xl">
-                    We look forward to welcoming you to {{ $restaurantName }}.
+                    We look forward to making your next occasion memorable at {{ $restaurantName }}.
                 </h2>
                 <p data-gsap-reveal class="mt-6 max-w-2xl text-base leading-8 text-brand-muted">
-                    Explore the menu, send a Reservation Request, or contact our team for directions and general dining questions.
+                    Explore the menu, send a Reservation Request, or begin a conversation with our team about your visit.
                 </p>
             </div>
 

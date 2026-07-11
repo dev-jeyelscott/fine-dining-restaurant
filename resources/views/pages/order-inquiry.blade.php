@@ -51,7 +51,7 @@
         <div class="mx-auto grid max-w-7xl gap-14 px-5 sm:px-6 lg:grid-cols-[0.78fr_1.22fr] lg:gap-20 lg:px-10 xl:gap-28">
                 <aside data-gsap-reveal class="lg:sticky lg:top-28 lg:self-start">
                     <p class="text-xs font-semibold uppercase tracking-[0.32em] text-brand-gold-dark">Order Inquiry</p>
-                    <h2 class="mt-5 font-display text-4xl leading-tight sm:text-5xl">Bring the experience home</h2>
+                    <h2 class="mt-5 font-display text-4xl leading-tight sm:text-5xl">A taste of the house, at home</h2>
                     <p class="mt-6 max-w-xl text-base leading-8 text-brand-muted">
                         Share the items you are interested in, your preferred pickup or delivery time, and any notes. This does not place a paid order or reserve delivery availability.
                     </p>
@@ -68,7 +68,7 @@
 
                     <div data-gsap-reveal class="mt-10 border border-brand-gold/35 bg-brand-paper p-6 text-sm leading-7 text-brand-muted">
                         <p class="font-semibold text-brand-ink">Please note</p>
-                        <p class="mt-2">This is an Order Inquiry, not checkout or online payment. Our team will manually confirm availability, final total, and pickup or delivery details directly.</p>
+                        <p class="mt-2">This is an Order Inquiry rather than checkout. Our team will personally confirm availability, the final total, and pickup or delivery details with you.</p>
                     </div>
                 </aside>
 

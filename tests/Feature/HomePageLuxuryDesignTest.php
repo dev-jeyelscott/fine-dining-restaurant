@@ -9,18 +9,18 @@ use Illuminate\Support\Facades\Storage;
 test('homepage renders the premium restaurant experience and approved calls to action', function (): void {
     $this->get(route('home'))
         ->assertOk()
-        ->assertSeeText('Fine dining, thoughtfully served')
-        ->assertSeeText('Fine dining made warm and welcoming')
-        ->assertSeeText('Signature selections')
-        ->assertSeeText('Plan your dining experience')
-        ->assertSeeText('Bring the experience home')
-        ->assertSeeText('A refined setting for meaningful occasions')
-        ->assertSeeText('Ambiance, dishes, and celebrations')
+        ->assertSeeText('A table worth remembering')
+        ->assertSeeText('An invitation to linger')
+        ->assertSeeText('The art of the menu')
+        ->assertSeeText('Make an evening of it')
+        ->assertSeeText('A taste of the house, at home')
+        ->assertSeeText('A setting for life’s finest gatherings')
+        ->assertSeeText('A glimpse of the experience')
         ->assertSeeText('Request a Reservation')
         ->assertSeeText('Submit Order Inquiry')
         ->assertSeeText('View Full Menu')
         ->assertSeeText('Explore Banquet Hall')
-        ->assertSeeText('View the Gallery');
+        ->assertSeeText('Discover the Gallery');
 });
 
 test('homepage remains scope safe and does not fabricate social proof', function (): void {

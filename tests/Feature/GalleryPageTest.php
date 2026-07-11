@@ -69,7 +69,7 @@ test('gallery page presents visible images in a premium editorial layout', funct
         ->assertSee('data-gsap-counter', false)
         ->assertSee('data-gsap="panel"', false)
         ->assertSee('fetchpriority="high"', false)
-        ->assertSeeText('A closer look at the experience')
+        ->assertSeeText('Details worth remembering')
         ->assertSeeText('The Collection')
         ->assertSeeText('Grand Dining Room')
         ->assertSeeText('Golden Truffle Tenderloin')
@@ -227,7 +227,7 @@ test('gallery page uses the approved introduction when page content is empty', f
 
     $this->get(route('gallery'))
         ->assertOk()
-        ->assertSeeText('From softly lit dining rooms to carefully finished plates and thoughtfully prepared celebrations, every image reflects the warmth, refinement, and attention to detail guests can expect.');
+        ->assertSeeText('From softly lit dining rooms to carefully finished plates and beautifully prepared celebrations, every image reflects our warmth, refinement, and attention to detail.');
 });
 
 test('gallery page handles a single visible image', function (): void {

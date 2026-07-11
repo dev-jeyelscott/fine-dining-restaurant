@@ -8,7 +8,7 @@
     $pageTitle = $title ? "{$title} | {$siteName}" : $siteName;
     $metaDescription = $description ?: \App\Models\SiteSetting::value(
         'meta_description',
-        'Fine dining restaurant offering menu, reservation requests, order inquiries, banquet hall information, gallery, and contact details.'
+        'An elevated dining destination for considered cuisine, gracious hospitality, intimate celebrations, and memorable occasions.'
     );
 @endphp
 

@@ -81,8 +81,8 @@
             <x-public.section-heading
                 data-menu-motion="full-heading"
                 eyebrow="From Our Kitchen"
-                title="The full menu"
-                description="Each selection is prepared with care and served with the warm, attentive hospitality at the heart of our dining room."
+                title="A menu composed with intention"
+                description="Each selection is prepared with care, guided by seasonality, and served with the warm hospitality at the heart of our dining room."
             />
 
             <div class="mt-20 divide-y divide-brand-gold/20">
@@ -132,10 +132,10 @@
             <div data-menu-motion="closing-copy">
                 <p data-menu-motion="closing-item" class="text-xs font-semibold uppercase tracking-[0.3em] text-brand-gold-dark">Dining With Us</p>
                 <h2 data-menu-motion="closing-item" class="mt-5 max-w-3xl font-display text-4xl leading-tight sm:text-5xl">
-                    Let us prepare something memorable for your table.
+                    Let us compose something memorable for your table.
                 </h2>
                 <p data-menu-motion="closing-item" class="mt-6 max-w-2xl text-base leading-8 text-brand-muted">
-                    Planning to dine with us or enjoy a selection at home? Send your request and our team will personally review the details and confirm availability.
+                    Planning an evening with us or a taste of the house at home? Share your request and our team will personally review the details with you.
                 </p>
             </div>
 

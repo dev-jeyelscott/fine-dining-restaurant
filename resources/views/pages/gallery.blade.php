@@ -1,6 +1,6 @@
 <x-layouts.public
     :title="$page?->meta_title ?: 'Gallery'"
-    :description="$page?->meta_description ?: 'View our restaurant interiors, dishes, events, and ambiance.'"
+    :description="$page?->meta_description ?: 'Discover the rooms, dishes, celebrations, and quiet details that shape our dining experience.'"
 >
     @php
         $heroImage = $galleryImages->first();
@@ -36,7 +36,7 @@
         <div class="mx-auto w-full max-w-7xl px-5 pb-20 pt-36 sm:px-6 lg:px-10 lg:pb-28 lg:pt-44">
             <div data-gsap="hero-content" class="max-w-4xl">
                 <p data-gsap-reveal class="text-xs font-semibold uppercase tracking-[0.38em] text-brand-gold sm:text-sm">
-                    Gallery
+                    The Gallery
                 </p>
 
                 <h1 data-gsap-reveal class="mt-6 max-w-4xl font-display text-5xl leading-[0.98] text-white sm:text-6xl lg:text-8xl">
@@ -44,7 +44,7 @@
                 </h1>
 
                 <p data-gsap-reveal class="mt-7 max-w-2xl text-base leading-8 text-stone-200 sm:text-lg">
-                    {{ $page?->excerpt ?: 'Step inside the restaurant through a curated collection of dining spaces, signature plates, private gatherings, and details that shape the guest experience.' }}
+                    {{ $page?->excerpt ?: 'Step inside through a curated collection of dining spaces, signature plates, private gatherings, and details that make each occasion distinct.' }}
                 </p>
 
                 <div data-gsap-reveal class="mt-10 flex flex-col gap-4 sm:flex-row">
@@ -71,8 +71,8 @@
             <div>
                 <x-public.section-heading
                     eyebrow="The Experience"
-                    title="A closer look at the experience"
-                    :description="$page?->content ?: 'From softly lit dining rooms to carefully finished plates and thoughtfully prepared celebrations, every image reflects the warmth, refinement, and attention to detail guests can expect.'"
+                    title="Details worth remembering"
+                    :description="$page?->content ?: 'From softly lit dining rooms to carefully finished plates and beautifully prepared celebrations, every image reflects our warmth, refinement, and attention to detail.'"
                     align="left"
                     theme="light"
                 />
