@@ -7,6 +7,7 @@ const successTitles = {
 export default function inquiryForm() {
     return {
         submitting: false,
+        popup: null,
         errors: {},
         touched: new Set(),
         fulfillmentType: 'pickup',
@@ -247,6 +248,7 @@ export default function inquiryForm() {
             this.$el.reset();
             this.clearAllErrors();
             this.touched.clear();
+            this.popup = null;
             this.fulfillmentType = this.$el.dataset.defaultFulfillment || 'pickup';
             this.$dispatch('inquiry-form:reset', { fulfillmentType: this.fulfillmentType });
         },
