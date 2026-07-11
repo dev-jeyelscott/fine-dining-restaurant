@@ -64,12 +64,14 @@ test('homepage exposes semantic hooks for progressive luxury motion', function (
 test('homepage gallery preview renders an accessible editorial carousel contract', function (): void {
     $this->get(route('home'))
         ->assertOk()
-        ->assertSee('data-gallery-carousel', false)
-        ->assertSee('data-gallery-track', false)
-        ->assertSee('data-gallery-slide', false)
-        ->assertSee('data-gallery-prev', false)
-        ->assertSee('data-gallery-next', false)
-        ->assertSee('data-gallery-counter', false);
+        ->assertSee('data-home-gallery', false)
+        ->assertSee('data-home-gallery-viewport', false)
+        ->assertSee('data-home-gallery-track', false)
+        ->assertSee('data-home-gallery-slide', false)
+        ->assertSee('data-home-gallery-previous', false)
+        ->assertSee('data-home-gallery-next', false)
+        ->assertSee('data-home-gallery-current', false)
+        ->assertSee('data-home-gallery-total', false);
 });
 
 test('public entry lazy loads homepage motion without statically importing gsap', function (): void {
@@ -88,10 +90,46 @@ test('homepage motion reads media conditions and reverts its match media lifecyc
         ->toContain('context.conditions')
         ->toContain('reducedMotion')
         ->toContain('media.revert()')
-        ->toContain('initializeGalleryCarousel')
+        ->not->toContain('({ reducedMotion }) =>');
+});
+
+test('homepage carousel initializer keeps the required interaction and lifecycle contracts', function (): void {
+    $carouselModule = (string) file_get_contents(resource_path('js/home-gallery-carousel.js'));
+
+    expect($carouselModule)
+        ->toContain('Draggable')
         ->toContain('ArrowLeft')
         ->toContain('ArrowRight')
-        ->not->toContain('({ reducedMotion }) =>');
+        ->toContain('event.key === "Home"')
+        ->toContain('event.key === "End"')
+        ->toContain('ResizeObserver')
+        ->toContain('draggable?.kill()')
+        ->toContain('reducedMotion');
+});
+
+test('homepage carousel keeps the six-image controller bound and safe one-image state', function (): void {
+    expect((string) file_get_contents(app_path('Http/Controllers/PublicSite/HomeController.php')))
+        ->toContain('->limit(6)');
+
+    expect((string) file_get_contents(resource_path('views/components/public/home-gallery-carousel.blade.php')))
+        ->not->toContain('take(5)')
+        ->toContain('$galleryImages->count() > 1');
+
+    GalleryImage::query()->delete();
+    GalleryImage::query()->create([
+        'title' => 'A single gallery moment',
+        'alt_text' => 'A single gallery moment',
+        'image_path' => 'gallery/single-gallery-moment.jpg',
+        'category' => 'interior',
+        'sort_order' => 1,
+        'is_visible' => true,
+    ]);
+
+    $this->get(route('home'))
+        ->assertOk()
+        ->assertSee('data-home-gallery-slide', false)
+        ->assertDontSee('data-home-gallery-previous', false)
+        ->assertDontSee('data-home-gallery-next', false);
 });
 
 test('homepage displays only the first three visible menu items in configured order', function (): void {

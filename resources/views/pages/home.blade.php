@@ -209,7 +209,7 @@
         </div>
     </section>
 
-    <section data-gsap="gallery" data-gallery-carousel class="bg-brand-ink py-24 lg:py-32">
+    <section data-gsap="gallery" class="bg-brand-ink py-24 lg:py-32">
         <div class="mx-auto max-w-7xl px-5 sm:px-6 lg:px-10">
             <x-public.section-heading
                 eyebrow="Gallery"
@@ -217,57 +217,7 @@
                 description="Step into the rooms, plates, and celebrations that define the world of {{ $restaurantName }}."
             />
 
-            @if ($galleryImages->isNotEmpty())
-                <div class="mt-14" data-gallery-track tabindex="0" aria-label="Gallery preview">
-                    @foreach ($galleryImages->take(5) as $image)
-                        <article data-gallery-slide data-gsap="tile" @class([
-                            'group relative min-h-[28rem] overflow-hidden bg-brand-ink-soft sm:min-h-[34rem] lg:min-h-[40rem]',
-                            'hidden' => ! $loop->first,
-                        ]) aria-hidden="{{ $loop->first ? 'false' : 'true' }}">
-                            @if ($image->image_url)
-                                <x-public.responsive-image
-                                    :image="$image"
-                                    :alt="$image->alt_text ?: $image->title ?: 'Restaurant gallery image'"
-                                    :variant="$loop->first ? 'large' : 'card'"
-                                    :sizes="$loop->first ? '(min-width: 1024px) 66vw, 100vw' : '(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw'"
-                                    width="1200"
-                                    height="900"
-                                    img-class="h-full w-full object-cover transition duration-700 group-hover:scale-105"
-                                />
-                            @endif
-
-                            <div class="absolute inset-0 bg-gradient-to-t from-brand-ink/90 via-brand-ink/10 to-transparent opacity-90 transition group-hover:opacity-100"></div>
-
-                            @if ($image->title || $image->category)
-                                <div class="absolute inset-x-0 bottom-0 p-6 sm:p-10">
-                                    @if ($image->category)
-                                        <p class="text-[0.65rem] font-semibold uppercase tracking-[0.24em] text-brand-gold">
-                                            {{ $image->category }}
-                                        </p>
-                                    @endif
-                                    @if ($image->title)
-                                        <h3 class="mt-2 font-display text-2xl text-white">{{ $image->title }}</h3>
-                                    @endif
-                                </div>
-                            @endif
-                        </article>
-                    @endforeach
-                </div>
-                <div class="mt-6 flex items-center justify-between gap-6 border-t border-brand-gold/25 pt-5" data-gallery-controls>
-                    <p class="text-xs font-semibold uppercase tracking-[0.22em] text-brand-gold" aria-live="polite">
-                        <span data-gallery-counter>01</span>
-                        <span class="text-white/35"> / {{ str_pad((string) min($galleryImages->count(), 5), 2, '0', STR_PAD_LEFT) }}</span>
-                    </p>
-                    <div class="flex gap-2">
-                        <button type="button" data-gallery-prev aria-label="Previous gallery image" class="inline-flex size-12 items-center justify-center border border-brand-gold/50 text-brand-gold transition hover:bg-brand-gold hover:text-brand-ink focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-gold">&larr;</button>
-                        <button type="button" data-gallery-next aria-label="Next gallery image" class="inline-flex size-12 items-center justify-center border border-brand-gold/50 text-brand-gold transition hover:bg-brand-gold hover:text-brand-ink focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-gold">&rarr;</button>
-                    </div>
-                </div>
-            @else
-                <x-public.alert type="warning" class="mt-14">
-                    Our gallery is currently being curated. Please return soon for a glimpse of Le Jardin.
-                </x-public.alert>
-            @endif
+            <x-public.home-gallery-carousel :gallery-images="$galleryImages" />
 
             <div class="mt-12 text-center">
                 <a

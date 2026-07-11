@@ -1,5 +1,6 @@
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { initHomeGalleryCarousel } from "./home-gallery-carousel";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -68,93 +69,6 @@ function addGoldFrame(target) {
         scale: 1,
         scrollTrigger: { trigger: target.parentElement, start: "top 78%", once: true },
     });
-}
-
-function initializeGalleryCarousel(root, { reducedMotion }) {
-    const carousel = root.querySelector("[data-gallery-carousel]");
-
-    if (!carousel) {
-        return;
-    }
-
-    const slides = [...carousel.querySelectorAll("[data-gallery-slide]")];
-    const track = carousel.querySelector("[data-gallery-track]");
-    const counter = carousel.querySelector("[data-gallery-counter]");
-    const previous = carousel.querySelector("[data-gallery-prev]");
-    const next = carousel.querySelector("[data-gallery-next]");
-
-    if (slides.length < 2 || !track || !counter || !previous || !next) {
-        return;
-    }
-
-    let activeIndex = 0;
-
-    const render = (nextIndex, animate = true) => {
-        const previousIndex = activeIndex;
-        activeIndex = (nextIndex + slides.length) % slides.length;
-        const outgoing = slides[previousIndex];
-        const incoming = slides[activeIndex];
-
-        slides.forEach((slide, index) => {
-            const isActive = index === activeIndex;
-            slide.classList.toggle("hidden", !isActive);
-            slide.setAttribute("aria-hidden", isActive ? "false" : "true");
-        });
-        counter.textContent = String(activeIndex + 1).padStart(2, "0");
-
-        if (!animate || reducedMotion) {
-            gsap.set(incoming, { clearProps: "all" });
-            return;
-        }
-
-        const image = incoming.querySelector("img");
-        const copy = incoming.querySelector("div.absolute.inset-x-0");
-        const timeline = gsap.timeline({ defaults: { ease: "power4.out" } });
-
-        timeline.set(incoming, { autoAlpha: 0, x: 32 })
-            .set(image, { scale: 1.08 }, 0)
-            .to(outgoing, { autoAlpha: 0, x: -32, duration: 0.45 }, 0)
-            .to(incoming, { autoAlpha: 1, x: 0, duration: 0.8 }, 0.08)
-            .to(image, { scale: 1, duration: 1.2 }, 0.08);
-
-        if (copy) {
-            timeline.fromTo(copy, { autoAlpha: 0, y: 18 }, { autoAlpha: 1, y: 0, duration: 0.55 }, 0.3);
-        }
-    };
-
-    const handlePrevious = () => render(activeIndex - 1);
-    const handleNext = () => render(activeIndex + 1);
-    const handleKeydown = (event) => {
-        if (event.key === "ArrowLeft") {
-            event.preventDefault();
-            handlePrevious();
-        }
-        if (event.key === "ArrowRight") {
-            event.preventDefault();
-            handleNext();
-        }
-    };
-
-    previous.addEventListener("click", handlePrevious);
-    next.addEventListener("click", handleNext);
-    track.addEventListener("keydown", handleKeydown);
-
-    if (!reducedMotion) {
-        gsap.fromTo(carousel, { autoAlpha: 0, y: 24 }, {
-            autoAlpha: 1,
-            duration: 0.8,
-            ease: "power3.out",
-            scrollTrigger: { trigger: carousel, start: "top 80%", once: true },
-            y: 0,
-        });
-    }
-
-    return () => {
-        previous.removeEventListener("click", handlePrevious);
-        next.removeEventListener("click", handleNext);
-        track.removeEventListener("keydown", handleKeydown);
-        gsap.killTweensOf(slides);
-    };
 }
 
 function initializeHeroMotion(root, { desktop }) {
@@ -445,7 +359,7 @@ function initializeOrderInquiryMotion(root, { desktop, reducedMotion }) {
 }
 
 function initializeHomeMotion(root, { desktop, reducedMotion }) {
-    const carouselCleanup = initializeGalleryCarousel(root, { reducedMotion });
+    const carouselCleanup = initHomeGalleryCarousel(root.querySelector("[data-home-gallery]"), { reducedMotion });
 
     if (reducedMotion) {
         return carouselCleanup;
