@@ -61,6 +61,25 @@ test('homepage exposes semantic hooks for progressive luxury motion', function (
         ->assertSee('data-gsap-reveal', false);
 });
 
+test('public entry lazy loads homepage motion without statically importing gsap', function (): void {
+    $publicEntry = (string) file_get_contents(resource_path('js/app.js'));
+
+    expect($publicEntry)
+        ->toContain('document.querySelector("[data-home-motion]")')
+        ->toContain('import("./public-animations")')
+        ->not->toContain('import { initPublicAnimations } from "./public-animations"');
+});
+
+test('homepage motion reads media conditions and reverts its match media lifecycle', function (): void {
+    $motionModule = (string) file_get_contents(resource_path('js/public-animations.js'));
+
+    expect($motionModule)
+        ->toContain('context.conditions')
+        ->toContain('reducedMotion')
+        ->toContain('media.revert()')
+        ->not->toContain('({ reducedMotion }) =>');
+});
+
 test('homepage displays only the first three visible menu items in configured order', function (): void {
     $category = MenuCategory::query()->create([
         'name' => 'Chef Selections',
