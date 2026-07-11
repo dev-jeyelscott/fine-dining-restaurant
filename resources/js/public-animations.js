@@ -70,15 +70,34 @@ function addGoldFrame(target) {
     });
 }
 
+function initializeHeroMotion(root, { desktop }) {
+    const heroImage = root.querySelector("[data-gsap=hero-image]");
+    if (heroImage?.querySelector("img")) {
+        gsap.fromTo(heroImage.querySelector("img"), { scale: 1.06 }, {
+            scale: 1, duration: 1.6, ease: "power4.out",
+        });
+        addParallax(heroImage, desktop ? 3 : 1.5);
+    }
+
+    const heroContent = root.querySelector("[data-gsap=hero-content]");
+    if (heroContent) {
+        const heroItems = heroContent.querySelectorAll("[data-gsap-reveal]");
+        gsap.set(heroItems, { autoAlpha: 0, y: 24 });
+        gsap.timeline({ defaults: { ease: "power4.out" } }).to(heroItems, {
+            autoAlpha: 1, duration: 1.1, stagger: 0.12, y: 0,
+        });
+    }
+}
+
 function setMenuFinalStates(root) {
     gsap.set(root.querySelectorAll('[data-menu-motion="hero-image"]'), { clipPath: "inset(0 0 0% 0)", scale: 1 });
     gsap.set(root.querySelectorAll('[data-menu-motion="hero-item"], [data-menu-motion="full-heading"], [data-menu-motion="closing-item"], [data-menu-motion="closing-actions"]'), { autoAlpha: 1, x: 0, y: 0 });
     gsap.set(root.querySelectorAll('[data-menu-motion="course-number"], [data-menu-motion="course-title"], [data-menu-motion="course-description"], [data-menu-motion="course-rule"], [data-menu-motion="card"], [data-menu-motion="card-copy"], [data-menu-motion="card-image"]'), { autoAlpha: 1, x: 0, y: 0, clipPath: "inset(0 0 0% 0)", scale: 1, scaleX: 1 });
 
     const links = [...root.querySelectorAll('[data-menu-category-link]')];
-    const activeLink = links.find((link) => link.getAttribute('href') === window.location.hash) ?? links[0];
+    const activeLink = links.find((link) => link.getAttribute("href") === window.location.hash) ?? links[0];
 
-    links.forEach((link) => link.setAttribute('aria-current', link === activeLink ? 'true' : 'false'));
+    links.forEach((link) => link.setAttribute("aria-current", link === activeLink ? "true" : "false"));
 }
 
 function initializeMenuMotion(root, { reducedMotion }) {
@@ -115,12 +134,12 @@ function initializeMenuMotion(root, { reducedMotion }) {
     if (categoryNav) {
         const links = [...categoryNav.querySelectorAll('[data-menu-category-link]')];
         const indicator = categoryNav.querySelector('[data-menu-category-indicator]');
-        const scroller = categoryNav.querySelector(':scope > div');
-        let activeLink = links.find((link) => link.getAttribute('href') === window.location.hash)
-            ?? links.find((link) => link.getAttribute('aria-current') === 'true')
+        const scroller = categoryNav.querySelector(":scope > div");
+        let activeLink = links.find((link) => link.getAttribute("href") === window.location.hash)
+            ?? links.find((link) => link.getAttribute("aria-current") === "true")
             ?? links[0];
 
-        links.forEach((link) => link.setAttribute('aria-current', link === activeLink ? 'true' : 'false'));
+        links.forEach((link) => link.setAttribute("aria-current", link === activeLink ? "true" : "false"));
 
         const positionIndicator = () => {
             if (!indicator || !scroller || !activeLink) {
@@ -140,7 +159,7 @@ function initializeMenuMotion(root, { reducedMotion }) {
                 return;
             }
 
-            links.forEach((candidate) => candidate.setAttribute('aria-current', candidate === link ? 'true' : 'false'));
+            links.forEach((candidate) => candidate.setAttribute("aria-current", candidate === link ? "true" : "false"));
             activeLink = link;
             positionIndicator();
         };
@@ -148,12 +167,12 @@ function initializeMenuMotion(root, { reducedMotion }) {
         links.forEach((link) => {
             const handleClick = () => setActiveLink(link);
 
-            link.addEventListener('click', handleClick);
-            cleanup.push(() => link.removeEventListener('click', handleClick));
+            link.addEventListener("click", handleClick);
+            cleanup.push(() => link.removeEventListener("click", handleClick));
         });
         positionIndicator();
-        ScrollTrigger.addEventListener('refresh', positionIndicator);
-        cleanup.push(() => ScrollTrigger.removeEventListener('refresh', positionIndicator));
+        ScrollTrigger.addEventListener("refresh", positionIndicator);
+        cleanup.push(() => ScrollTrigger.removeEventListener("refresh", positionIndicator));
 
         courses.forEach((course, index) => {
             const link = links[index];
@@ -166,7 +185,6 @@ function initializeMenuMotion(root, { reducedMotion }) {
                 trigger: course,
             });
         });
-
     }
 
     if (fullHeading) {
@@ -182,11 +200,15 @@ function initializeMenuMotion(root, { reducedMotion }) {
     }
 
     courses.forEach((course) => {
-        const courseItems = course.querySelectorAll('[data-menu-motion="course-number"], [data-menu-motion="course-title"], [data-menu-motion="course-description"], [data-menu-motion="course-rule"]');
+        const courseItems = course.querySelectorAll('[data-menu-motion="course-number"], [data-menu-motion="course-title"], [data-menu-motion="course-description"]');
+        const courseRule = course.querySelector('[data-menu-motion="course-rule"]');
         const images = course.querySelectorAll('[data-menu-motion="card-image"]');
         const copies = course.querySelectorAll('[data-menu-motion="card-copy"]');
 
         gsap.set(courseItems, { autoAlpha: 0, y: 20 });
+        if (courseRule) {
+            gsap.set(courseRule, { autoAlpha: 1, scaleX: 0, transformOrigin: "left center", y: 0 });
+        }
         gsap.set(images, { clipPath: "inset(0 0 100% 0)" });
         gsap.set(copies, { autoAlpha: 0, y: 18 });
 
@@ -195,11 +217,14 @@ function initializeMenuMotion(root, { reducedMotion }) {
         });
 
         timeline.to(course.querySelector('[data-menu-motion="course-number"]'), { autoAlpha: 1, duration: 0.55, ease: "power3.out", y: 0 })
-            .to(course.querySelectorAll('[data-menu-motion="course-title"], [data-menu-motion="course-description"]'), { autoAlpha: 1, duration: 0.7, ease: "power3.out", stagger: 0.08, y: 0 }, "<0.12")
-            .to(course.querySelector('[data-menu-motion="course-rule"]'), { duration: 0.55, ease: "power3.out", scaleX: 1 }, "<0.12")
-            .to(images, { clipPath: "inset(0 0 0% 0)", duration: 0.9, ease: "power4.out", stagger: { each: 0.08, from: "start" } }, "<0.18")
-            .to(copies, { autoAlpha: 1, duration: 0.65, ease: "power3.out", stagger: { each: 0.08, from: "start" }, y: 0 }, "<0.16");
+            .to(course.querySelectorAll('[data-menu-motion="course-title"], [data-menu-motion="course-description"]'), { autoAlpha: 1, duration: 0.7, ease: "power3.out", stagger: 0.08, y: 0 }, "<0.12");
 
+        if (courseRule) {
+            timeline.to(courseRule, { autoAlpha: 1, duration: 0.55, ease: "power3.out", scaleX: 1, y: 0 }, "<0.12");
+        }
+
+        timeline.to(images, { clipPath: "inset(0 0 0% 0)", duration: 0.9, ease: "power4.out", stagger: { each: 0.08, from: "start" } }, "<0.18")
+            .to(copies, { autoAlpha: 1, duration: 0.65, ease: "power3.out", stagger: { each: 0.08, from: "start" }, y: 0 }, "<0.16");
     });
 
     if (closingCta) {
@@ -217,27 +242,127 @@ function initializeMenuMotion(root, { reducedMotion }) {
     return () => cleanup.forEach((callback) => callback());
 }
 
+function animateDeliveryAddress(root, fulfillmentType, reducedMotion, { animate = true } = {}) {
+    const panel = root.querySelector('[data-gsap="delivery-address"]');
+
+    if (!panel) {
+        return;
+    }
+
+    const isDelivery = fulfillmentType === "delivery";
+
+    if (reducedMotion || !animate) {
+        gsap.killTweensOf(panel);
+        gsap.set(panel, {
+            autoAlpha: isDelivery ? 1 : 0,
+            clearProps: "height,transform",
+            display: isDelivery ? "block" : "none",
+        });
+        return;
+    }
+
+    gsap.killTweensOf(panel);
+
+    if (isDelivery) {
+        gsap.set(panel, { display: "block", height: 0, autoAlpha: 0, y: -10 });
+        gsap.to(panel, { autoAlpha: 1, duration: 0.25, ease: "power2.out", height: "auto", y: 0 });
+        return;
+    }
+
+    gsap.set(panel, { display: "block", height: "auto", autoAlpha: 1, y: 0 });
+    const currentHeight = panel.offsetHeight;
+
+    gsap.set(panel, { height: currentHeight });
+    gsap.to(panel, {
+        autoAlpha: 0,
+        duration: 0.2,
+        ease: "power2.in",
+        height: 0,
+        y: -10,
+        onComplete: () => gsap.set(panel, { display: "none" }),
+    });
+}
+
+function initializeOrderInquiryMotion(root, { desktop, reducedMotion }) {
+    const sidebar = root.querySelector("aside[data-gsap-reveal]");
+    const process = root.querySelector('[data-gsap="process"]');
+    const form = root.querySelector('[data-gsap="form-column"] form');
+    const cards = root.querySelector('[data-gsap="fulfillment-cards"]');
+    const feedback = root.querySelectorAll('[data-gsap="feedback"]');
+    const deliveryPanel = root.querySelector('[data-gsap="delivery-address"]');
+
+    if (reducedMotion) {
+        root.querySelectorAll("[data-gsap-reveal]").forEach((element) => gsap.set(element, { clearProps: "all" }));
+        root.querySelectorAll('[data-gsap="card"]').forEach((element) => gsap.set(element, { clearProps: "all" }));
+        feedback.forEach((element) => gsap.set(element, { clearProps: "all" }));
+    } else {
+        initializeHeroMotion(root, { desktop });
+
+        if (sidebar) {
+            gsap.fromTo(sidebar, { autoAlpha: 0, x: desktop ? -32 : 0, y: desktop ? 0 : revealDistance }, {
+                autoAlpha: 1,
+                duration: 0.9,
+                ease: "power3.out",
+                scrollTrigger: { trigger: sidebar.parentElement, start: "top 78%", once: true },
+                x: 0,
+                y: 0,
+            });
+        }
+
+        if (process) {
+            revealTimeline(process, { stagger: 0.14 });
+        }
+
+        if (form) {
+            revealTimeline(form, { start: "top 84%", stagger: 0.08 });
+        }
+
+        if (cards) {
+            const cardItems = cards.querySelectorAll('[data-gsap="card"]');
+            gsap.set(cardItems, { autoAlpha: 0, y: 18 });
+            gsap.timeline({ scrollTrigger: { trigger: cards, start: "top 82%", once: true } }).to(cardItems, {
+                autoAlpha: 1,
+                duration: 0.65,
+                ease: "power3.out",
+                stagger: 0.1,
+                y: 0,
+            });
+        }
+
+        feedback.forEach((element) => gsap.fromTo(element, { autoAlpha: 0, y: 8 }, {
+            autoAlpha: 1,
+            duration: 0.3,
+            ease: "power2.out",
+            y: 0,
+        }));
+    }
+
+    const handleFulfillmentChange = (event) => {
+        animateDeliveryAddress(root, event.detail?.fulfillmentType, reducedMotion);
+    };
+
+    root.addEventListener("order-inquiry:fulfillment-change", handleFulfillmentChange);
+    animateDeliveryAddress(
+        root,
+        root.querySelector('input[name="fulfillment_type"]:checked')?.value ?? "pickup",
+        reducedMotion,
+        { animate: false },
+    );
+
+    return () => {
+        root.removeEventListener("order-inquiry:fulfillment-change", handleFulfillmentChange);
+        if (deliveryPanel) {
+            gsap.killTweensOf(deliveryPanel);
+        }
+    };
+}
+
 function initializeHomeMotion(root, { desktop, reducedMotion }) {
     if (reducedMotion) {
         return;
     }
 
-    const heroImage = root.querySelector("[data-gsap=hero-image]");
-    if (heroImage?.querySelector("img")) {
-        gsap.fromTo(heroImage.querySelector("img"), { scale: 1.06 }, {
-            scale: 1, duration: 1.6, ease: "power4.out",
-        });
-        addParallax(heroImage, desktop ? 3 : 1.5);
-    }
-
-    const heroContent = root.querySelector("[data-gsap=hero-content]");
-    if (heroContent) {
-        const heroItems = heroContent.querySelectorAll("[data-gsap-reveal]");
-        gsap.set(heroItems, { autoAlpha: 0, y: 24 });
-        gsap.timeline({ defaults: { ease: "power4.out" } }).to(heroItems, {
-            autoAlpha: 1, duration: 1.1, stagger: 0.12, y: 0,
-        });
-    }
+    initializeHeroMotion(root, { desktop });
 
     const discoverLine = root.querySelector("[data-gsap=discover-line]");
     if (discoverLine) {
@@ -300,9 +425,13 @@ export function initPublicAnimations(root = document.querySelector("[data-home-m
 
         if (root.dataset.publicMotion === "menu") {
             return initializeMenuMotion(root, { reducedMotion });
-        } else {
-            initializeHomeMotion(root, { desktop, reducedMotion });
         }
+
+        if (root.matches("[data-order-inquiry-motion]")) {
+            return initializeOrderInquiryMotion(root, { desktop, reducedMotion });
+        }
+
+        initializeHomeMotion(root, { desktop, reducedMotion });
     });
 
     const cleanup = () => media.revert();
