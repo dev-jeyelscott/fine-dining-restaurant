@@ -50,6 +50,17 @@ test('homepage navigation exposes an accessible mobile menu contract', function 
         ->assertSee('aria-label="Mobile navigation"', false);
 });
 
+test('homepage exposes semantic hooks for progressive luxury motion', function (): void {
+    $this->get(route('home'))
+        ->assertOk()
+        ->assertSee('data-home-motion', false)
+        ->assertSee('data-gsap="hero-image"', false)
+        ->assertSee('data-gsap="menu"', false)
+        ->assertSee('data-gsap="panel"', false)
+        ->assertSee('data-gsap="gallery"', false)
+        ->assertSee('data-gsap-reveal', false);
+});
+
 test('homepage displays only the first three visible menu items in configured order', function (): void {
     $category = MenuCategory::query()->create([
         'name' => 'Chef Selections',

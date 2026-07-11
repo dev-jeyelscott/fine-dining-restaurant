@@ -10,7 +10,7 @@
 @endphp
 
 @if ($variant === 'luxury')
-    <article class="group">
+    <article data-gsap="card" class="group">
         <div class="relative aspect-[4/5] overflow-hidden bg-brand-ink-soft">
             @if ($item->image_url)
                 <x-public.responsive-image

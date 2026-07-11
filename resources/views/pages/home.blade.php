@@ -13,6 +13,7 @@
                 : null;
     @endphp
 
+    <div data-home-motion>
     <x-public.homepage-hero
         eyebrow="Fine dining, thoughtfully served"
         title="{{ $page?->title ?: 'An elevated dining experience for every occasion' }}"
@@ -25,12 +26,12 @@
         :secondary-url="route('menu')"
     />
 
-    <section id="restaurant-story" class="overflow-hidden bg-brand-ivory py-24 text-brand-ink lg:py-32">
+    <section id="restaurant-story" data-gsap="section" class="overflow-hidden bg-brand-ivory py-24 text-brand-ink lg:py-32">
         <div class="mx-auto grid max-w-7xl items-center gap-16 px-5 sm:px-6 lg:grid-cols-2 lg:px-10">
             <div class="relative mx-auto w-full max-w-xl lg:mx-0">
-                <div class="absolute -bottom-7 -right-7 hidden h-2/3 w-2/3 border border-brand-gold/70 lg:block" aria-hidden="true"></div>
+                <div data-gsap="frame" class="absolute -bottom-7 -right-7 hidden h-2/3 w-2/3 border border-brand-gold/70 lg:block" aria-hidden="true"></div>
 
-                <div class="relative aspect-[4/5] overflow-hidden bg-brand-paper shadow-[0_30px_80px_rgba(23,25,22,0.18)]">
+                <div data-gsap="image" class="relative aspect-[4/5] overflow-hidden bg-brand-paper shadow-[0_30px_80px_rgba(23,25,22,0.18)]">
                     @if ($storyImage?->image_url)
                         <x-public.responsive-image
                             :image="$storyImage"
@@ -74,7 +75,7 @@
         </div>
     </section>
 
-    <section class="bg-brand-ink py-24 lg:py-32">
+    <section data-gsap="menu" class="bg-brand-ink py-24 lg:py-32">
         <div class="mx-auto max-w-7xl px-5 sm:px-6 lg:px-10">
             <x-public.section-heading
                 eyebrow="The Menu"
@@ -104,7 +105,7 @@
     </section>
 
     <section class="grid lg:grid-cols-2">
-        <article class="relative isolate flex min-h-[32rem] items-center overflow-hidden bg-brand-ink px-5 py-20 sm:px-10 lg:px-16">
+        <article data-gsap="panel" class="relative isolate flex min-h-[32rem] items-center overflow-hidden bg-brand-ink px-5 py-20 sm:px-10 lg:px-16">
             @if ($heroImage?->image_url)
                 <x-public.responsive-image
                     :image="$heroImage"
@@ -133,7 +134,7 @@
             </div>
         </article>
 
-        <article class="relative isolate flex min-h-[32rem] items-center overflow-hidden bg-brand-paper px-5 py-20 text-brand-ink sm:px-10 lg:px-16">
+        <article data-gsap="panel" class="relative isolate flex min-h-[32rem] items-center overflow-hidden bg-brand-paper px-5 py-20 text-brand-ink sm:px-10 lg:px-16">
             @if ($storyImage?->image_url)
                 <x-public.responsive-image
                     :image="$storyImage"
@@ -163,7 +164,7 @@
         </article>
     </section>
 
-    <section class="overflow-hidden bg-white py-24 text-brand-ink lg:py-32">
+    <section data-gsap="section" class="overflow-hidden bg-white py-24 text-brand-ink lg:py-32">
         <div class="mx-auto grid max-w-7xl items-center gap-16 px-5 sm:px-6 lg:grid-cols-2 lg:px-10">
             <div>
                 <x-public.section-heading
@@ -188,8 +189,8 @@
             </div>
 
             <div class="relative">
-                <div class="absolute -left-7 -top-7 hidden h-full w-full border border-brand-gold/70 lg:block" aria-hidden="true"></div>
-                <div class="relative aspect-[4/3] overflow-hidden bg-brand-paper shadow-[0_30px_80px_rgba(23,25,22,0.16)]">
+                <div data-gsap="frame" class="absolute -left-7 -top-7 hidden h-full w-full border border-brand-gold/70 lg:block" aria-hidden="true"></div>
+                <div data-gsap="image" class="relative aspect-[4/3] overflow-hidden bg-brand-paper shadow-[0_30px_80px_rgba(23,25,22,0.16)]">
                     @if ($banquetImage?->image_url)
                         <x-public.responsive-image
                             :image="$banquetImage"
@@ -208,7 +209,7 @@
         </div>
     </section>
 
-    <section class="bg-brand-ink py-24 lg:py-32">
+    <section data-gsap="gallery" class="bg-brand-ink py-24 lg:py-32">
         <div class="mx-auto max-w-7xl px-5 sm:px-6 lg:px-10">
             <x-public.section-heading
                 eyebrow="Gallery"
@@ -219,7 +220,7 @@
             @if ($galleryImages->isNotEmpty())
                 <div class="mt-14 grid auto-rows-[15rem] gap-4 md:grid-cols-2 lg:grid-cols-3">
                     @foreach ($galleryImages->take(5) as $image)
-                        <article @class([
+                        <article data-gsap="tile" @class([
                             'group relative overflow-hidden bg-brand-ink-soft',
                             'md:row-span-2 lg:col-span-2' => $loop->first,
                         ])>
@@ -269,28 +270,28 @@
         </div>
     </section>
 
-    <section class="bg-brand-paper py-24 text-brand-ink lg:py-28">
+    <section data-gsap="section" class="bg-brand-paper py-24 text-brand-ink lg:py-28">
         <div class="mx-auto grid max-w-7xl gap-12 px-5 sm:px-6 lg:grid-cols-[1.1fr_0.9fr] lg:px-10">
             <div>
-                <p class="text-xs font-semibold uppercase tracking-[0.3em] text-brand-gold-dark">Plan Your Visit</p>
-                <h2 class="mt-5 max-w-2xl font-display text-4xl leading-tight sm:text-5xl">
+                <p data-gsap-reveal class="text-xs font-semibold uppercase tracking-[0.3em] text-brand-gold-dark">Plan Your Visit</p>
+                <h2 data-gsap-reveal class="mt-5 max-w-2xl font-display text-4xl leading-tight sm:text-5xl">
                     We look forward to welcoming you to {{ $restaurantName }}.
                 </h2>
-                <p class="mt-6 max-w-2xl text-base leading-8 text-brand-muted">
+                <p data-gsap-reveal class="mt-6 max-w-2xl text-base leading-8 text-brand-muted">
                     Explore the menu, send a Reservation Request, or contact our team for directions and general dining questions.
                 </p>
             </div>
 
             <dl class="grid content-start gap-7 border-l-0 border-brand-gold/40 lg:border-l lg:pl-12">
                 @if ($settings['address'] ?? null)
-                    <div>
+                    <div data-gsap-reveal>
                         <dt class="text-xs font-semibold uppercase tracking-[0.22em] text-brand-gold-dark">Address</dt>
                         <dd class="mt-2 text-base leading-7 text-brand-muted">{{ $settings['address'] }}</dd>
                     </div>
                 @endif
 
                 @if ($phoneTelTarget !== null)
-                    <div>
+                    <div data-gsap-reveal>
                         <dt class="text-xs font-semibold uppercase tracking-[0.22em] text-brand-gold-dark">Phone</dt>
                         <dd class="mt-2">
                             <a href="tel:{{ $phoneTelTarget }}" class="text-base text-brand-muted transition hover:text-brand-ink">
@@ -301,7 +302,7 @@
                 @endif
 
                 @if ($settings['email'] ?? null)
-                    <div>
+                    <div data-gsap-reveal>
                         <dt class="text-xs font-semibold uppercase tracking-[0.22em] text-brand-gold-dark">Email</dt>
                         <dd class="mt-2">
                             <a href="mailto:{{ $settings['email'] }}" class="text-base text-brand-muted transition hover:text-brand-ink">
@@ -311,7 +312,7 @@
                     </div>
                 @endif
 
-                <div class="flex flex-wrap gap-3 pt-2">
+                <div data-gsap-reveal class="flex flex-wrap gap-3 pt-2">
                     @if ($settings['map_link'] ?? null)
                         <a
                             href="{{ $settings['map_link'] }}"
@@ -333,4 +334,5 @@
             </dl>
         </div>
     </section>
+    </div>
 </x-layouts.public>
