@@ -14,7 +14,11 @@ function revealTimeline(target, options = {}) {
 
     gsap.set(elements, { autoAlpha: 0, y: revealDistance });
     gsap.timeline({
-        scrollTrigger: { trigger: target, start: options.start ?? "top 82%", once: true },
+        scrollTrigger: {
+            trigger: target,
+            start: options.start ?? "top 82%",
+            once: true,
+        },
     }).to(elements, {
         autoAlpha: 1,
         duration: options.duration ?? 0.85,
@@ -35,11 +39,21 @@ function revealImage(target) {
     gsap.set(image, { scale: 1.04 });
     gsap.timeline({
         scrollTrigger: { trigger: target, start: "top 82%", once: true },
-    }).to(target, {
-        clipPath: "inset(0 0 0% 0)", duration: 1, ease: "power4.out",
-    }).to(image, {
-        scale: 1, duration: 1.2, ease: "power3.out",
-    }, "<");
+    })
+        .to(target, {
+            clipPath: "inset(0 0 0% 0)",
+            duration: 1,
+            ease: "power4.out",
+        })
+        .to(
+            image,
+            {
+                scale: 1,
+                duration: 1.2,
+                ease: "power3.out",
+            },
+            "<",
+        );
 }
 
 function addParallax(target, amount = 5) {
@@ -49,11 +63,20 @@ function addParallax(target, amount = 5) {
         return;
     }
 
-    gsap.fromTo(image, { yPercent: -amount / 2 }, {
-        yPercent: amount / 2,
-        ease: "none",
-        scrollTrigger: { trigger: target, start: "top bottom", end: "bottom top", scrub: true },
-    });
+    gsap.fromTo(
+        image,
+        { yPercent: -amount / 2 },
+        {
+            yPercent: amount / 2,
+            ease: "none",
+            scrollTrigger: {
+                trigger: target,
+                start: "top bottom",
+                end: "bottom top",
+                scrub: true,
+            },
+        },
+    );
 }
 
 function addGoldFrame(target) {
@@ -61,13 +84,21 @@ function addGoldFrame(target) {
         return;
     }
 
-    gsap.fromTo(target, { autoAlpha: 0, scale: 0.98 }, {
-        autoAlpha: 1,
-        duration: 0.9,
-        ease: "power3.out",
-        scale: 1,
-        scrollTrigger: { trigger: target.parentElement, start: "top 78%", once: true },
-    });
+    gsap.fromTo(
+        target,
+        { autoAlpha: 0, scale: 0.98 },
+        {
+            autoAlpha: 1,
+            duration: 0.9,
+            ease: "power3.out",
+            scale: 1,
+            scrollTrigger: {
+                trigger: target.parentElement,
+                start: "top 78%",
+                once: true,
+            },
+        },
+    );
 }
 
 function animateDeliveryAddress(root, fulfillmentType, reducedMotion) {
@@ -80,7 +111,10 @@ function animateDeliveryAddress(root, fulfillmentType, reducedMotion) {
     const isDelivery = fulfillmentType === "delivery";
 
     if (reducedMotion) {
-        gsap.set(panel, { clearProps: "height,opacity,transform", display: isDelivery ? "block" : "none" });
+        gsap.set(panel, {
+            clearProps: "height,opacity,transform",
+            display: isDelivery ? "block" : "none",
+        });
         return;
     }
 
@@ -88,7 +122,13 @@ function animateDeliveryAddress(root, fulfillmentType, reducedMotion) {
 
     if (isDelivery) {
         gsap.set(panel, { display: "block", height: 0, autoAlpha: 0, y: -10 });
-        gsap.to(panel, { autoAlpha: 1, duration: 0.25, ease: "power2.out", height: "auto", y: 0 });
+        gsap.to(panel, {
+            autoAlpha: 1,
+            duration: 0.25,
+            ease: "power2.out",
+            height: "auto",
+            y: 0,
+        });
         return;
     }
 
@@ -112,7 +152,9 @@ function initializeOrderInquiryMotion(root, { reducedMotion }) {
     const feedback = root.querySelectorAll('[data-gsap="feedback"]');
 
     if (reducedMotion) {
-        root.querySelectorAll("[data-gsap-reveal]").forEach((element) => gsap.set(element, { clearProps: "all" }));
+        root.querySelectorAll("[data-gsap-reveal]").forEach((element) =>
+            gsap.set(element, { clearProps: "all" }),
+        );
         feedback.forEach((element) => gsap.set(element, { clearProps: "all" }));
     } else {
         if (process) {
@@ -122,7 +164,9 @@ function initializeOrderInquiryMotion(root, { reducedMotion }) {
         if (cards) {
             const cardItems = cards.querySelectorAll('[data-gsap="card"]');
             gsap.set(cardItems, { autoAlpha: 0, y: 18 });
-            gsap.timeline({ scrollTrigger: { trigger: cards, start: "top 82%", once: true } }).to(cardItems, {
+            gsap.timeline({
+                scrollTrigger: { trigger: cards, start: "top 82%", once: true },
+            }).to(cardItems, {
                 autoAlpha: 1,
                 duration: 0.65,
                 ease: "power3.out",
@@ -131,37 +175,83 @@ function initializeOrderInquiryMotion(root, { reducedMotion }) {
             });
         }
 
-        feedback.forEach((element) => gsap.fromTo(element, { autoAlpha: 0, y: 8 }, {
-            autoAlpha: 1,
-            duration: 0.3,
-            ease: "power2.out",
-            y: 0,
-        }));
+        feedback.forEach((element) =>
+            gsap.fromTo(
+                element,
+                { autoAlpha: 0, y: 8 },
+                {
+                    autoAlpha: 1,
+                    duration: 0.3,
+                    ease: "power2.out",
+                    y: 0,
+                },
+            ),
+        );
     }
 
     const handleFulfillmentChange = (event) => {
-        animateDeliveryAddress(root, event.detail?.fulfillmentType, reducedMotion);
+        animateDeliveryAddress(
+            root,
+            event.detail?.fulfillmentType,
+            reducedMotion,
+        );
     };
 
-    root.addEventListener("order-inquiry:fulfillment-change", handleFulfillmentChange);
+    root.addEventListener(
+        "order-inquiry:fulfillment-change",
+        handleFulfillmentChange,
+    );
     animateDeliveryAddress(
         root,
-        root.querySelector('input[name="fulfillment_type"]:checked')?.value ?? "pickup",
+        root.querySelector('input[name="fulfillment_type"]:checked')?.value ??
+            "pickup",
         reducedMotion,
     );
 
-    return () => root.removeEventListener("order-inquiry:fulfillment-change", handleFulfillmentChange);
+    return () =>
+        root.removeEventListener(
+            "order-inquiry:fulfillment-change",
+            handleFulfillmentChange,
+        );
 }
 
 function setMenuFinalStates(root) {
-    gsap.set(root.querySelectorAll('[data-menu-motion="hero-image"]'), { clipPath: "inset(0 0 0% 0)", scale: 1 });
-    gsap.set(root.querySelectorAll('[data-menu-motion="hero-item"], [data-menu-motion="full-heading"], [data-menu-motion="closing-item"], [data-menu-motion="closing-actions"]'), { autoAlpha: 1, x: 0, y: 0 });
-    gsap.set(root.querySelectorAll('[data-menu-motion="course-number"], [data-menu-motion="course-title"], [data-menu-motion="course-description"], [data-menu-motion="course-rule"], [data-menu-motion="card"], [data-menu-motion="card-copy"], [data-menu-motion="card-image"]'), { autoAlpha: 1, x: 0, y: 0, clipPath: "inset(0 0 0% 0)", scale: 1, scaleX: 1 });
+    gsap.set(root.querySelectorAll('[data-menu-motion="hero-image"]'), {
+        clipPath: "inset(0 0 0% 0)",
+        scale: 1,
+    });
+    gsap.set(
+        root.querySelectorAll(
+            '[data-menu-motion="hero-item"], [data-menu-motion="full-heading"], [data-menu-motion="closing-item"], [data-menu-motion="closing-actions"]',
+        ),
+        { autoAlpha: 1, x: 0, y: 0 },
+    );
+    gsap.set(
+        root.querySelectorAll(
+            '[data-menu-motion="course-number"], [data-menu-motion="course-title"], [data-menu-motion="course-description"], [data-menu-motion="course-rule"], [data-menu-motion="card"], [data-menu-motion="card-copy"], [data-menu-motion="card-image"]',
+        ),
+        {
+            autoAlpha: 1,
+            x: 0,
+            y: 0,
+            clipPath: "inset(0 0 0% 0)",
+            scale: 1,
+            scaleX: 1,
+        },
+    );
 
-    const links = [...root.querySelectorAll('[data-menu-category-link]')];
-    const activeLink = links.find((link) => link.getAttribute('href') === window.location.hash) ?? links[0];
+    const links = [...root.querySelectorAll("[data-menu-category-link]")];
+    const activeLink =
+        links.find(
+            (link) => link.getAttribute("href") === window.location.hash,
+        ) ?? links[0];
 
-    links.forEach((link) => link.setAttribute('aria-current', link === activeLink ? 'true' : 'false'));
+    links.forEach((link) =>
+        link.setAttribute(
+            "aria-current",
+            link === activeLink ? "true" : "false",
+        ),
+    );
 }
 
 function initializeMenuMotion(root, { reducedMotion }) {
@@ -183,7 +273,16 @@ function initializeMenuMotion(root, { reducedMotion }) {
         const items = hero.querySelectorAll('[data-menu-motion="hero-item"]');
 
         if (image) {
-            gsap.fromTo(image, { clipPath: "inset(0 0 100% 0)", scale: 1.05 }, { clipPath: "inset(0 0 0% 0)", scale: 1, duration: 1.4, ease: "power4.out" });
+            gsap.fromTo(
+                image,
+                { clipPath: "inset(0 0 100% 0)", scale: 1.05 },
+                {
+                    clipPath: "inset(0 0 0% 0)",
+                    scale: 1,
+                    duration: 1.4,
+                    ease: "power4.out",
+                },
+            );
         }
 
         gsap.set(items, { autoAlpha: 0, y: 20 });
@@ -196,14 +295,28 @@ function initializeMenuMotion(root, { reducedMotion }) {
     }
 
     if (categoryNav) {
-        const links = [...categoryNav.querySelectorAll('[data-menu-category-link]')];
-        const indicator = categoryNav.querySelector('[data-menu-category-indicator]');
-        const scroller = categoryNav.querySelector(':scope > div');
-        let activeLink = links.find((link) => link.getAttribute('href') === window.location.hash)
-            ?? links.find((link) => link.getAttribute('aria-current') === 'true')
-            ?? links[0];
+        const links = [
+            ...categoryNav.querySelectorAll("[data-menu-category-link]"),
+        ];
+        const indicator = categoryNav.querySelector(
+            "[data-menu-category-indicator]",
+        );
+        const scroller = categoryNav.querySelector(":scope > div");
+        let activeLink =
+            links.find(
+                (link) => link.getAttribute("href") === window.location.hash,
+            ) ??
+            links.find(
+                (link) => link.getAttribute("aria-current") === "true",
+            ) ??
+            links[0];
 
-        links.forEach((link) => link.setAttribute('aria-current', link === activeLink ? 'true' : 'false'));
+        links.forEach((link) =>
+            link.setAttribute(
+                "aria-current",
+                link === activeLink ? "true" : "false",
+            ),
+        );
 
         const positionIndicator = () => {
             if (!indicator || !scroller || !activeLink) {
@@ -223,7 +336,12 @@ function initializeMenuMotion(root, { reducedMotion }) {
                 return;
             }
 
-            links.forEach((candidate) => candidate.setAttribute('aria-current', candidate === link ? 'true' : 'false'));
+            links.forEach((candidate) =>
+                candidate.setAttribute(
+                    "aria-current",
+                    candidate === link ? "true" : "false",
+                ),
+            );
             activeLink = link;
             positionIndicator();
         };
@@ -231,12 +349,14 @@ function initializeMenuMotion(root, { reducedMotion }) {
         links.forEach((link) => {
             const handleClick = () => setActiveLink(link);
 
-            link.addEventListener('click', handleClick);
-            cleanup.push(() => link.removeEventListener('click', handleClick));
+            link.addEventListener("click", handleClick);
+            cleanup.push(() => link.removeEventListener("click", handleClick));
         });
         positionIndicator();
-        ScrollTrigger.addEventListener('refresh', positionIndicator);
-        cleanup.push(() => ScrollTrigger.removeEventListener('refresh', positionIndicator));
+        ScrollTrigger.addEventListener("refresh", positionIndicator);
+        cleanup.push(() =>
+            ScrollTrigger.removeEventListener("refresh", positionIndicator),
+        );
 
         courses.forEach((course, index) => {
             const link = links[index];
@@ -249,13 +369,20 @@ function initializeMenuMotion(root, { reducedMotion }) {
                 trigger: course,
             });
         });
-
     }
 
     if (fullHeading) {
-        const headingItems = fullHeading.querySelectorAll('p, h2, div[aria-hidden="true"]');
+        const headingItems = fullHeading.querySelectorAll(
+            'p, h2, div[aria-hidden="true"]',
+        );
         gsap.set(headingItems, { autoAlpha: 0, y: 18 });
-        gsap.timeline({ scrollTrigger: { once: true, start: "top 82%", trigger: fullHeading } }).to(headingItems, {
+        gsap.timeline({
+            scrollTrigger: {
+                once: true,
+                start: "top 82%",
+                trigger: fullHeading,
+            },
+        }).to(headingItems, {
             autoAlpha: 1,
             duration: 0.75,
             ease: "power3.out",
@@ -265,9 +392,15 @@ function initializeMenuMotion(root, { reducedMotion }) {
     }
 
     courses.forEach((course) => {
-        const courseItems = course.querySelectorAll('[data-menu-motion="course-number"], [data-menu-motion="course-title"], [data-menu-motion="course-description"], [data-menu-motion="course-rule"]');
-        const images = course.querySelectorAll('[data-menu-motion="card-image"]');
-        const copies = course.querySelectorAll('[data-menu-motion="card-copy"]');
+        const courseItems = course.querySelectorAll(
+            '[data-menu-motion="course-number"], [data-menu-motion="course-title"], [data-menu-motion="course-description"], [data-menu-motion="course-rule"]',
+        );
+        const images = course.querySelectorAll(
+            '[data-menu-motion="card-image"]',
+        );
+        const copies = course.querySelectorAll(
+            '[data-menu-motion="card-copy"]',
+        );
 
         gsap.set(courseItems, { autoAlpha: 0, y: 20 });
         gsap.set(images, { clipPath: "inset(0 0 100% 0)" });
@@ -277,18 +410,66 @@ function initializeMenuMotion(root, { reducedMotion }) {
             scrollTrigger: { once: true, start: "top 78%", trigger: course },
         });
 
-        timeline.to(course.querySelector('[data-menu-motion="course-number"]'), { autoAlpha: 1, duration: 0.55, ease: "power3.out", y: 0 })
-            .to(course.querySelectorAll('[data-menu-motion="course-title"], [data-menu-motion="course-description"]'), { autoAlpha: 1, duration: 0.7, ease: "power3.out", stagger: 0.08, y: 0 }, "<0.12")
-            .to(course.querySelector('[data-menu-motion="course-rule"]'), { duration: 0.55, ease: "power3.out", scaleX: 1 }, "<0.12")
-            .to(images, { clipPath: "inset(0 0 0% 0)", duration: 0.9, ease: "power4.out", stagger: { each: 0.08, from: "start" } }, "<0.18")
-            .to(copies, { autoAlpha: 1, duration: 0.65, ease: "power3.out", stagger: { each: 0.08, from: "start" }, y: 0 }, "<0.16");
-
+        timeline
+            .to(course.querySelector('[data-menu-motion="course-number"]'), {
+                autoAlpha: 1,
+                duration: 0.55,
+                ease: "power3.out",
+                y: 0,
+            })
+            .to(
+                course.querySelectorAll(
+                    '[data-menu-motion="course-title"], [data-menu-motion="course-description"]',
+                ),
+                {
+                    autoAlpha: 1,
+                    duration: 0.7,
+                    ease: "power3.out",
+                    stagger: 0.08,
+                    y: 0,
+                },
+                "<0.12",
+            )
+            .to(
+                course.querySelector('[data-menu-motion="course-rule"]'),
+                { duration: 0.55, ease: "power3.out", scaleX: 1 },
+                "<0.12",
+            )
+            .to(
+                images,
+                {
+                    clipPath: "inset(0 0 0% 0)",
+                    duration: 0.9,
+                    ease: "power4.out",
+                    stagger: { each: 0.08, from: "start" },
+                },
+                "<0.18",
+            )
+            .to(
+                copies,
+                {
+                    autoAlpha: 1,
+                    duration: 0.65,
+                    ease: "power3.out",
+                    stagger: { each: 0.08, from: "start" },
+                    y: 0,
+                },
+                "<0.16",
+            );
     });
 
     if (closingCta) {
-        const items = closingCta.querySelectorAll('[data-menu-motion="closing-item"], [data-menu-motion="closing-actions"]');
+        const items = closingCta.querySelectorAll(
+            '[data-menu-motion="closing-item"], [data-menu-motion="closing-actions"]',
+        );
         gsap.set(items, { autoAlpha: 0, y: 20 });
-        gsap.timeline({ scrollTrigger: { once: true, start: "top 82%", trigger: closingCta } }).to(items, {
+        gsap.timeline({
+            scrollTrigger: {
+                once: true,
+                start: "top 82%",
+                trigger: closingCta,
+            },
+        }).to(items, {
             autoAlpha: 1,
             duration: 0.8,
             ease: "power3.out",
@@ -307,9 +488,15 @@ function initializeHomeMotion(root, { desktop, reducedMotion }) {
 
     const heroImage = root.querySelector("[data-gsap=hero-image]");
     if (heroImage?.querySelector("img")) {
-        gsap.fromTo(heroImage.querySelector("img"), { scale: 1.06 }, {
-            scale: 1, duration: 1.6, ease: "power4.out",
-        });
+        gsap.fromTo(
+            heroImage.querySelector("img"),
+            { scale: 1.06 },
+            {
+                scale: 1,
+                duration: 1.6,
+                ease: "power4.out",
+            },
+        );
         addParallax(heroImage, desktop ? 3 : 1.5);
     }
 
@@ -318,28 +505,52 @@ function initializeHomeMotion(root, { desktop, reducedMotion }) {
         const heroItems = heroContent.querySelectorAll("[data-gsap-reveal]");
         gsap.set(heroItems, { autoAlpha: 0, y: 24 });
         gsap.timeline({ defaults: { ease: "power4.out" } }).to(heroItems, {
-            autoAlpha: 1, duration: 1.1, stagger: 0.12, y: 0,
+            autoAlpha: 1,
+            duration: 1.1,
+            stagger: 0.12,
+            y: 0,
         });
     }
 
     const discoverLine = root.querySelector("[data-gsap=discover-line]");
     if (discoverLine) {
-        gsap.fromTo(discoverLine, { scaleY: 0, transformOrigin: "top center" }, {
-            scaleY: 1, duration: 1, delay: 1.2, ease: "power3.out",
-        });
+        gsap.fromTo(
+            discoverLine,
+            { scaleY: 0, transformOrigin: "top center" },
+            {
+                scaleY: 1,
+                duration: 1,
+                delay: 1.2,
+                ease: "power3.out",
+            },
+        );
     }
 
-    root.querySelectorAll("[data-gsap=section]").forEach((section) => revealTimeline(section));
-    root.querySelectorAll("[data-gsap=image]").forEach((image) => revealImage(image));
-    root.querySelectorAll("[data-gsap=parallax]").forEach((image) => addParallax(image, desktop ? 4 : 2));
-    root.querySelectorAll("[data-gsap=frame]").forEach((frame) => addGoldFrame(frame));
+    root.querySelectorAll("[data-gsap=section]").forEach((section) =>
+        revealTimeline(section),
+    );
+    root.querySelectorAll("[data-gsap=image]").forEach((image) =>
+        revealImage(image),
+    );
+    root.querySelectorAll("[data-gsap=parallax]").forEach((image) =>
+        addParallax(image, desktop ? 4 : 2),
+    );
+    root.querySelectorAll("[data-gsap=frame]").forEach((frame) =>
+        addGoldFrame(frame),
+    );
 
     const menu = root.querySelector("[data-gsap=menu]");
     if (menu) {
         const cards = menu.querySelectorAll("[data-gsap=card]");
         gsap.set(cards, { autoAlpha: 0, y: revealDistance });
-        gsap.timeline({ scrollTrigger: { trigger: menu, start: "top 78%", once: true } }).to(cards, {
-            autoAlpha: 1, duration: 0.8, ease: "power3.out", stagger: 0.12, y: 0,
+        gsap.timeline({
+            scrollTrigger: { trigger: menu, start: "top 78%", once: true },
+        }).to(cards, {
+            autoAlpha: 1,
+            duration: 0.8,
+            ease: "power3.out",
+            stagger: 0.12,
+            y: 0,
         });
     }
 
@@ -348,49 +559,75 @@ function initializeHomeMotion(root, { desktop, reducedMotion }) {
             ? { x: index % 2 === 0 ? -32 : 32, y: 0 }
             : { x: 0, y: revealDistance };
 
-        gsap.fromTo(panel, { autoAlpha: 0, ...offset }, {
-            autoAlpha: 1,
-            duration: 0.9,
-            ease: "power3.out",
-            scrollTrigger: { trigger: panel.parentElement, start: "top 78%", once: true },
-            x: 0,
-            y: 0,
-        });
+        gsap.fromTo(
+            panel,
+            { autoAlpha: 0, ...offset },
+            {
+                autoAlpha: 1,
+                duration: 0.9,
+                ease: "power3.out",
+                scrollTrigger: {
+                    trigger: panel.parentElement,
+                    start: "top 78%",
+                    once: true,
+                },
+                x: 0,
+                y: 0,
+            },
+        );
     });
 
     const gallery = root.querySelector("[data-gsap=gallery]");
     if (gallery) {
-        gsap.fromTo(gallery.querySelectorAll("[data-gsap=tile]"), { autoAlpha: 0, y: 24 }, {
-            autoAlpha: 1, duration: 0.8, ease: "power3.out",
-            scrollTrigger: { trigger: gallery, start: "top 80%", once: true }, stagger: 0.12, y: 0,
-        });
+        gsap.fromTo(
+            gallery.querySelectorAll("[data-gsap=tile]"),
+            { autoAlpha: 0, y: 24 },
+            {
+                autoAlpha: 1,
+                duration: 0.8,
+                ease: "power3.out",
+                scrollTrigger: {
+                    trigger: gallery,
+                    start: "top 80%",
+                    once: true,
+                },
+                stagger: 0.12,
+                y: 0,
+            },
+        );
     }
 }
 
-export function initPublicAnimations(root = document.querySelector("[data-home-motion]")) {
+export function initPublicAnimations(
+    root = document.querySelector("[data-home-motion]"),
+) {
     if (!root) {
         return () => {};
     }
 
     const media = gsap.matchMedia();
 
-    media.add({
-        reducedMotion: "(prefers-reduced-motion: reduce)",
-        desktop: "(min-width: 1024px)",
-        mobile: "(max-width: 1023px)",
-    }, (context) => {
-        const { desktop = false, reducedMotion = false } = context.conditions;
+    media.add(
+        {
+            reducedMotion: "(prefers-reduced-motion: reduce)",
+            desktop: "(min-width: 1024px)",
+            mobile: "(max-width: 1023px)",
+        },
+        (context) => {
+            const { desktop = false, reducedMotion = false } =
+                context.conditions;
 
-        if (root.dataset.publicMotion === "menu") {
-            return initializeMenuMotion(root, { reducedMotion });
-        } else {
-        initializeHomeMotion(root, { desktop, reducedMotion });
+            if (root.dataset.publicMotion === "menu") {
+                return initializeMenuMotion(root, { reducedMotion });
+            } else {
+                initializeHomeMotion(root, { desktop, reducedMotion });
 
-        if (root.matches("[data-order-inquiry-motion]")) {
-            initializeOrderInquiryMotion(root, { reducedMotion });
-        }
-        }
-    });
+                if (root.matches("[data-order-inquiry-motion]")) {
+                    initializeOrderInquiryMotion(root, { reducedMotion });
+                }
+            }
+        },
+    );
 
     const cleanup = () => media.revert();
 
