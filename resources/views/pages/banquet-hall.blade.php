@@ -7,7 +7,8 @@
         $galleryImages = $banquetImages->skip(1);
     @endphp
 
-    <section data-home-motion data-banquet-hero data-public-hero class="relative isolate flex min-h-[44rem] items-center overflow-hidden bg-brand-ink lg:min-h-screen">
+    <div data-home-motion data-banquet-motion>
+    <section data-banquet-hero data-public-hero class="relative isolate flex min-h-[44rem] items-center overflow-hidden bg-brand-ink lg:min-h-screen">
         @if ($featuredImage?->image_url)
             <div data-gsap="hero-image" class="absolute inset-0 -z-30">
                 <x-public.responsive-image
@@ -167,4 +168,5 @@
             </div>
         </div>
     </section>
+    </div>
 </x-layouts.public>
