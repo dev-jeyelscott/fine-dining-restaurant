@@ -60,6 +60,27 @@ test('reservation request page uses the luxury homepage design language', functi
         ->assertSee('font-display', false);
 });
 
+test('reservation request page exposes accessible motion hooks without hiding form feedback', function (): void {
+    $this->get(route('reservation-request.create'))
+        ->assertOk()
+        ->assertSee('data-home-motion', false)
+        ->assertSee('data-reservation-motion', false)
+        ->assertSee('data-gsap="hero-image"', false)
+        ->assertSee('data-gsap="hero-content"', false)
+        ->assertSee('data-reservation-sidebar', false)
+        ->assertSee('data-reservation-process-step', false)
+        ->assertSee('data-reservation-notice', false)
+        ->assertSee('data-reservation-field-group="identity"', false)
+        ->assertSee('data-reservation-field-group="contact"', false)
+        ->assertSee('data-reservation-field-group="schedule"', false)
+        ->assertSee('data-reservation-field-group="event"', false)
+        ->assertSee('data-reservation-field-group="notes"', false)
+        ->assertSee('data-reservation-field-group="submit"', false)
+        ->assertSee('role="status"', false)
+        ->assertSee('role="alert"', false)
+        ->assertSee('data-reservation-form', false);
+});
+
 test('invalid reservation request payload fails validation', function (): void {
     Queue::fake();
 
