@@ -91,7 +91,7 @@ test('reservation success feedback remains an accessible status region', functio
 });
 
 test('reservation validation feedback remains an accessible alert region', function (): void {
-    $errors = (new ViewErrorBag())->put('default', new MessageBag([
+    $errors = (new ViewErrorBag)->put('default', new MessageBag([
         'customer_name' => ['The customer name field is required.'],
     ]));
 
