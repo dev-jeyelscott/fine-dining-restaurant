@@ -60,7 +60,7 @@ test('reservation request page uses the luxury homepage design language', functi
         ->assertSee('font-display', false);
 });
 
-test('reservation request page exposes accessible motion hooks without hiding form feedback', function (): void {
+test('reservation request page exposes progressive motion hooks', function (): void {
     $this->get(route('reservation-request.create'))
         ->assertOk()
         ->assertSee('data-home-motion', false)
@@ -76,9 +76,27 @@ test('reservation request page exposes accessible motion hooks without hiding fo
         ->assertSee('data-reservation-field-group="event"', false)
         ->assertSee('data-reservation-field-group="notes"', false)
         ->assertSee('data-reservation-field-group="submit"', false)
-        ->assertSee('role="status"', false)
-        ->assertSee('role="alert"', false)
         ->assertSee('data-reservation-form', false);
+});
+
+test('reservation success feedback remains an accessible status region', function (): void {
+    $this->withSession([
+        'status' => 'Your reservation request has been received for review.',
+    ])->get(route('reservation-request.create'))
+        ->assertOk()
+        ->assertSee('data-reservation-feedback', false)
+        ->assertSee('role="status"', false);
+});
+
+test('reservation validation feedback remains an accessible alert region', function (): void {
+    Queue::fake();
+
+    $this->followingRedirects()
+        ->from(route('reservation-request.create'))
+        ->post(route('reservation-requests.store'), [])
+        ->assertOk()
+        ->assertSee('data-reservation-feedback', false)
+        ->assertSee('role="alert"', false);
 });
 
 test('invalid reservation request payload fails validation', function (): void {
