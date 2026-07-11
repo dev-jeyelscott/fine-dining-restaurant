@@ -70,11 +70,8 @@ function addGoldFrame(target) {
     });
 }
 
-function initializeHomeMotion(root, reducedMotion) {
+function initializeHomeMotion(root, { desktop, reducedMotion }) {
     if (reducedMotion) {
-        gsap.set(root.querySelectorAll("[data-gsap-reveal], [data-gsap=image], [data-gsap=frame]"), {
-            clearProps: "all",
-        });
         return;
     }
 
@@ -83,7 +80,7 @@ function initializeHomeMotion(root, reducedMotion) {
         gsap.fromTo(heroImage.querySelector("img"), { scale: 1.06 }, {
             scale: 1, duration: 1.6, ease: "power4.out",
         });
-        addParallax(heroImage, 3);
+        addParallax(heroImage, desktop ? 3 : 1.5);
     }
 
     const heroContent = root.querySelector("[data-gsap=hero-content]");
@@ -104,7 +101,7 @@ function initializeHomeMotion(root, reducedMotion) {
 
     root.querySelectorAll("[data-gsap=section]").forEach((section) => revealTimeline(section));
     root.querySelectorAll("[data-gsap=image]").forEach((image) => revealImage(image));
-    root.querySelectorAll("[data-gsap=parallax]").forEach((image) => addParallax(image, 4));
+    root.querySelectorAll("[data-gsap=parallax]").forEach((image) => addParallax(image, desktop ? 4 : 2));
     root.querySelectorAll("[data-gsap=frame]").forEach((frame) => addGoldFrame(frame));
 
     const menu = root.querySelector("[data-gsap=menu]");
@@ -117,9 +114,17 @@ function initializeHomeMotion(root, reducedMotion) {
     }
 
     root.querySelectorAll("[data-gsap=panel]").forEach((panel, index) => {
-        gsap.fromTo(panel, { autoAlpha: 0, x: index % 2 === 0 ? -32 : 32 }, {
-            autoAlpha: 1, duration: 0.9, ease: "power3.out",
-            scrollTrigger: { trigger: panel.parentElement, start: "top 78%", once: true }, x: 0,
+        const offset = desktop
+            ? { x: index % 2 === 0 ? -32 : 32, y: 0 }
+            : { x: 0, y: revealDistance };
+
+        gsap.fromTo(panel, { autoAlpha: 0, ...offset }, {
+            autoAlpha: 1,
+            duration: 0.9,
+            ease: "power3.out",
+            scrollTrigger: { trigger: panel.parentElement, start: "top 78%", once: true },
+            x: 0,
+            y: 0,
         });
     });
 
@@ -132,22 +137,28 @@ function initializeHomeMotion(root, reducedMotion) {
     }
 }
 
-export function initPublicAnimations() {
-    const root = document.querySelector("[data-home-motion]");
+export function initPublicAnimations(root = document.querySelector("[data-home-motion]")) {
     if (!root) {
-        return;
+        return () => {};
     }
 
-    const context = gsap.context(() => {
-        const media = gsap.matchMedia();
-        media.add({
-            reducedMotion: "(prefers-reduced-motion: reduce)",
-            desktop: "(min-width: 1024px)",
-            mobile: "(max-width: 1023px)",
-        }, ({ reducedMotion }) => initializeHomeMotion(root, reducedMotion));
-    }, root);
+    const media = gsap.matchMedia();
+
+    media.add({
+        reducedMotion: "(prefers-reduced-motion: reduce)",
+        desktop: "(min-width: 1024px)",
+        mobile: "(max-width: 1023px)",
+    }, (context) => {
+        const { desktop = false, reducedMotion = false } = context.conditions;
+
+        initializeHomeMotion(root, { desktop, reducedMotion });
+    });
+
+    const cleanup = () => media.revert();
 
     if (import.meta.hot) {
-        import.meta.hot.dispose(() => context.revert());
+        import.meta.hot.dispose(cleanup);
     }
+
+    return cleanup;
 }
