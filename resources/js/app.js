@@ -1,8 +1,15 @@
 import Alpine from "alpinejs";
-import { initPublicAnimations } from "./public-animations";
 
 window.Alpine = Alpine;
 
 Alpine.start();
 
-initPublicAnimations();
+const homeMotionRoot = document.querySelector("[data-home-motion]");
+
+if (homeMotionRoot) {
+    import("./public-animations")
+        .then(({ initPublicAnimations }) => initPublicAnimations(homeMotionRoot))
+        .catch((error) => {
+            console.error("Unable to initialize Home page animations.", error);
+        });
+}
