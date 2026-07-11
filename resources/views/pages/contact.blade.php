@@ -2,311 +2,128 @@
     :title="$page?->meta_title ?: 'Contact'"
     :description="$page?->meta_description ?: 'Contact us for reservations, order inquiries, banquet inquiries, location, and general questions.'"
 >
-    <x-public.hero
-        eyebrow="Contact Us"
-        title="{{ $page?->title ?: 'Get in touch' }}"
-        description="{{ $page?->excerpt ?: 'Find our phone, email, address, map, and inquiry options.' }}"
-        primary-label="Request a Reservation"
-        :primary-url="route('reservation-request.create')"
-        secondary-label="Submit Order Inquiry"
-        :secondary-url="route('order-inquiry.create')"
-    />
+    <section data-contact-hero data-public-hero class="relative isolate flex min-h-[44rem] items-center overflow-hidden bg-brand-ink lg:min-h-screen">
+        @if ($heroImage?->image_url)
+            <x-public.responsive-image
+                :image="$heroImage"
+                :alt="$heroImage->alt_text ?: $heroImage->title ?: 'Elegant restaurant interior'"
+                variant="hero"
+                sizes="100vw"
+                width="1920"
+                height="1280"
+                loading="eager"
+                fetchpriority="high"
+                img-class="absolute inset-0 -z-30 h-full w-full object-cover object-center"
+            />
+        @else
+            <div data-contact-hero-fallback class="absolute inset-0 -z-30 bg-[radial-gradient(circle_at_70%_25%,rgba(201,164,93,0.3),transparent_26%),linear-gradient(135deg,#353126,#171916_68%)]"></div>
+        @endif
 
-    <section class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-        <div class="grid gap-10 lg:grid-cols-2">
-            <div class="rounded-2xl border border-white/10 bg-white/[0.03] p-6 shadow-2xl shadow-black/20">
-                <h2 class="text-2xl font-bold text-white">Restaurant details</h2>
+        <div class="absolute inset-0 -z-20 bg-[linear-gradient(to_bottom,rgba(23,25,22,0.5),rgba(23,25,22,0.42)_35%,rgba(23,25,22,0.96))]"></div>
+        <div class="absolute inset-0 -z-10 bg-gradient-to-r from-brand-ink/85 via-brand-ink/30 to-transparent"></div>
 
-                <p class="mt-3 text-sm leading-6 text-stone-400">
-                    Reach out directly or send us a message using the inquiry form. Our team will review your message and follow up as soon as practical.
-                </p>
+        <div class="mx-auto w-full max-w-7xl px-5 pb-20 pt-36 sm:px-6 lg:px-10 lg:pb-28 lg:pt-44">
+            <div class="max-w-4xl">
+                <p class="text-xs font-semibold uppercase tracking-[0.38em] text-brand-gold sm:text-sm">A thoughtful welcome awaits</p>
+                <h1 class="mt-6 max-w-4xl font-display text-5xl leading-[0.98] text-white sm:text-6xl lg:text-8xl">{{ $page?->title ?: 'Get in touch' }}</h1>
+                <p class="mt-7 max-w-2xl text-base leading-8 text-stone-200 sm:text-lg">{{ $page?->excerpt ?: 'Whether you have a question, are planning a gathering, or simply wish to reach us, our team is here to help.' }}</p>
+                <a href="#contact-inquiry" class="group mt-9 inline-flex items-center gap-4 text-xs font-semibold uppercase tracking-[0.22em] text-white transition hover:text-brand-gold">
+                    Send us a message
+                    <span class="transition duration-300 group-hover:translate-x-2" aria-hidden="true">&rarr;</span>
+                </a>
+            </div>
+        </div>
+    </section>
 
-                @php
-                    $phone = $settings['phone'] ?? null;
-                    $phoneDigits = is_string($phone)
-                        ? preg_replace('/\D+/', '', $phone)
-                        : null;
-                    $phoneTelTarget = is_string($phone)
-                        && is_string($phoneDigits)
-                        && $phoneDigits !== ''
-                            ? (str_starts_with(ltrim($phone), '+') ? '+' : '').$phoneDigits
-                            : null;
-                @endphp
+    <section id="contact-inquiry" class="overflow-hidden bg-brand-ivory py-20 text-brand-ink sm:py-24 lg:py-32">
+        @php
+            $phone = $settings['phone'] ?? null;
+            $phoneDigits = is_string($phone) ? preg_replace('/\D+/', '', $phone) : null;
+            $phoneTelTarget = is_string($phone) && is_string($phoneDigits) && $phoneDigits !== ''
+                ? (str_starts_with(ltrim($phone), '+') ? '+' : '').$phoneDigits
+                : null;
+            $inputClasses = 'mt-2 block min-h-12 w-full border border-stone-300 bg-brand-ivory px-4 py-3 text-base text-brand-ink placeholder:text-stone-400 transition hover:border-brand-gold-dark focus:border-brand-gold-dark focus:bg-white focus:outline-none focus:ring-2 focus:ring-brand-gold/25';
+            $labelClasses = 'block text-xs font-semibold uppercase tracking-[0.16em] text-brand-ink';
+            $errorClasses = 'mt-2 text-sm text-brand-burgundy';
+        @endphp
 
-                <dl class="mt-6 space-y-5 text-sm">
+        <div class="mx-auto grid max-w-7xl gap-14 px-5 sm:px-6 lg:grid-cols-[0.78fr_1.22fr] lg:gap-20 lg:px-10 xl:gap-28">
+            <aside class="lg:sticky lg:top-28 lg:self-start">
+                <p class="text-xs font-semibold uppercase tracking-[0.32em] text-brand-gold-dark">Contact us</p>
+                <h2 class="mt-5 max-w-lg font-display text-4xl leading-tight sm:text-5xl">A warm response, thoughtfully given</h2>
+                <p class="mt-6 max-w-xl text-base leading-8 text-brand-muted">Reach out directly or send us a message. Our team will personally review your inquiry and follow up as soon as practical.</p>
+                <div class="mt-10 h-px w-16 bg-brand-gold"></div>
+
+                <dl class="mt-10 grid gap-7 border-l border-brand-gold/45 pl-6 text-sm leading-7">
                     @if ($phoneTelTarget !== null)
-                        <div>
-                            <dt class="font-semibold text-stone-300">Phone</dt>
-                            <dd class="mt-1 text-stone-400">
-                                <a href="tel:{{ $phoneTelTarget }}" class="hover:text-amber-200">
-                                    {{ $phone }}
-                                </a>
-                            </dd>
-                        </div>
+                        <div><dt class="text-xs font-semibold uppercase tracking-[0.2em] text-brand-gold-dark">Phone</dt><dd class="mt-1 text-brand-muted"><a href="tel:{{ $phoneTelTarget }}" class="transition hover:text-brand-ink">{{ $phone }}</a></dd></div>
                     @endif
-
                     @if ($settings['email'] ?? null)
-                        <div>
-                            <dt class="font-semibold text-stone-300">Email</dt>
-                            <dd class="mt-1 text-stone-400">
-                                <a href="mailto:{{ $settings['email'] }}" class="hover:text-amber-200">
-                                    {{ $settings['email'] }}
-                                </a>
-                            </dd>
-                        </div>
+                        <div><dt class="text-xs font-semibold uppercase tracking-[0.2em] text-brand-gold-dark">Email</dt><dd class="mt-1 break-words text-brand-muted"><a href="mailto:{{ $settings['email'] }}" class="transition hover:text-brand-ink">{{ $settings['email'] }}</a></dd></div>
                     @endif
-
                     @if ($settings['address'] ?? null)
-                        <div>
-                            <dt class="font-semibold text-stone-300">Address</dt>
-                            <dd class="mt-1 text-stone-400">{{ $settings['address'] }}</dd>
-                        </div>
+                        <div><dt class="text-xs font-semibold uppercase tracking-[0.2em] text-brand-gold-dark">Visit us</dt><dd class="mt-1 text-brand-muted">{{ $settings['address'] }}</dd></div>
                     @endif
-
                     @if ($settings['map_link'] ?? null)
-                        <div>
-                            <dt class="font-semibold text-stone-300">Map</dt>
-                            <dd class="mt-1">
-                                <a
-                                    href="{{ $settings['map_link'] }}"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    class="text-amber-300 hover:text-amber-200"
-                                >
-                                    Open location map
-                                </a>
-                            </dd>
-                        </div>
+                        <div><dt class="text-xs font-semibold uppercase tracking-[0.2em] text-brand-gold-dark">Directions</dt><dd class="mt-1"><a href="{{ $settings['map_link'] }}" target="_blank" rel="noopener noreferrer" class="group inline-flex items-center gap-3 font-semibold text-brand-ink transition hover:text-brand-gold-dark">Open location map <span class="transition group-hover:translate-x-1" aria-hidden="true">&rarr;</span></a></dd></div>
                     @endif
                 </dl>
 
                 @if (($settings['facebook_url'] ?? null) || ($settings['instagram_url'] ?? null) || ($settings['tiktok_url'] ?? null))
-                    <div class="mt-8 border-t border-white/10 pt-6">
-                        <h3 class="text-sm font-semibold text-stone-300">Social links</h3>
-
-                        <div class="mt-3 flex flex-wrap gap-3 text-sm">
-                            @if ($settings['facebook_url'] ?? null)
-                                <a
-                                    href="{{ $settings['facebook_url'] }}"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    class="rounded-full border border-white/10 px-4 py-2 text-stone-300 hover:border-amber-200 hover:text-amber-200"
-                                >
-                                    Facebook
-                                </a>
-                            @endif
-
-                            @if ($settings['instagram_url'] ?? null)
-                                <a
-                                    href="{{ $settings['instagram_url'] }}"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    class="rounded-full border border-white/10 px-4 py-2 text-stone-300 hover:border-amber-200 hover:text-amber-200"
-                                >
-                                    Instagram
-                                </a>
-                            @endif
-
-                            @if ($settings['tiktok_url'] ?? null)
-                                <a
-                                    href="{{ $settings['tiktok_url'] }}"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    class="rounded-full border border-white/10 px-4 py-2 text-stone-300 hover:border-amber-200 hover:text-amber-200"
-                                >
-                                    TikTok
-                                </a>
-                            @endif
+                    <div class="mt-10 border-t border-brand-gold/25 pt-7">
+                        <h3 class="text-xs font-semibold uppercase tracking-[0.2em] text-brand-gold-dark">Follow our table</h3>
+                        <div class="mt-4 flex flex-wrap gap-x-6 gap-y-3 text-sm font-semibold text-brand-ink">
+                            @foreach (['facebook_url' => 'Facebook', 'instagram_url' => 'Instagram', 'tiktok_url' => 'TikTok'] as $settingKey => $label)
+                                @if ($settings[$settingKey] ?? null)
+                                    <a href="{{ $settings[$settingKey] }}" target="_blank" rel="noopener noreferrer" class="border-b border-brand-gold/50 pb-1 transition hover:border-brand-gold-dark hover:text-brand-gold-dark">{{ $label }}</a>
+                                @endif
+                            @endforeach
                         </div>
                     </div>
                 @endif
 
-                <div class="mt-8 rounded-2xl border border-amber-300/20 bg-amber-300/10 p-4 text-sm leading-6 text-amber-100">
-                    For reservations and order requests, please use the dedicated forms so our team receives the right details for manual review.
+                <div class="mt-10 border border-brand-gold/35 bg-brand-paper p-6 text-sm leading-7 text-brand-muted">
+                    <p class="font-semibold text-brand-ink">Planning a visit?</p>
+                    <p class="mt-2">For reservations and order requests, please use the dedicated forms so our team receives the right details for manual review.</p>
+                    <div class="mt-5 grid gap-3 text-xs font-semibold uppercase tracking-[0.14em] text-brand-ink sm:flex sm:flex-wrap sm:gap-x-6">
+                        <a href="{{ route('reservation-request.create') }}" class="transition hover:text-brand-gold-dark">Reservation Request</a>
+                        <a href="{{ route('order-inquiry.create') }}" class="transition hover:text-brand-gold-dark">Order Inquiry</a>
+                    </div>
                 </div>
-            </div>
+            </aside>
 
-            <div class="rounded-2xl border border-white/10 bg-white/[0.03] p-6 shadow-2xl shadow-black/20">
-                <h2 class="text-2xl font-bold text-white">Send an inquiry</h2>
-
-                <p class="mt-3 text-sm leading-6 text-stone-400">
-                    Send us a general question, banquet inquiry, or restaurant message. This form is for manual restaurant follow-up.
-                </p>
-
+            <div>
                 @if (session()->has('status') || session()->has('success'))
-                    <div class="mt-6 rounded-2xl border border-emerald-400/30 bg-emerald-400/10 p-4 text-sm leading-6 text-emerald-100">
-                        {{ session('status') ?? session('success') }}
-                    </div>
+                    <div role="status" class="mb-6 border border-emerald-700/25 bg-emerald-50 p-5 text-sm leading-7 text-emerald-900">{{ session('status') ?? session('success') }}</div>
                 @endif
-
                 @if ($errors->any())
-                    <div class="mt-6 rounded-2xl border border-red-400/30 bg-red-400/10 p-4 text-sm leading-6 text-red-100">
-                        <p class="font-semibold">Please review the highlighted fields and try again.</p>
-                    </div>
+                    <div role="alert" class="mb-6 border border-brand-burgundy/25 bg-red-50 p-5 text-sm leading-7 text-brand-burgundy"><p class="font-semibold">Please review the highlighted fields and try again.</p></div>
                 @endif
 
-                <form
-                    method="POST"
-                    action="{{ route('contact-inquiries.store') }}"
-                    class="mt-8 space-y-6"
-                    novalidate
-                >
+                <form data-contact-form method="POST" action="{{ route('contact-inquiries.store') }}" class="border border-brand-gold/30 bg-white p-6 shadow-[0_28px_80px_rgba(23,25,22,0.1)] sm:p-9 lg:p-12" novalidate>
                     @csrf
-
                     <input type="hidden" name="source_page" value="contact">
+                    <div class="hidden" aria-hidden="true"><label for="website">Website</label><input id="website" name="website" type="text" tabindex="-1" autocomplete="off" value="{{ old('website') }}"></div>
 
-                    {{-- Honeypot: must remain empty. --}}
-                    <div class="hidden" aria-hidden="true">
-                        <label for="website">Website</label>
-                        <input
-                            id="website"
-                            name="website"
-                            type="text"
-                            tabindex="-1"
-                            autocomplete="off"
-                            value="{{ old('website') }}"
-                        >
+                    <div class="border-b border-brand-gold/25 pb-8">
+                        <p class="text-xs font-semibold uppercase tracking-[0.28em] text-brand-gold-dark">Your message</p>
+                        <h2 class="mt-3 font-display text-3xl leading-tight text-brand-ink sm:text-4xl">How may we assist you?</h2>
+                        <p class="mt-4 text-sm leading-7 text-brand-muted">Send a general question, banquet inquiry, or restaurant message. Fields marked with <span class="text-brand-burgundy">*</span> are required.</p>
                     </div>
 
-                    <div>
-                        <label for="customer_name" class="block text-sm font-medium text-stone-200">
-                            Full name <span class="text-red-300">*</span>
-                        </label>
-                        <input
-                            id="customer_name"
-                            name="customer_name"
-                            type="text"
-                            value="{{ old('customer_name') }}"
-                            autocomplete="name"
-                            required
-                            class="mt-2 block w-full rounded-xl border border-white/10 bg-stone-950/60 px-4 py-3 text-white placeholder:text-stone-500 focus:border-amber-300 focus:outline-none focus:ring-2 focus:ring-amber-300/20"
-                            placeholder="Juan dela Cruz"
-                        >
-                        @error('customer_name')
-                            <p class="mt-2 text-sm text-red-300">{{ $message }}</p>
-                        @enderror
+                    <div class="mt-9 grid gap-x-6 gap-y-7 sm:grid-cols-2">
+                        <div class="sm:col-span-2"><label for="customer_name" class="{{ $labelClasses }}">Full name <span class="text-brand-burgundy">*</span></label><input id="customer_name" name="customer_name" type="text" value="{{ old('customer_name') }}" autocomplete="name" required class="{{ $inputClasses }}" placeholder="Juan dela Cruz">@error('customer_name') <p class="{{ $errorClasses }}">{{ $message }}</p> @enderror</div>
+                        <div><label for="email" class="{{ $labelClasses }}">Email address <span class="text-brand-burgundy">*</span></label><input id="email" name="email" type="email" value="{{ old('email') }}" autocomplete="email" required class="{{ $inputClasses }}" placeholder="you@example.com">@error('email') <p class="{{ $errorClasses }}">{{ $message }}</p> @enderror</div>
+                        <div><label for="phone" class="{{ $labelClasses }}">Phone number</label><input id="phone" name="phone" type="tel" value="{{ old('phone') }}" autocomplete="tel" class="{{ $inputClasses }}" placeholder="+63 912 345 6789">@error('phone') <p class="{{ $errorClasses }}">{{ $message }}</p> @enderror</div>
+                        <div class="sm:col-span-2"><label for="subject" class="{{ $labelClasses }}">Subject</label><select id="subject" name="subject" class="{{ $inputClasses }}"><option value="">Select a topic</option>@foreach (['General inquiry', 'Banquet inquiry', 'Private event inquiry', 'Menu question', 'Other'] as $subject)<option value="{{ $subject }}" @selected(old('subject') === $subject)>{{ $subject }}</option>@endforeach</select>@error('subject') <p class="{{ $errorClasses }}">{{ $message }}</p> @enderror</div>
+                        <div class="sm:col-span-2"><label for="message" class="{{ $labelClasses }}">Message <span class="text-brand-burgundy">*</span></label><textarea id="message" name="message" rows="7" required class="{{ $inputClasses }} resize-y" placeholder="How can we help?">{{ old('message') }}</textarea>@error('message') <p class="{{ $errorClasses }}">{{ $message }}</p> @enderror</div>
                     </div>
 
-                    <div class="grid gap-6 sm:grid-cols-2">
-                        <div>
-                            <label for="email" class="block text-sm font-medium text-stone-200">
-                                Email address <span class="text-red-300">*</span>
-                            </label>
-                            <input
-                                id="email"
-                                name="email"
-                                type="email"
-                                value="{{ old('email') }}"
-                                autocomplete="email"
-                                required
-                                class="mt-2 block w-full rounded-xl border border-white/10 bg-stone-950/60 px-4 py-3 text-white placeholder:text-stone-500 focus:border-amber-300 focus:outline-none focus:ring-2 focus:ring-amber-300/20"
-                                placeholder="you@example.com"
-                            >
-                            @error('email')
-                                <p class="mt-2 text-sm text-red-300">{{ $message }}</p>
-                            @enderror
-                        </div>
-
-                        <div>
-                            <label for="phone" class="block text-sm font-medium text-stone-200">
-                                Phone number
-                            </label>
-                            <input
-                                id="phone"
-                                name="phone"
-                                type="tel"
-                                value="{{ old('phone') }}"
-                                autocomplete="tel"
-                                class="mt-2 block w-full rounded-xl border border-white/10 bg-stone-950/60 px-4 py-3 text-white placeholder:text-stone-500 focus:border-amber-300 focus:outline-none focus:ring-2 focus:ring-amber-300/20"
-                                placeholder="+63 912 345 6789"
-                            >
-                            @error('phone')
-                                <p class="mt-2 text-sm text-red-300">{{ $message }}</p>
-                            @enderror
-                        </div>
-                    </div>
-
-                    <div>
-                        <label for="subject" class="block text-sm font-medium text-stone-200">
-                            Subject
-                        </label>
-                        <select
-                            id="subject"
-                            name="subject"
-                            class="mt-2 block w-full rounded-xl border border-white/10 bg-stone-950/60 px-4 py-3 text-white focus:border-amber-300 focus:outline-none focus:ring-2 focus:ring-amber-300/20"
-                        >
-                            <option value="">Select a topic</option>
-                            <option value="General inquiry" @selected(old('subject') === 'General inquiry')>
-                                General inquiry
-                            </option>
-                            <option value="Banquet inquiry" @selected(old('subject') === 'Banquet inquiry')>
-                                Banquet inquiry
-                            </option>
-                            <option value="Private event inquiry" @selected(old('subject') === 'Private event inquiry')>
-                                Private event inquiry
-                            </option>
-                            <option value="Menu question" @selected(old('subject') === 'Menu question')>
-                                Menu question
-                            </option>
-                            <option value="Other" @selected(old('subject') === 'Other')>
-                                Other
-                            </option>
-                        </select>
-                        @error('subject')
-                            <p class="mt-2 text-sm text-red-300">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    <div>
-                        <label for="message" class="block text-sm font-medium text-stone-200">
-                            Message <span class="text-red-300">*</span>
-                        </label>
-                        <textarea
-                            id="message"
-                            name="message"
-                            rows="6"
-                            required
-                            class="mt-2 block w-full rounded-xl border border-white/10 bg-stone-950/60 px-4 py-3 text-white placeholder:text-stone-500 focus:border-amber-300 focus:outline-none focus:ring-2 focus:ring-amber-300/20"
-                            placeholder="How can we help?"
-                        >{{ old('message') }}</textarea>
-                        @error('message')
-                            <p class="mt-2 text-sm text-red-300">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    <div class="rounded-2xl border border-amber-300/20 bg-amber-300/10 p-4 text-sm leading-6 text-amber-100">
-                        Your message will be reviewed by our team. For table requests or order inquiries, use the dedicated forms so the restaurant receives all required details.
-                    </div>
-
-                    <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                        <p class="text-xs leading-5 text-stone-500">
-                            Fields marked with <span class="text-red-300">*</span> are required.
-                        </p>
-
-                        <button
-                            type="submit"
-                            class="inline-flex items-center justify-center rounded-full bg-amber-300 px-6 py-3 text-sm font-semibold text-stone-950 transition hover:bg-amber-200 focus:outline-none focus:ring-2 focus:ring-amber-300 focus:ring-offset-2 focus:ring-offset-stone-950"
-                        >
-                            Send Inquiry
-                        </button>
+                    <div class="mt-9 border-t border-brand-gold/25 pt-8">
+                        <p class="max-w-xl text-sm leading-7 text-brand-muted">Your message will be reviewed by our team. For table requests or order inquiries, use the dedicated forms so the restaurant receives all required details.</p>
+                        <button type="submit" class="mt-6 inline-flex min-h-12 w-full items-center justify-center bg-brand-ink px-7 py-3 text-xs font-semibold uppercase tracking-[0.2em] text-white transition duration-300 hover:bg-brand-gold-dark focus-visible:outline-brand-gold sm:w-auto">Send Inquiry</button>
                     </div>
                 </form>
-
-                <div class="mt-8 grid gap-3 sm:grid-cols-2">
-                    <a
-                        href="{{ route('reservation-request.create') }}"
-                        class="rounded-full border border-white/15 px-5 py-3 text-center text-sm font-semibold text-stone-100 hover:border-amber-200 hover:text-amber-200"
-                    >
-                        Request a Reservation
-                    </a>
-
-                    <a
-                        href="{{ route('order-inquiry.create') }}"
-                        class="rounded-full border border-white/15 px-5 py-3 text-center text-sm font-semibold text-stone-100 hover:border-amber-200 hover:text-amber-200"
-                    >
-                        Submit Order Inquiry
-                    </a>
-                </div>
             </div>
         </div>
     </section>

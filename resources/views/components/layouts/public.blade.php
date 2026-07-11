@@ -6,9 +6,9 @@
         :description="$description ?? null"
     />
 
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @vite(['resources/css/public.css', 'resources/js/app.js'])
 </head>
-<body class="min-h-screen bg-stone-950 text-stone-100 antialiased">
+<body class="min-h-screen overflow-x-hidden bg-brand-ink font-sans text-brand-ivory antialiased">
     <div class="min-h-screen">
         <x-public.header />
 

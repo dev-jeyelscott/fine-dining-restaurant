@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\HasResponsiveImages;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
@@ -21,6 +22,8 @@ use Illuminate\Support\Carbon;
  * @property bool $is_visible
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
+ * @property-read string|null $image_url
+ * @property-read MenuCategory $menuCategory
  */
 #[Fillable([
     'menu_category_id',
@@ -34,6 +37,8 @@ use Illuminate\Support\Carbon;
 ])]
 class MenuItem extends Model
 {
+    use HasResponsiveImages;
+
     /**
      * @return array<string, string>
      */
