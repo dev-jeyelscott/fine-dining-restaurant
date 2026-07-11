@@ -55,10 +55,23 @@ test('banquet hall follows the luxury homepage design language and preserves inq
         ->assertSeeText('Banquet requests are inquiries only')
         ->assertSeeText('Start a Banquet Inquiry')
         ->assertSeeText('Request a Reservation')
-        ->assertSee(route('contact.create'), false)
+        ->assertSee(route('contact.create').'#contact-inquiry', false)
         ->assertSee(route('reservation-request.create'), false)
         ->assertSee('/storage/gallery/variants/grand-banquet-room-hero.jpg', false)
         ->assertSee('Elegant banquet room prepared for dinner');
+});
+
+test('banquet inquiry contact CTA lands on the approved inquiry form', function (): void {
+    $this->get(route('banquet-hall'))
+        ->assertOk()
+        ->assertSee('href="'.route('contact.create').'#contact-inquiry"', false)
+        ->assertSeeText('Banquet requests are inquiries only');
+
+    $this->get(route('contact.create'))
+        ->assertOk()
+        ->assertSee('id="contact-inquiry"', false)
+        ->assertSee('scroll-mt-20', false)
+        ->assertSeeText('private-event detail');
 });
 
 test('banquet hall keeps scope-safe manual review language', function (): void {

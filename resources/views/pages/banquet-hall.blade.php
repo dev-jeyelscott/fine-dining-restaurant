@@ -41,7 +41,7 @@
 
                 <div data-gsap-reveal class="mt-10 flex flex-col gap-4 sm:flex-row">
                     <a
-                        href="{{ route('contact.create') }}"
+                        href="{{ route('contact.create') }}#contact-inquiry"
                         class="inline-flex min-h-12 items-center justify-center bg-brand-gold px-7 py-3 text-xs font-semibold uppercase tracking-[0.2em] text-brand-ink transition duration-300 hover:bg-brand-gold-dark hover:text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-gold"
                     >
                         Contact Us
@@ -153,7 +153,7 @@
             </div>
             <div data-gsap-reveal class="mt-10 flex flex-col justify-center gap-4 sm:flex-row">
                 <a
-                    href="{{ route('contact.create') }}"
+                    href="{{ route('contact.create') }}#contact-inquiry"
                     class="inline-flex min-h-12 items-center justify-center bg-brand-ink px-7 py-3 text-xs font-semibold uppercase tracking-[0.2em] text-brand-ivory transition duration-300 hover:bg-brand-ink-soft focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-gold-dark"
                 >
                     Start a Banquet Inquiry
