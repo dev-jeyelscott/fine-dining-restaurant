@@ -16,8 +16,8 @@
     <div data-home-motion>
     <x-public.homepage-hero
         eyebrow="A table worth remembering"
-        title="{{ $page?->title ?: 'Where every occasion is beautifully considered' }}"
-        description="{{ $page?->excerpt ?: 'Savour considered cuisine, gracious service, and an atmosphere designed for lingering—whether marking a milestone or simply making an evening memorable.' }}"
+        title="{{ $page?->title ?: 'A Dining Experience, Beautifully Composed' }}"
+        description="{{ $page?->excerpt ?: 'Season-led cuisine, gracious hospitality, and an intimate setting for dinners, celebrations, and private occasions.' }}"
         :image="$heroImage"
         :image-alt="$heroImage?->alt_text ?: $heroImage?->title ?: 'Elegant restaurant dining room'"
         primary-label="Request a Reservation"
@@ -45,7 +45,7 @@
                     @else
                         <div class="absolute inset-0 bg-[radial-gradient(circle_at_30%_25%,rgba(201,164,93,0.28),transparent_32%),linear-gradient(145deg,#d8cfbd,#8b7960)]"></div>
                         <p class="absolute inset-x-8 bottom-8 border-t border-white/45 pt-4 text-xs font-semibold uppercase tracking-[0.24em] text-white/80">
-                            Restaurant imagery can be managed from the admin panel
+                            A glimpse of the atmosphere awaiting your visit
                         </p>
                     @endif
                 </div>
@@ -55,7 +55,7 @@
                 <x-public.section-heading
                     eyebrow="Our Story"
                     title="An invitation to linger"
-                    :description="$page?->content ?: 'We bring considered preparation, gracious service, and a quietly refined atmosphere together to make every visit feel personal.'"
+                    :description="$page?->content ?: 'At Le Jardin, precise technique and generous hospitality come together in a dining experience that feels polished, personal, and warmly familiar.'"
                     align="left"
                     theme="light"
                 />
@@ -88,7 +88,7 @@
                     <x-public.menu-card :item="$item" variant="luxury" />
                 @empty
                     <x-public.alert type="warning" class="md:col-span-2 lg:col-span-3">
-                        No visible menu items yet. Add menu items from the Filament admin panel.
+                        Our latest menu selections are being prepared. Please contact our team for current offerings.
                     </x-public.alert>
                 @endforelse
             </div>
@@ -255,7 +255,7 @@
                 </div>
             @else
                 <x-public.alert type="warning" class="mt-14">
-                    No visible gallery images yet. Add images from the Filament admin panel.
+                    Our gallery is currently being curated. Please return soon for a glimpse of Le Jardin.
                 </x-public.alert>
             @endif
 

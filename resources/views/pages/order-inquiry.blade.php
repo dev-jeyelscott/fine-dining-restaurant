@@ -1,6 +1,6 @@
 <x-layouts.public
-    :title="$page?->meta_title ?: 'Order Inquiry'"
-    :description="$page?->meta_description ?: 'Submit an order inquiry for manual restaurant review.'"
+    :title="$page?->meta_title ?: 'Order Inquiry | Le Jardin Fine Dining'"
+    :description="$page?->meta_description ?: 'Submit an Order Inquiry for pickup or delivery. Our team will confirm availability, final pricing, and arrangements directly with you.'"
 >
     @php
         $fieldClass = 'mt-2 block min-h-12 w-full border border-stone-300 bg-brand-ivory px-4 py-3 text-base text-brand-ink placeholder:text-stone-400 transition hover:border-brand-gold-dark focus:border-brand-gold-dark focus:bg-white focus:outline-none focus:ring-2 focus:ring-brand-gold/25';
@@ -34,13 +34,13 @@
             <div data-gsap="hero-content" class="max-w-4xl">
                 <p data-gsap-reveal class="text-xs font-semibold uppercase tracking-[0.38em] text-brand-gold sm:text-sm">Dining beyond our tables</p>
                 <h1 data-gsap-reveal class="mt-6 max-w-4xl font-display text-5xl leading-[0.98] text-white sm:text-6xl lg:text-8xl">
-                    {{ $page?->title ?: 'Submit an order inquiry' }}
+                    {{ $page?->title ?: 'Bring Le Jardin to Your Table' }}
                 </h1>
                 <p data-gsap-reveal class="mt-7 max-w-2xl text-base leading-8 text-stone-200 sm:text-lg">
-                    {{ $page?->excerpt ?: 'Send your pickup or delivery preference and order details. Our team will review availability, final total, and next steps directly with you.' }}
+                    {{ $page?->excerpt ?: 'Share your preferred dishes and pickup or delivery details, and our team will personally review availability and pricing with you.' }}
                 </p>
                 <a data-gsap-reveal href="#order-inquiry-form" class="group mt-9 inline-flex items-center gap-4 text-xs font-semibold uppercase tracking-[0.22em] text-white transition hover:text-brand-gold focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-gold">
-                    Begin your inquiry
+                    Share Your Selection
                     <span class="transition duration-300 group-hover:translate-x-2 motion-reduce:transform-none" aria-hidden="true">&rarr;</span>
                 </a>
             </div>
@@ -51,24 +51,24 @@
         <div class="mx-auto grid max-w-7xl gap-14 px-5 sm:px-6 lg:grid-cols-[0.78fr_1.22fr] lg:gap-20 lg:px-10 xl:gap-28">
                 <aside data-gsap-reveal class="lg:sticky lg:top-28 lg:self-start">
                     <p class="text-xs font-semibold uppercase tracking-[0.32em] text-brand-gold-dark">Order Inquiry</p>
-                    <h2 class="mt-5 font-display text-4xl leading-tight sm:text-5xl">A taste of the house, at home</h2>
+                    <h2 class="mt-5 font-display text-4xl leading-tight sm:text-5xl">A considered dining experience, beyond our doors</h2>
                     <p class="mt-6 max-w-xl text-base leading-8 text-brand-muted">
-                        Share the items you are interested in, your preferred pickup or delivery time, and any notes. This does not place a paid order or reserve delivery availability.
+                        Share the dishes you are considering, your preferred timing, and any special notes. Our team will then confirm availability, pricing, and fulfillment arrangements with you.
                     </p>
                     <div class="mt-10 h-px w-16 bg-brand-gold" aria-hidden="true"></div>
 
                     <div data-gsap="process" class="mt-10 border-l border-brand-gold/45 pl-6">
-                        <p class="text-xs font-semibold uppercase tracking-[0.24em] text-brand-gold-dark">What happens next</p>
+                        <p class="text-xs font-semibold uppercase tracking-[0.24em] text-brand-gold-dark">What to expect</p>
                         <ol class="mt-6 grid gap-6 text-sm leading-7 text-brand-muted">
-                            <li data-gsap-reveal class="grid grid-cols-[2rem_1fr] gap-3"><span class="font-display text-xl text-brand-gold-dark">01</span><span>Our team reviews your requested items and timing.</span></li>
-                            <li data-gsap-reveal class="grid grid-cols-[2rem_1fr] gap-3"><span class="font-display text-xl text-brand-gold-dark">02</span><span>We confirm availability, final total, and fulfillment details.</span></li>
-                            <li data-gsap-reveal class="grid grid-cols-[2rem_1fr] gap-3"><span class="font-display text-xl text-brand-gold-dark">03</span><span>Payment and pickup or delivery arrangements are made directly with you.</span></li>
+                            <li data-gsap-reveal class="grid grid-cols-[2rem_1fr] gap-3"><span class="font-display text-xl text-brand-gold-dark">01</span><span>Our team reviews your preferred dishes and timing.</span></li>
+                            <li data-gsap-reveal class="grid grid-cols-[2rem_1fr] gap-3"><span class="font-display text-xl text-brand-gold-dark">02</span><span>We contact you with availability, final pricing, and fulfillment details.</span></li>
+                            <li data-gsap-reveal class="grid grid-cols-[2rem_1fr] gap-3"><span class="font-display text-xl text-brand-gold-dark">03</span><span>Payment and pickup or delivery arrangements are then confirmed with you directly.</span></li>
                         </ol>
                     </div>
 
                     <div data-gsap-reveal class="mt-10 border border-brand-gold/35 bg-brand-paper p-6 text-sm leading-7 text-brand-muted">
-                        <p class="font-semibold text-brand-ink">Please note</p>
-                        <p class="mt-2">This is an Order Inquiry rather than checkout. Our team will personally confirm availability, the final total, and pickup or delivery details with you.</p>
+                        <p class="font-semibold text-brand-ink">A note on confirmation</p>
+                        <p class="mt-2">Submitting this form begins an Order Inquiry. Availability, final pricing, payment, and pickup or delivery arrangements are confirmed only after our team contacts you directly.</p>
                     </div>
                 </aside>
 
@@ -96,7 +96,7 @@
 
                         <div class="border-b border-brand-gold/25 pb-8">
                             <p class="text-xs font-semibold uppercase tracking-[0.28em] text-brand-gold-dark">Your Details</p>
-                            <h2 class="mt-3 font-display text-3xl leading-tight text-brand-ink sm:text-4xl">Tell us about your order inquiry</h2>
+                            <h2 class="mt-3 font-display text-3xl leading-tight text-brand-ink sm:text-4xl">Share your Order Inquiry</h2>
                             <p class="mt-4 text-sm leading-7 text-brand-muted">Fields marked with <span class="text-brand-burgundy">*</span> are required.</p>
                         </div>
 
@@ -153,7 +153,7 @@
                         <div class="mt-8">
                             <label for="order_details" class="{{ $labelClass }}">Order details <span class="text-brand-burgundy">*</span></label>
                             <textarea id="order_details" name="order_details" rows="6" required class="{{ $fieldClass }}" placeholder="Example: 2x Truffle Pasta, 1x Grilled Salmon, 1x Chocolate Cake">{{ old('order_details') }}</textarea>
-                            <p class="mt-2 text-xs leading-5 text-brand-muted">You may type menu items, quantities, and any item-specific notes here. This is an inquiry only, not a shopping cart.</p>
+                            <p class="mt-2 text-xs leading-5 text-brand-muted">Include preferred menu items, quantities, and any item-specific notes. Submitting this form begins an inquiry and does not confirm an order.</p>
                             @error('order_details') <p class="{{ $errorClass }}">{{ $message }}</p> @enderror
                         </div>
 

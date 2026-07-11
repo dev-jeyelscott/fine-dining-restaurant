@@ -1,6 +1,6 @@
 <x-layouts.public
-    :title="$page?->meta_title ?: 'Gallery'"
-    :description="$page?->meta_description ?: 'Discover the rooms, dishes, celebrations, and quiet details that shape our dining experience.'"
+    :title="$page?->meta_title ?: 'Gallery | Le Jardin Fine Dining'"
+    :description="$page?->meta_description ?: 'Explore Le Jardin’s dining rooms, signature dishes, private celebrations, and beautifully considered details.'"
 >
     @php
         $heroImage = $galleryImages->first();
@@ -40,11 +40,11 @@
                 </p>
 
                 <h1 data-gsap-reveal class="mt-6 max-w-4xl font-display text-5xl leading-[0.98] text-white sm:text-6xl lg:text-8xl">
-                    {{ $page?->title ?: 'Ambiance, dishes, and memorable occasions' }}
+                    {{ $page?->title ?: 'A Portrait of Le Jardin' }}
                 </h1>
 
                 <p data-gsap-reveal class="mt-7 max-w-2xl text-base leading-8 text-stone-200 sm:text-lg">
-                    {{ $page?->excerpt ?: 'Step inside through a curated collection of dining spaces, signature plates, private gatherings, and details that make each occasion distinct.' }}
+                    {{ $page?->excerpt ?: 'Discover the atmosphere, culinary craft, and celebrations that define Le Jardin.' }}
                 </p>
 
                 <div data-gsap-reveal class="mt-10 flex flex-col gap-4 sm:flex-row">
@@ -163,7 +163,7 @@
             <x-public.section-heading
                 eyebrow="The Collection"
                 title="Ambiance, cuisine, and celebrations"
-                description="Explore the complete collection of visible images managed by the restaurant team."
+                description="Discover a considered collection of dining spaces, signature plates, private gatherings, and details that shape each occasion."
             />
 
             @if ($categories->isNotEmpty())
@@ -205,7 +205,7 @@
                 @endif
             @else
                 <x-public.alert type="warning" class="mt-14">
-                    No visible gallery images yet. Add images from the Filament admin panel.
+                    Our gallery is currently being curated. Please return soon for a glimpse of Le Jardin.
                 </x-public.alert>
             @endif
         </div>
