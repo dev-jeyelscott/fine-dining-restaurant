@@ -45,7 +45,7 @@ test('public Blade fallbacks do not expose implementation language', function ()
     foreach ($publicPageFiles as $file) {
         $source = strtolower((string) file_get_contents(resource_path('views/pages/'.$file)));
 
-        expect($source, $file)
+        expect($source)
             ->not->toContain('filament')
             ->not->toContain('admin panel')
             ->not->toContain('database record')
