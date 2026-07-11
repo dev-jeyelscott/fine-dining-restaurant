@@ -1,6 +1,6 @@
 <x-layouts.public
-    :title="$page?->meta_title ?: 'Menu'"
-    :description="$page?->meta_description ?: 'Browse our menu categories, dishes, descriptions, and prices.'"
+    :title="$page?->meta_title ?: 'Seasonal Menu | Le Jardin Fine Dining'"
+    :description="$page?->meta_description ?: 'Explore Le Jardin’s considered menu of delicate starters, signature mains, elegant desserts, and composed beverages.'"
 >
     @php
         $menuItems = $categories->flatMap->menuItems;
@@ -34,10 +34,10 @@
             <div data-menu-motion="hero-content" class="max-w-4xl">
                 <p data-menu-motion="hero-item" class="text-xs font-semibold uppercase tracking-[0.38em] text-brand-gold">Our Menu</p>
                 <h1 data-menu-motion="hero-item" class="mt-6 max-w-4xl font-display text-5xl leading-[0.98] text-white sm:text-6xl lg:text-8xl">
-                    {{ $page?->title ?: 'A thoughtful expression of the season' }}
+                    {{ $page?->title ?: 'A Menu Guided by Season and Craft' }}
                 </h1>
                 <p data-menu-motion="hero-item" class="mt-7 max-w-2xl text-base leading-8 text-stone-200 sm:text-lg">
-                    {{ $page?->excerpt ?: 'Explore carefully prepared dishes, considered pairings, and familiar flavours elevated with finesse.' }}
+                    {{ $page?->excerpt ?: 'From delicate first courses to expressive mains and elegant finales, every plate is composed with balance, precision, and character.' }}
                 </p>
 
                 <div data-menu-motion="hero-item" class="mt-10 flex flex-col gap-4 sm:flex-row">
@@ -81,8 +81,8 @@
             <x-public.section-heading
                 data-menu-motion="full-heading"
                 eyebrow="From Our Kitchen"
-                title="A menu composed with intention"
-                description="Each selection is prepared with care, guided by seasonality, and served with the warm hospitality at the heart of our dining room."
+                title="The Le Jardin Menu"
+                :description="$page?->content ?: 'Explore a considered progression of dishes prepared with premium ingredients, precise technique, and a respect for flavour.'"
             />
 
             <div class="mt-20 divide-y divide-brand-gold/20">
@@ -111,7 +111,7 @@
                                     <x-public.menu-card :item="$item" variant="luxury" />
                                 @empty
                                     <x-public.alert type="warning" class="sm:col-span-2">
-                                        No visible menu items in this category yet.
+                                        This course is currently being composed. Please contact our team for current selections.
                                     </x-public.alert>
                                 @endforelse
                             </div>
@@ -119,7 +119,7 @@
                     </section>
                 @empty
                     <x-public.alert type="warning">
-                        No visible menu categories yet. Add menu categories and menu items from the Filament admin panel.
+                        Our latest menu is currently being composed. Please contact our team for current offerings.
                     </x-public.alert>
                 @endforelse
             </div>
@@ -132,10 +132,10 @@
             <div data-menu-motion="closing-copy">
                 <p data-menu-motion="closing-item" class="text-xs font-semibold uppercase tracking-[0.3em] text-brand-gold-dark">Dining With Us</p>
                 <h2 data-menu-motion="closing-item" class="mt-5 max-w-3xl font-display text-4xl leading-tight sm:text-5xl">
-                    Let us compose something memorable for your table.
+                    Let us compose an occasion around your table.
                 </h2>
                 <p data-menu-motion="closing-item" class="mt-6 max-w-2xl text-base leading-8 text-brand-muted">
-                    Planning an evening with us or a taste of the house at home? Share your request and our team will personally review the details with you.
+                    Join us in the dining room or enjoy selected dishes at home. Our team will personally review your request and confirm availability with you.
                 </p>
             </div>
 
