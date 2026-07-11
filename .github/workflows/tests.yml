@@ -84,4 +84,18 @@ jobs:
         run: php artisan test --compact tests/Feature/PublicPagesTest.php
 
       - name: Run Tests
-        run: php artisan test
+        id: full-tests
+        continue-on-error: true
+        run: php artisan test > full-tests.log 2>&1
+
+      - name: Upload Full Test Diagnostics
+        if: steps.full-tests.outcome == 'failure'
+        uses: actions/upload-artifact@84480863f228bb9747b473957fcc9e309aa96097 # v4.4.2
+        with:
+          name: full-tests-php-${{ matrix.php-version }}
+          path: full-tests.log
+          if-no-files-found: error
+
+      - name: Fail On Test Errors
+        if: steps.full-tests.outcome == 'failure'
+        run: exit 1
