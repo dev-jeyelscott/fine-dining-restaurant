@@ -62,6 +62,23 @@ test('homepage exposes semantic hooks for progressive luxury motion', function (
 });
 
 test('homepage gallery preview renders an accessible editorial carousel contract', function (): void {
+    GalleryImage::query()->create([
+        'title' => 'First gallery moment',
+        'alt_text' => 'First gallery moment',
+        'image_path' => 'gallery/first-gallery-moment.jpg',
+        'category' => 'interior',
+        'sort_order' => 1,
+        'is_visible' => true,
+    ]);
+    GalleryImage::query()->create([
+        'title' => 'Second gallery moment',
+        'alt_text' => 'Second gallery moment',
+        'image_path' => 'gallery/second-gallery-moment.jpg',
+        'category' => 'dish',
+        'sort_order' => 2,
+        'is_visible' => true,
+    ]);
+
     $this->get(route('home'))
         ->assertOk()
         ->assertSee('data-home-gallery', false)
