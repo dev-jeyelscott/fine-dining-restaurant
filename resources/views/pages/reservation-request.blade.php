@@ -19,7 +19,7 @@
                 />
             </div>
         @else
-            <div class="absolute inset-0 -z-30 bg-[radial-gradient(circle_at_70%_25%,rgba(201,164,93,0.3),transparent_26%),linear-gradient(135deg,#353126,#171916_68%)]"></div>
+            <div data-gsap="hero-image" class="absolute inset-0 -z-30 bg-[radial-gradient(circle_at_70%_25%,rgba(201,164,93,0.3),transparent_26%),linear-gradient(135deg,#353126,#171916_68%)]"></div>
         @endif
 
         <div class="absolute inset-0 -z-20 bg-[linear-gradient(to_bottom,rgba(23,25,22,0.5),rgba(23,25,22,0.42)_35%,rgba(23,25,22,0.96))]"></div>
@@ -29,13 +29,13 @@
             <div data-gsap="hero-content" class="max-w-4xl">
                 <p data-gsap-reveal class="text-xs font-semibold uppercase tracking-[0.38em] text-brand-gold sm:text-sm">An evening worth anticipating</p>
                 <h1 data-gsap-reveal class="mt-6 max-w-4xl font-display text-5xl leading-[0.98] text-white sm:text-6xl lg:text-8xl">
-                    {{ $page?->title ?: 'Request a table' }}
+                    {{ $page?->title ?: 'Reserve your place at the table' }}
                 </h1>
                 <p data-gsap-reveal class="mt-7 max-w-2xl text-base leading-8 text-stone-200 sm:text-lg">
-                    {{ $page?->excerpt ?: 'Share your preferred date, time, and party size. Our team will personally review the details and contact you to confirm availability.' }}
+                    {{ $page?->excerpt ?: 'Share the details of your preferred visit. Our team will personally review your request and be in touch regarding availability.' }}
                 </p>
                 <a data-gsap-reveal href="#reservation-form" class="group mt-9 inline-flex items-center gap-4 text-xs font-semibold uppercase tracking-[0.22em] text-white transition hover:text-brand-gold">
-                    Begin your request
+                    Begin your Reservation Request
                     <span class="transition duration-300 group-hover:translate-x-2" aria-hidden="true">&rarr;</span>
                 </a>
             </div>
@@ -46,15 +46,15 @@
         <div class="mx-auto grid max-w-7xl gap-14 px-5 sm:px-6 lg:grid-cols-[0.78fr_1.22fr] lg:gap-20 lg:px-10 xl:gap-28">
             <aside data-reservation-sidebar class="lg:sticky lg:top-28 lg:self-start">
                 <p data-gsap-reveal class="text-xs font-semibold uppercase tracking-[0.32em] text-brand-gold-dark">Reservation Request</p>
-                <h2 data-gsap-reveal class="mt-5 max-w-lg font-display text-4xl leading-tight sm:text-5xl">Your table, thoughtfully prepared</h2>
+                <h2 data-gsap-reveal class="mt-5 max-w-lg font-display text-4xl leading-tight sm:text-5xl">An evening thoughtfully prepared</h2>
                 <p data-gsap-reveal class="mt-6 max-w-xl text-base leading-8 text-brand-muted">
-                    Tell us when you would like to join us and who will be dining. Every request is reviewed by our team so we can give your visit the attention it deserves.
+                    Tell us when you would like to join us and who will be dining. Every request receives the personal attention it deserves.
                 </p>
 
                 <div data-gsap-reveal class="mt-10 h-px w-16 bg-brand-gold"></div>
 
                 <div class="mt-10 border-l border-brand-gold/45 pl-6">
-                    <h3 data-gsap-reveal class="text-xs font-semibold uppercase tracking-[0.24em] text-brand-gold-dark">How your request works</h3>
+                    <h3 data-gsap-reveal class="text-xs font-semibold uppercase tracking-[0.24em] text-brand-gold-dark">Your request, thoughtfully handled</h3>
                     <ol class="mt-6 grid gap-6 text-sm leading-7 text-brand-muted">
                         <li data-gsap-reveal data-reservation-process-step class="grid grid-cols-[2rem_1fr] gap-3"><span class="font-display text-xl text-brand-gold-dark">01</span><span>Share your preferred date, time, and party size.</span></li>
                         <li data-gsap-reveal data-reservation-process-step class="grid grid-cols-[2rem_1fr] gap-3"><span class="font-display text-xl text-brand-gold-dark">02</span><span>Our team reviews availability and your notes.</span></li>

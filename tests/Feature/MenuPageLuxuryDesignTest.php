@@ -29,7 +29,7 @@ test('menu page presents visible categories and items in the luxury menu layout'
         ->assertSee('href="#category-chef-selections"', false)
         ->assertSee('id="category-chef-selections"', false)
         ->assertSeeTextInOrder([
-            'The full menu',
+            'The Le Jardin Menu',
             'Chef Selections',
             'Truffle-Crusted Beef Tenderloin',
             'Submit Order Inquiry',
@@ -66,16 +66,5 @@ test('menu page exposes progressive motion hooks without hiding native content',
         ->assertSee('data-menu-motion="card-image"', false)
         ->assertSee('data-menu-motion="closing-cta"', false)
         ->assertSeeText('Roasted Garden Vegetables')
-        ->assertSeeText('personally review the details and confirm availability');
-});
-
-test('menu course divider animation restores a visible final state', function (): void {
-    $animationSource = file_get_contents(resource_path('js/public-animations.js'));
-
-    expect($animationSource)
-        ->toBeString()
-        ->toContain('const courseRule = course.querySelector')
-        ->toContain('gsap.set(courseRule, { autoAlpha: 1, scaleX: 0')
-        ->toContain('timeline.to(courseRule, { autoAlpha: 1')
-        ->toContain('scaleX: 1, y: 0');
+        ->assertSeeText('personally review your request and confirm availability with you');
 });

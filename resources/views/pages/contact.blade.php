@@ -1,6 +1,6 @@
 <x-layouts.public
     :title="$page?->meta_title ?: 'Contact'"
-    :description="$page?->meta_description ?: 'Contact us for reservations, order inquiries, banquet inquiries, location, and general questions.'"
+    :description="$page?->meta_description ?: 'Begin a conversation about dining, private occasions, Order Inquiries, directions, or your next visit.'"
 >
     <div data-home-motion data-contact-motion>
         <section data-contact-hero data-public-hero class="relative isolate flex min-h-[44rem] items-center overflow-hidden bg-brand-ink lg:min-h-screen">
@@ -52,7 +52,7 @@
 
         <div class="mx-auto grid max-w-7xl gap-14 px-5 sm:px-6 lg:grid-cols-[0.78fr_1.22fr] lg:gap-20 lg:px-10 xl:gap-28">
             <aside class="lg:sticky lg:top-28 lg:self-start">
-                <p data-gsap-reveal class="text-xs font-semibold uppercase tracking-[0.32em] text-brand-gold-dark">Contact us</p>
+                <p data-gsap-reveal class="text-xs font-semibold uppercase tracking-[0.32em] text-brand-gold-dark">Begin a conversation</p>
                 <h2 data-gsap-reveal class="mt-5 max-w-lg font-display text-4xl leading-tight sm:text-5xl">A warm response, thoughtfully given</h2>
                 <p data-gsap-reveal class="mt-6 max-w-xl text-base leading-8 text-brand-muted">Reach out directly or send us a message. Our team will personally review your inquiry and follow up as soon as practical.</p>
                 <div data-gsap-reveal class="mt-10 h-px w-16 origin-left bg-brand-gold"></div>
@@ -111,7 +111,7 @@
                     <div data-gsap-reveal class="border-b border-brand-gold/25 pb-8">
                         <p class="text-xs font-semibold uppercase tracking-[0.28em] text-brand-gold-dark">Your message</p>
                         <h2 class="mt-3 font-display text-3xl leading-tight text-brand-ink sm:text-4xl">How may we assist you?</h2>
-                        <p class="mt-4 text-sm leading-7 text-brand-muted">Send a general question, banquet inquiry, or restaurant message. Fields marked with <span class="text-brand-burgundy">*</span> are required.</p>
+                        <p class="mt-4 text-sm leading-7 text-brand-muted">Share a question, private-event detail, or note for our team. Fields marked with <span class="text-brand-burgundy">*</span> are required.</p>
                     </div>
 
                     <div class="mt-9 grid gap-x-6 gap-y-7 sm:grid-cols-2">
@@ -123,7 +123,7 @@
                     </div>
 
                     <div data-gsap-reveal class="mt-9 border-t border-brand-gold/25 pt-8">
-                        <p class="max-w-xl text-sm leading-7 text-brand-muted">Your message will be reviewed by our team. For table requests or order inquiries, use the dedicated forms so the restaurant receives all required details.</p>
+                        <p class="max-w-xl text-sm leading-7 text-brand-muted">Your message will receive our personal attention. For table requests or Order Inquiries, use the dedicated forms so we have every detail needed to assist you.</p>
                         <button type="submit" class="mt-6 inline-flex min-h-12 w-full items-center justify-center bg-brand-ink px-7 py-3 text-xs font-semibold uppercase tracking-[0.2em] text-white transition duration-300 hover:bg-brand-gold-dark focus-visible:outline-brand-gold sm:w-auto">Send Inquiry</button>
                     </div>
                 </form>

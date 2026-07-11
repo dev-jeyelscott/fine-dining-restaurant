@@ -1,6 +1,6 @@
 <x-layouts.public
-    :title="$page?->meta_title ?: 'Gallery'"
-    :description="$page?->meta_description ?: 'View our restaurant interiors, dishes, events, and ambiance.'"
+    :title="$page?->meta_title ?: 'Gallery | Le Jardin Fine Dining'"
+    :description="$page?->meta_description ?: 'Explore Le Jardin’s dining rooms, signature dishes, private celebrations, and beautifully considered details.'"
 >
     @php
         $heroImage = $galleryImages->first();
@@ -36,15 +36,15 @@
         <div class="mx-auto w-full max-w-7xl px-5 pb-20 pt-36 sm:px-6 lg:px-10 lg:pb-28 lg:pt-44">
             <div data-gsap="hero-content" class="max-w-4xl">
                 <p data-gsap-reveal class="text-xs font-semibold uppercase tracking-[0.38em] text-brand-gold sm:text-sm">
-                    Gallery
+                    The Gallery
                 </p>
 
                 <h1 data-gsap-reveal class="mt-6 max-w-4xl font-display text-5xl leading-[0.98] text-white sm:text-6xl lg:text-8xl">
-                    {{ $page?->title ?: 'Ambiance, dishes, and memorable occasions' }}
+                    {{ $page?->title ?: 'A Portrait of Le Jardin' }}
                 </h1>
 
                 <p data-gsap-reveal class="mt-7 max-w-2xl text-base leading-8 text-stone-200 sm:text-lg">
-                    {{ $page?->excerpt ?: 'Step inside the restaurant through a curated collection of dining spaces, signature plates, private gatherings, and details that shape the guest experience.' }}
+                    {{ $page?->excerpt ?: 'Discover the atmosphere, culinary craft, and celebrations that define Le Jardin.' }}
                 </p>
 
                 <div data-gsap-reveal class="mt-10 flex flex-col gap-4 sm:flex-row">
@@ -71,8 +71,8 @@
             <div>
                 <x-public.section-heading
                     eyebrow="The Experience"
-                    title="A closer look at the experience"
-                    :description="$page?->content ?: 'From softly lit dining rooms to carefully finished plates and thoughtfully prepared celebrations, every image reflects the warmth, refinement, and attention to detail guests can expect.'"
+                    title="Details worth remembering"
+                    :description="$page?->content ?: 'From softly lit dining rooms to carefully finished plates and beautifully prepared celebrations, every image reflects our warmth, refinement, and attention to detail.'"
                     align="left"
                     theme="light"
                 />
@@ -163,7 +163,7 @@
             <x-public.section-heading
                 eyebrow="The Collection"
                 title="Ambiance, cuisine, and celebrations"
-                description="Explore the complete collection of visible images managed by the restaurant team."
+                description="Discover a considered collection of dining spaces, signature plates, private gatherings, and details that shape each occasion."
             />
 
             @if ($categories->isNotEmpty())
@@ -205,7 +205,7 @@
                 @endif
             @else
                 <x-public.alert type="warning" class="mt-14">
-                    No visible gallery images yet. Add images from the Filament admin panel.
+                    Our gallery is currently being curated. Please return soon for a glimpse of Le Jardin.
                 </x-public.alert>
             @endif
         </div>

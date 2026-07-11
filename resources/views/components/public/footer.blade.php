@@ -10,12 +10,12 @@
         <div>
             <h2 class="text-lg font-semibold text-amber-200">{{ $restaurantName }}</h2>
             <p class="mt-3 text-sm leading-6 text-stone-400">
-                A fine-dining experience for families, guests, celebrations, and memorable gatherings.
+                Thoughtful cuisine, gracious hospitality, and beautifully considered occasions.
             </p>
         </div>
 
         <div>
-            <h3 class="text-sm font-semibold uppercase tracking-widest text-stone-300">Contact</h3>
+            <h3 class="text-sm font-semibold uppercase tracking-widest text-stone-300">Find Us</h3>
 
             <div class="mt-3 space-y-2 text-sm text-stone-400">
                 @if ($phone)
@@ -33,12 +33,12 @@
         </div>
 
         <div>
-            <h3 class="text-sm font-semibold uppercase tracking-widest text-stone-300">Visit Us</h3>
+            <h3 class="text-sm font-semibold uppercase tracking-widest text-stone-300">Discover</h3>
             <div class="mt-3 flex flex-col gap-2 text-sm text-stone-400">
-                <a href="{{ route('menu') }}" class="hover:text-amber-200">View Our Menu</a>
+                <a href="{{ route('menu') }}" class="hover:text-amber-200">Explore the Menu</a>
                 <a href="{{ route('reservation-request.create') }}" class="hover:text-amber-200">Request a Reservation</a>
                 <a href="{{ route('order-inquiry.create') }}" class="hover:text-amber-200">Submit Order Inquiry</a>
-                <a href="{{ route('contact.create') }}" class="hover:text-amber-200">Contact Us</a>
+                <a href="{{ route('contact.create') }}" class="hover:text-amber-200">Begin a Conversation</a>
             </div>
         </div>
     </div>

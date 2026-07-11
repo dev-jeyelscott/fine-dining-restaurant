@@ -7,8 +7,7 @@
         $galleryImages = $banquetImages->skip(1);
     @endphp
 
-    <div data-home-motion data-banquet-motion>
-    <section data-banquet-hero data-public-hero class="relative isolate flex min-h-[44rem] items-center overflow-hidden bg-brand-ink lg:min-h-screen">
+    <section data-home-motion data-banquet-hero data-public-hero class="relative isolate flex min-h-[44rem] items-center overflow-hidden bg-brand-ink lg:min-h-screen">
         @if ($featuredImage?->image_url)
             <div data-gsap="hero-image" class="absolute inset-0 -z-30">
                 <x-public.responsive-image
@@ -72,7 +71,7 @@
                     @if ($page?->content)
                         {!! str($page->content)->sanitizeHtml() !!}
                     @else
-                        <p>Our banquet hall is suited for family celebrations, private dining, corporate meals, and other special gatherings.</p>
+                        <p>Our banquet hall offers a refined setting for family celebrations, private dining, corporate meals, and life’s most meaningful gatherings.</p>
                         <p>Please contact our team for capacity, availability, menu options, and event details. All banquet inquiries are manually reviewed.</p>
                     @endif
                 </div>
@@ -168,5 +167,4 @@
             </div>
         </div>
     </section>
-    </div>
 </x-layouts.public>
