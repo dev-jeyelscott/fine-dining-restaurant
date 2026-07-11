@@ -68,3 +68,14 @@ test('menu page exposes progressive motion hooks without hiding native content',
         ->assertSeeText('Roasted Garden Vegetables')
         ->assertSeeText('personally review the details and confirm availability');
 });
+
+test('menu course divider animation restores a visible final state', function (): void {
+    $animationSource = file_get_contents(resource_path('js/public-animations.js'));
+
+    expect($animationSource)
+        ->toBeString()
+        ->toContain('const courseRule = course.querySelector')
+        ->toContain('gsap.set(courseRule, { autoAlpha: 1, scaleX: 0')
+        ->toContain('timeline.to(courseRule, { autoAlpha: 1')
+        ->toContain('scaleX: 1, y: 0');
+});
