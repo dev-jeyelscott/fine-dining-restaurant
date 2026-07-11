@@ -4,8 +4,8 @@
 >
     <div data-home-motion data-reservation-motion>
     <section data-reservation-hero data-public-hero class="relative isolate flex min-h-[44rem] items-center overflow-hidden bg-brand-ink lg:min-h-screen">
+        <div data-gsap="hero-image" class="absolute inset-0 -z-30">
         @if ($heroImage?->image_url)
-            <div data-gsap="hero-image" class="absolute inset-0 -z-30">
                 <x-public.responsive-image
                     :image="$heroImage"
                     :alt="$heroImage->alt_text ?: $heroImage->title ?: 'Elegant restaurant dining room'"
@@ -17,10 +17,10 @@
                     fetchpriority="high"
                     img-class="absolute inset-0 h-full w-full object-cover object-center"
                 />
-            </div>
         @else
-            <div data-gsap="hero-image" class="absolute inset-0 -z-30 bg-[radial-gradient(circle_at_70%_25%,rgba(201,164,93,0.3),transparent_26%),linear-gradient(135deg,#353126,#171916_68%)]"></div>
+            <div class="absolute inset-0 bg-[radial-gradient(circle_at_70%_25%,rgba(201,164,93,0.3),transparent_26%),linear-gradient(135deg,#353126,#171916_68%)]"></div>
         @endif
+        </div>
 
         <div class="absolute inset-0 -z-20 bg-[linear-gradient(to_bottom,rgba(23,25,22,0.5),rgba(23,25,22,0.42)_35%,rgba(23,25,22,0.96))]"></div>
         <div class="absolute inset-0 -z-10 bg-gradient-to-r from-brand-ink/85 via-brand-ink/30 to-transparent"></div>
