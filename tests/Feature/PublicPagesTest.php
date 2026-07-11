@@ -156,6 +156,15 @@ test('site setting updates and deletes invalidate cached public values', functio
         ->toBe('Fallback Restaurant Name');
 });
 
+test('gallery page opts into the shared public motion runtime', function (): void {
+    $this->get(route('gallery'))
+        ->assertOk()
+        ->assertSee('data-home-motion', false)
+        ->assertSee('data-gallery-motion', false)
+        ->assertSee('data-gsap="hero-content"', false)
+        ->assertSee('data-gsap="gallery"', false);
+});
+
 test('shared public settings keep malformed public links out of rendered pages', function (): void {
     SiteSetting::query()->create([
         'key' => 'map_link',

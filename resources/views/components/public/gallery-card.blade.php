@@ -29,7 +29,7 @@
         <div class="absolute inset-0 -z-10 ring-1 ring-inset ring-white/10 transition duration-500 group-hover:ring-brand-gold/55"></div>
 
         @if ($image->title || $image->category)
-            <div class="absolute inset-x-0 bottom-0 p-6 sm:p-7">
+            <div data-gsap-reveal class="absolute inset-x-0 bottom-0 p-6 sm:p-7">
                 @if ($image->category)
                     <p class="text-[0.65rem] font-semibold uppercase tracking-[0.26em] text-brand-gold">
                         {{ $image->category }}

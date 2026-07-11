@@ -61,6 +61,13 @@ test('gallery page presents visible images in a premium editorial layout', funct
     $this->get(route('gallery'))
         ->assertOk()
         ->assertSee('id="gallery-collection"', false)
+        ->assertSee('data-home-motion', false)
+        ->assertSee('data-gallery-motion', false)
+        ->assertSee('data-gsap="hero-image"', false)
+        ->assertSee('data-gsap="frame"', false)
+        ->assertSee('data-gsap="gallery"', false)
+        ->assertSee('data-gsap-counter', false)
+        ->assertSee('data-gsap="panel"', false)
         ->assertSee('fetchpriority="high"', false)
         ->assertSeeText('A closer look at the experience')
         ->assertSeeText('The Collection')
@@ -71,6 +78,27 @@ test('gallery page presents visible images in a premium editorial layout', funct
         ->assertSeeText('Signature Dish')
         ->assertSeeText('Celebrations')
         ->assertDontSeeText('Hidden Preparation Area');
+});
+
+test('gallery motion hooks preserve accessible content and responsive image contracts', function (): void {
+    GalleryImage::query()->create([
+        'title' => 'Layered Dining Room',
+        'alt_text' => 'Layered dining room view',
+        'image_path' => storeGalleryPageTestImage('layered-dining-room.jpg'),
+        'category' => 'Ambiance',
+        'sort_order' => 1,
+        'is_visible' => true,
+    ]);
+
+    $this->get(route('gallery'))
+        ->assertOk()
+        ->assertSee('data-gsap="image"', false)
+        ->assertSee('data-gsap="parallax"', false)
+        ->assertSee('data-gsap="tile"', false)
+        ->assertSee('data-gsap-reveal', false)
+        ->assertSee('srcset=', false)
+        ->assertSee('loading="lazy"', false)
+        ->assertSee('alt="Layered dining room view"', false);
 });
 
 test('gallery page bounds visible image rendering with simple pagination', function (): void {
