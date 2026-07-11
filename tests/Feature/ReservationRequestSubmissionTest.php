@@ -35,6 +35,9 @@ beforeEach(function (): void {
 test('reservation request page renders form', function (): void {
     $this->get(route('reservation-request.create'))
         ->assertOk()
+        ->assertSee('x-data="inquiryForm"', false)
+        ->assertSee('@submit.prevent="submit"', false)
+        ->assertSee('x-bind:aria-busy="submitting"', false)
         ->assertSeeText('Reservation Request')
         ->assertSee('method="POST"', false)
         ->assertSee('name="customer_name"', false)
@@ -149,6 +152,35 @@ test('valid reservation request payload stores database record', function (): vo
 
     expect(Carbon::parse($reservationRequest->preferred_date)->toDateString())
         ->toBe($payload['preferred_date']);
+});
+
+test('valid JSON reservation request stores once and returns manual review message', function (): void {
+    Queue::fake();
+
+    $response = $this
+        ->withHeader('Accept', 'application/json')
+        ->postJson(route('reservation-requests.store'), reservationRequestSubmissionTestPayload());
+
+    $response
+        ->assertOk()
+        ->assertJsonPath('success', true)
+        ->assertJsonPath('message', fn (string $message): bool => str_contains($message, 'not yet a confirmed reservation'));
+
+    $this->assertDatabaseCount('reservation_requests', 1);
+});
+
+test('invalid JSON reservation request returns field errors without storing', function (): void {
+    Queue::fake();
+
+    $response = $this
+        ->withHeader('Accept', 'application/json')
+        ->postJson(route('reservation-requests.store'), []);
+
+    $response
+        ->assertStatus(422)
+        ->assertJsonValidationErrors(['customer_name', 'phone', 'email', 'guest_count', 'preferred_date', 'preferred_time']);
+
+    $this->assertDatabaseCount('reservation_requests', 0);
 });
 
 test('valid reservation request payload queues notification', function (): void {
