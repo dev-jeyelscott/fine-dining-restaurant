@@ -10,8 +10,8 @@
 @endphp
 
 @if ($variant === 'luxury')
-    <article data-gsap="card" class="group">
-        <div class="relative aspect-[4/5] overflow-hidden bg-brand-ink-soft">
+    <article data-gsap="card" data-menu-motion="card" class="group">
+        <div data-menu-motion="card-image" class="relative aspect-[4/5] overflow-hidden bg-brand-ink-soft">
             @if ($item->image_url)
                 <x-public.responsive-image
                     :image="$item"
@@ -32,7 +32,7 @@
             <div class="absolute inset-0 bg-gradient-to-t from-brand-ink/45 via-transparent to-transparent transition duration-500 group-hover:from-brand-ink/20"></div>
         </div>
 
-        <div class="pt-6">
+        <div data-menu-motion="card-copy" class="pt-6">
             @if ($menuCategory)
                 <p class="text-[0.68rem] font-semibold uppercase tracking-[0.24em] text-brand-gold">
                     {{ $menuCategory->name }}
