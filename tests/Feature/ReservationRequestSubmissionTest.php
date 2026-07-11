@@ -60,12 +60,11 @@ test('reservation request page uses the luxury homepage design language', functi
         ->assertSee('font-display', false);
 });
 
-test('reservation request page exposes progressive motion hooks', function (): void {
+test('reservation request page exposes unconditional progressive motion hooks', function (): void {
     $this->get(route('reservation-request.create'))
         ->assertOk()
         ->assertSee('data-home-motion', false)
         ->assertSee('data-reservation-motion', false)
-        ->assertSee('data-gsap="hero-image"', false)
         ->assertSee('data-gsap="hero-content"', false)
         ->assertSee('data-reservation-sidebar', false)
         ->assertSee('data-reservation-process-step', false)
@@ -79,11 +78,12 @@ test('reservation request page exposes progressive motion hooks', function (): v
         ->assertSee('data-reservation-form', false);
 });
 
-test('reservation feedback regions remain accessible and outside reveal choreography', function (): void {
+test('reservation conditional motion and feedback markup remains accessible', function (): void {
     $viewSource = file_get_contents(resource_path('views/pages/reservation-request.blade.php'));
 
     expect($viewSource)
         ->toBeString()
+        ->toContain('data-gsap="hero-image"')
         ->toContain('data-reservation-feedback role="status"')
         ->toContain('data-reservation-feedback role="alert"')
         ->not->toContain('data-reservation-feedback data-gsap');
