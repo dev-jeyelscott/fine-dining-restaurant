@@ -20,16 +20,17 @@
                     >
                         <div data-home-gallery-visual class="relative h-full w-full overflow-hidden bg-brand-ink-soft opacity-55 scale-[0.9] transition-none">
                             @if ($image->image_url)
-                                <x-public.responsive-image
-                                    data-home-gallery-image
-                                    :image="$image"
-                                    :alt="$image->alt_text ?: $image->title ?: 'Restaurant gallery image'"
-                                    variant="large"
-                                    sizes="(min-width: 1024px) 58vw, (min-width: 640px) 74vw, 86vw"
-                                    width="1600"
-                                    height="1000"
-                                    img-class="h-full w-full object-cover"
-                                />
+                                <div data-home-gallery-image class="h-full w-full">
+                                    <x-public.responsive-image
+                                        :image="$image"
+                                        :alt="$image->alt_text ?: $image->title ?: 'Restaurant gallery image'"
+                                        variant="large"
+                                        sizes="(min-width: 1024px) 58vw, (min-width: 640px) 74vw, 86vw"
+                                        width="1600"
+                                        height="1000"
+                                        img-class="h-full w-full object-cover"
+                                    />
+                                </div>
                             @endif
                             <div class="absolute inset-0 bg-gradient-to-t from-brand-ink/90 via-brand-ink/10 to-transparent"></div>
                             @if ($image->title || $image->category)

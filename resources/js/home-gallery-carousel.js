@@ -44,6 +44,7 @@ export function initHomeGalleryCarousel(root, { reducedMotion = false } = {}) {
     const caption = (slide) => slide.querySelector("[data-home-gallery-caption] > div");
 
     const offsetFor = (index) => -allSlides[index].offsetLeft + (viewport.clientWidth - allSlides[index].offsetWidth) / 2;
+    const xPercentFor = (pixels) => track.scrollWidth ? (pixels / track.scrollWidth) * 100 : 0;
 
     const updateState = () => {
         originals.forEach((slide, index) => {
@@ -65,17 +66,19 @@ export function initHomeGalleryCarousel(root, { reducedMotion = false } = {}) {
         allSlides.forEach((slide, index) => {
             if (reducedMotion) {
                 gsap.set(visual(slide), { opacity: 1, scale: 1 });
+                gsap.set(caption(slide), { yPercent: 0 });
                 return;
             }
             const distance = Math.min(Math.abs(index - (activeIndex + 1)), originals.length - Math.abs(index - (activeIndex + 1)));
             gsap.set(visual(slide), { opacity: distance === 0 ? 1 : 0.55, scale: distance === 0 ? 1 : 0.9 });
+            gsap.to(caption(slide), { autoAlpha: distance === 0 ? 1 : 0, duration: 0.55, ease: "power3.out", overwrite: true, yPercent: distance === 0 ? 0 : 100 });
         });
     };
 
     const snapToActive = (animate = true) => {
         const targetIndex = activeIndex + 1;
         const targetX = offsetFor(targetIndex);
-        const vars = { x: targetX, duration: reducedMotion || !animate ? 0 : 0.95, ease: "power4.inOut", overwrite: true };
+        const vars = { x: 0, xPercent: xPercentFor(targetX), duration: reducedMotion || !animate ? 0 : 0.95, ease: "power4.inOut", overwrite: true };
         transition?.kill();
         transition = gsap.to(track, vars);
         setVisualStates();
@@ -85,10 +88,10 @@ export function initHomeGalleryCarousel(root, { reducedMotion = false } = {}) {
     const normalizeLoop = () => {
         if (activeIndex < 0) {
             activeIndex = originals.length - 1;
-            gsap.set(track, { x: offsetFor(originals.length) });
+            gsap.set(track, { x: 0, xPercent: xPercentFor(offsetFor(originals.length)) });
         } else if (activeIndex >= originals.length) {
             activeIndex = 0;
-            gsap.set(track, { x: offsetFor(1) });
+            gsap.set(track, { x: 0, xPercent: xPercentFor(offsetFor(1)) });
         }
         updateState();
         setVisualStates();
