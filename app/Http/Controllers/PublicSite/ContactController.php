@@ -8,8 +8,8 @@ use App\Http\Requests\StoreContactInquiryRequest;
 use App\Models\GalleryImage;
 use App\Models\Page;
 use Illuminate\Contracts\View\View;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 
 class ContactController extends Controller
 {
