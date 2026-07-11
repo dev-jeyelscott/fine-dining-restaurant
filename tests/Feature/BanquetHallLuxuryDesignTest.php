@@ -38,7 +38,7 @@ test('banquet hall follows the luxury homepage design language and preserves inq
 
     $this->get(route('banquet-hall'))
         ->assertOk()
-        ->assertSee('data-home-motion', false)
+        ->assertSee('data-home-motion data-banquet-motion', false)
         ->assertSee('data-banquet-hero', false)
         ->assertSee('data-gsap="hero-image"', false)
         ->assertSee('data-gsap="hero-content"', false)
