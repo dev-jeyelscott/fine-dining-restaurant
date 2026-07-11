@@ -61,6 +61,17 @@ test('homepage exposes semantic hooks for progressive luxury motion', function (
         ->assertSee('data-gsap-reveal', false);
 });
 
+test('homepage gallery preview renders an accessible editorial carousel contract', function (): void {
+    $this->get(route('home'))
+        ->assertOk()
+        ->assertSee('data-gallery-carousel', false)
+        ->assertSee('data-gallery-track', false)
+        ->assertSee('data-gallery-slide', false)
+        ->assertSee('data-gallery-prev', false)
+        ->assertSee('data-gallery-next', false)
+        ->assertSee('data-gallery-counter', false);
+});
+
 test('public entry lazy loads homepage motion without statically importing gsap', function (): void {
     $publicEntry = (string) file_get_contents(resource_path('js/app.js'));
 
@@ -77,6 +88,9 @@ test('homepage motion reads media conditions and reverts its match media lifecyc
         ->toContain('context.conditions')
         ->toContain('reducedMotion')
         ->toContain('media.revert()')
+        ->toContain('initializeGalleryCarousel')
+        ->toContain('ArrowLeft')
+        ->toContain('ArrowRight')
         ->not->toContain('({ reducedMotion }) =>');
 });
 
