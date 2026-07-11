@@ -202,6 +202,16 @@ test('no cart payment order status wording appears', function (): void {
         ->assertDontSeeText('POS');
 });
 
+test('order inquiry conditional address keeps delivery validation and accessibility state in Alpine', function (): void {
+    $this->get(route('order-inquiry.create'))
+        ->assertOk()
+        ->assertSee('x-bind:required="fulfillmentType === \'delivery\'"', false)
+        ->assertSee('x-bind:disabled="fulfillmentType !== \'delivery\'"', false)
+        ->assertSee('x-bind:inert="fulfillmentType !== \'delivery\'"', false)
+        ->assertSee('x-show="fulfillmentType === \'delivery\'"', false)
+        ->assertSee('data-gsap="delivery-address"', false);
+});
+
 function validOrderInquirySubmissionPayload(array $overrides = []): array
 {
     return array_merge([

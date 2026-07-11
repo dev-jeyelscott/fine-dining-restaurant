@@ -70,6 +70,89 @@ function addGoldFrame(target) {
     });
 }
 
+function animateDeliveryAddress(root, fulfillmentType, reducedMotion) {
+    const panel = root.querySelector('[data-gsap="delivery-address"]');
+
+    if (!panel) {
+        return;
+    }
+
+    const isDelivery = fulfillmentType === "delivery";
+
+    if (reducedMotion) {
+        gsap.set(panel, { clearProps: "height,opacity,transform", display: isDelivery ? "block" : "none" });
+        return;
+    }
+
+    gsap.killTweensOf(panel);
+
+    if (isDelivery) {
+        gsap.set(panel, { display: "block", height: 0, autoAlpha: 0, y: -10 });
+        gsap.to(panel, { autoAlpha: 1, duration: 0.25, ease: "power2.out", height: "auto", y: 0 });
+        return;
+    }
+
+    gsap.set(panel, { display: "block", height: "auto", autoAlpha: 1, y: 0 });
+    const currentHeight = panel.offsetHeight;
+
+    gsap.set(panel, { height: currentHeight });
+    gsap.to(panel, {
+        autoAlpha: 0,
+        duration: 0.2,
+        ease: "power2.in",
+        height: 0,
+        y: -10,
+        onComplete: () => gsap.set(panel, { display: "none" }),
+    });
+}
+
+function initializeOrderInquiryMotion(root, { reducedMotion }) {
+    const process = root.querySelector('[data-gsap="process"]');
+    const cards = root.querySelector('[data-gsap="fulfillment-cards"]');
+    const feedback = root.querySelectorAll('[data-gsap="feedback"]');
+
+    if (reducedMotion) {
+        root.querySelectorAll("[data-gsap-reveal]").forEach((element) => gsap.set(element, { clearProps: "all" }));
+        feedback.forEach((element) => gsap.set(element, { clearProps: "all" }));
+    } else {
+        if (process) {
+            revealTimeline(process, { stagger: 0.14 });
+        }
+
+        if (cards) {
+            const cardItems = cards.querySelectorAll('[data-gsap="card"]');
+            gsap.set(cardItems, { autoAlpha: 0, y: 18 });
+            gsap.timeline({ scrollTrigger: { trigger: cards, start: "top 82%", once: true } }).to(cardItems, {
+                autoAlpha: 1,
+                duration: 0.65,
+                ease: "power3.out",
+                stagger: 0.1,
+                y: 0,
+            });
+        }
+
+        feedback.forEach((element) => gsap.fromTo(element, { autoAlpha: 0, y: 8 }, {
+            autoAlpha: 1,
+            duration: 0.3,
+            ease: "power2.out",
+            y: 0,
+        }));
+    }
+
+    const handleFulfillmentChange = (event) => {
+        animateDeliveryAddress(root, event.detail?.fulfillmentType, reducedMotion);
+    };
+
+    root.addEventListener("order-inquiry:fulfillment-change", handleFulfillmentChange);
+    animateDeliveryAddress(
+        root,
+        root.querySelector('input[name="fulfillment_type"]:checked')?.value ?? "pickup",
+        reducedMotion,
+    );
+
+    return () => root.removeEventListener("order-inquiry:fulfillment-change", handleFulfillmentChange);
+}
+
 function initializeHomeMotion(root, { desktop, reducedMotion }) {
     if (reducedMotion) {
         return;
@@ -152,6 +235,10 @@ export function initPublicAnimations(root = document.querySelector("[data-home-m
         const { desktop = false, reducedMotion = false } = context.conditions;
 
         initializeHomeMotion(root, { desktop, reducedMotion });
+
+        if (root.matches("[data-order-inquiry-motion]")) {
+            initializeOrderInquiryMotion(root, { reducedMotion });
+        }
     });
 
     const cleanup = () => media.revert();
