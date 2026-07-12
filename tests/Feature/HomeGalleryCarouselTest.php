@@ -43,6 +43,7 @@ test('homepage carousel styles preserve a responsive stacked landscape compositi
         ->toContain('aspect-ratio: 16 / 10;')
         ->toContain('aspect-ratio: 16 / 9;')
         ->toContain('overflow-x: clip;')
+        ->toContain('touch-action: pan-y;')
         ->toContain('width: 92%;')
         ->toContain('width: 84%;')
         ->toContain('width: 78%;')
