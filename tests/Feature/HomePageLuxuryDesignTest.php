@@ -114,13 +114,13 @@ test('homepage carousel initializer keeps the required interaction and lifecycle
     $carouselModule = (string) file_get_contents(resource_path('js/home-gallery-carousel.js'));
 
     expect($carouselModule)
-        ->toContain('Draggable')
         ->toContain('ArrowLeft')
         ->toContain('ArrowRight')
         ->toContain('event.key === "Home"')
         ->toContain('event.key === "End"')
         ->toContain('ResizeObserver')
-        ->toContain('draggable?.kill()')
+        ->not->toContain('Draggable')
+        ->not->toContain('draggable')
         ->toContain('reducedMotion');
 });
 

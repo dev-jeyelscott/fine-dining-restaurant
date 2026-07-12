@@ -428,7 +428,7 @@ export function initPublicAnimations(root = document.querySelector("[data-home-m
             return initializeOrderInquiryMotion(root, { desktop, reducedMotion });
         }
 
-        initializeHomeMotion(root, { desktop, reducedMotion });
+        return initializeHomeMotion(root, { desktop, reducedMotion });
     });
 
     const cleanup = () => media.revert();
