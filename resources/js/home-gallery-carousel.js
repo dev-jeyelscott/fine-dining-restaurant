@@ -18,7 +18,13 @@ export function initHomeGalleryCarousel(root, { reducedMotion = false } = {}) {
     const originalGalleryMotion = root.getAttribute("data-gsap");
     const originalTabIndex = viewport.getAttribute("tabindex");
     const captions = slides
-        .map((slide) => [...slide.children].find((child) => child.classList.contains("bottom-0") && child.classList.contains("inset-x-0")))
+        .map((slide) =>
+            [...slide.children].find(
+                (child) =>
+                    child.classList.contains("bottom-0") &&
+                    child.classList.contains("inset-x-0"),
+            ),
+        )
         .filter(Boolean);
     const controls = root.querySelector("[data-home-gallery-controls]");
     const previous = controls?.querySelector("[data-home-gallery-previous]");
@@ -37,7 +43,9 @@ export function initHomeGalleryCarousel(root, { reducedMotion = false } = {}) {
         slide.dataset.homeGallerySlide = "";
         slide.dataset.index = String(index);
         slide.setAttribute("aria-label", `${index + 1} of ${count}`);
-        slide.querySelectorAll("img").forEach((image) => image.setAttribute("draggable", "false"));
+        slide
+            .querySelectorAll("img")
+            .forEach((image) => image.setAttribute("draggable", "false"));
     });
 
     let currentIndex = 0;
@@ -47,7 +55,8 @@ export function initHomeGalleryCarousel(root, { reducedMotion = false } = {}) {
     let pointerId = null;
     let pointerStartX = null;
 
-    const captionFor = (slide) => captions.find((caption) => caption.parentElement === slide) ?? null;
+    const captionFor = (slide) =>
+        captions.find((caption) => caption.parentElement === slide) ?? null;
 
     const stateVars = (state) => ({
         autoAlpha: state === "current" ? 1 : state === "hidden" ? 0 : 0.48,
@@ -74,8 +83,14 @@ export function initHomeGalleryCarousel(root, { reducedMotion = false } = {}) {
             }
 
             slide.dataset.state = state;
-            slide.setAttribute("aria-current", state === "current" ? "true" : "false");
-            slide.setAttribute("aria-hidden", state === "current" ? "false" : "true");
+            slide.setAttribute(
+                "aria-current",
+                state === "current" ? "true" : "false",
+            );
+            slide.setAttribute(
+                "aria-hidden",
+                state === "current" ? "false" : "true",
+            );
 
             if (state === "current") {
                 slide.removeAttribute("inert");
@@ -87,7 +102,6 @@ export function initHomeGalleryCarousel(root, { reducedMotion = false } = {}) {
         if (current) {
             current.textContent = String(currentIndex + 1).padStart(2, "0");
         }
-
     };
 
     const renderImmediate = () => {
@@ -150,21 +164,32 @@ export function initHomeGalleryCarousel(root, { reducedMotion = false } = {}) {
             const state = slide.dataset.state;
             const caption = captionFor(slide);
 
-            activeTimeline.to(slide, { ...stateVars(state), duration: 0.88 }, 0);
+            activeTimeline.to(
+                slide,
+                { ...stateVars(state), duration: 0.88 },
+                0,
+            );
 
             if (caption) {
-                activeTimeline.to(caption, {
-                    autoAlpha: state === "current" ? 1 : 0,
-                    duration: state === "current" ? 0.5 : 0.3,
-                    ease: "power3.out",
-                    y: state === "current" ? 0 : 12,
-                }, state === "current" ? 0.42 : 0);
+                activeTimeline.to(
+                    caption,
+                    {
+                        autoAlpha: state === "current" ? 1 : 0,
+                        duration: state === "current" ? 0.5 : 0.3,
+                        ease: "power3.out",
+                        y: state === "current" ? 0 : 12,
+                    },
+                    state === "current" ? 0.42 : 0,
+                );
             }
         });
     };
 
     const handleKeydown = (event) => {
-        if (count === 1 || !["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) {
+        if (
+            count === 1 ||
+            !["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)
+        ) {
             return;
         }
 
@@ -215,9 +240,10 @@ export function initHomeGalleryCarousel(root, { reducedMotion = false } = {}) {
     viewport.addEventListener("pointerup", handlePointerUp);
     viewport.addEventListener("pointercancel", resetPointer);
 
-    const resizeObserver = typeof ResizeObserver === "undefined"
-        ? null
-        : new ResizeObserver(renderImmediate);
+    const resizeObserver =
+        typeof ResizeObserver === "undefined"
+            ? null
+            : new ResizeObserver(renderImmediate);
 
     resizeObserver?.observe(viewport);
     renderImmediate();
@@ -225,28 +251,34 @@ export function initHomeGalleryCarousel(root, { reducedMotion = false } = {}) {
     return () => {
         activeTimeline?.kill();
         resizeObserver?.disconnect();
+
         previous?.removeEventListener("click", handlePrevious);
         next?.removeEventListener("click", handleNext);
         viewport.removeEventListener("keydown", handleKeydown);
         viewport.removeEventListener("pointerdown", handlePointerDown);
         viewport.removeEventListener("pointerup", handlePointerUp);
         viewport.removeEventListener("pointercancel", resetPointer);
+
         queuedTarget = null;
+
         gsap.killTweensOf(slides);
         gsap.killTweensOf(captions);
 
-        slides.forEach((slide) => {
-            slide.removeAttribute("aria-current");
-            slide.removeAttribute("aria-hidden");
-            slide.removeAttribute("aria-label");
-            slide.removeAttribute("data-home-gallery-slide");
-            slide.removeAttribute("data-index");
+        slides.forEach((slide, index) => {
+            const isFirstSlide = index === 0;
+
+            slide.setAttribute("aria-current", isFirstSlide ? "true" : "false");
+            slide.setAttribute("aria-hidden", isFirstSlide ? "false" : "true");
             slide.removeAttribute("data-state");
             slide.removeAttribute("inert");
+
             gsap.set(slide, { clearProps: "all" });
         });
 
-        captions.forEach((caption) => gsap.set(caption, { clearProps: "all" }));
+        captions.forEach((caption) => {
+            gsap.set(caption, { clearProps: "all" });
+        });
+
         viewport.removeAttribute("data-home-gallery-viewport");
 
         if (originalTabIndex === null) {
@@ -256,8 +288,6 @@ export function initHomeGalleryCarousel(root, { reducedMotion = false } = {}) {
         }
 
         root.removeAttribute("data-home-gallery-enhanced");
-        root.removeAttribute("aria-label");
-        root.removeAttribute("aria-roledescription");
 
         if (originalGalleryMotion !== null) {
             root.setAttribute("data-gsap", originalGalleryMotion);

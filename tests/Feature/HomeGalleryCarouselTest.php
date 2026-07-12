@@ -16,7 +16,10 @@ test('homepage carousel initializer keeps accessible interaction and lifecycle c
         ->toContain('aria-current')
         ->toContain('aria-hidden')
         ->toContain('setAttribute("inert", "")')
-        ->toContain('controls?.remove()')
+        ->toContain('previous?.removeEventListener("click", handlePrevious)')
+        ->toContain('next?.removeEventListener("click", handleNext)')
+        ->toContain('viewport.removeEventListener("keydown", handleKeydown)')
+        ->not->toContain('controls?.remove()')
         ->toContain('gsap.killTweensOf(slides)');
 });
 
