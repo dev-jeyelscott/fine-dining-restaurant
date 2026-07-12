@@ -60,7 +60,7 @@ test('copy changes preserve the validated Menu and Order Inquiry GSAP runtime', 
     expect($source)
         ->toBeString()
         ->toContain('if (root.dataset.publicMotion === "menu")')
-        ->toContain('return initializeMenuMotion(root, { reducedMotion });')
+        ->toContain('return initializeMenuMotion(root, { desktop, reducedMotion });')
         ->toContain('if (root.matches("[data-order-inquiry-motion]"))')
         ->toContain('return initializeOrderInquiryMotion(root, { desktop, reducedMotion });')
         ->toContain('gsap.set(courseRule, { autoAlpha: 1, scaleX: 0')
