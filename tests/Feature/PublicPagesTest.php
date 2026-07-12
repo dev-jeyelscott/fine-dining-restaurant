@@ -61,8 +61,8 @@ test('public pages use an isolated Vite stylesheet without Flux sources', functi
     expect(str_contains($appStyles, 'flux-pro'))->toBeFalse();
 
     expect($viteConfig)
-        ->toContain("'resources/css/app.css'")
-        ->toContain("'resources/css/public.css'");
+        ->toContain('"resources/css/app.css"')
+        ->toContain('"resources/css/public.css"');
 });
 
 test('approved public pages render successfully', function (string $routeName): void {
