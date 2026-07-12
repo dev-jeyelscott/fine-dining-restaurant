@@ -10,7 +10,7 @@
     <div data-home-motion data-public-motion="menu">
     <section data-public-hero data-menu-motion="hero" class="relative isolate flex min-h-[44rem] items-center overflow-hidden bg-brand-ink lg:min-h-screen">
         @if ($heroItem?->image_url)
-            <div data-menu-motion="hero-image" class="absolute inset-0 -z-30 overflow-hidden">
+            <div data-gsap="hero-image" data-menu-motion="hero-image" class="absolute inset-0 -z-30 overflow-hidden">
                 <x-public.responsive-image
                     :image="$heroItem"
                     alt=""
@@ -24,23 +24,23 @@
                 />
             </div>
         @else
-            <div data-menu-motion="hero-image" class="absolute inset-0 -z-30 bg-[radial-gradient(circle_at_72%_28%,rgba(201,164,93,0.28),transparent_25%),linear-gradient(135deg,#2f302a,#171916_62%)]"></div>
+            <div data-gsap="hero-image" data-menu-motion="hero-image" class="absolute inset-0 -z-30 bg-[radial-gradient(circle_at_72%_28%,rgba(201,164,93,0.28),transparent_25%),linear-gradient(135deg,#2f302a,#171916_62%)]"></div>
         @endif
 
         <div class="absolute inset-0 -z-20 bg-[linear-gradient(to_bottom,rgba(23,25,22,0.42),rgba(23,25,22,0.62)_45%,rgba(23,25,22,0.98))]"></div>
         <div class="absolute inset-0 -z-10 bg-gradient-to-r from-brand-ink/90 via-brand-ink/55 to-brand-ink/20"></div>
 
         <div class="mx-auto w-full max-w-7xl px-5 pb-20 pt-36 sm:px-6 lg:px-10 lg:pb-28 lg:pt-44">
-            <div data-menu-motion="hero-content" class="max-w-4xl">
-                <p data-menu-motion="hero-item" class="text-xs font-semibold uppercase tracking-[0.38em] text-brand-gold">Our Menu</p>
-                <h1 data-menu-motion="hero-item" class="mt-6 max-w-4xl font-display text-5xl leading-[0.98] text-white sm:text-6xl lg:text-8xl">
+            <div data-gsap="hero-content" data-menu-motion="hero-content" class="max-w-4xl">
+                <p data-gsap-reveal data-menu-motion="hero-item" class="text-xs font-semibold uppercase tracking-[0.38em] text-brand-gold">Our Menu</p>
+                <h1 data-gsap-reveal data-menu-motion="hero-item" class="mt-6 max-w-4xl font-display text-5xl leading-[0.98] text-white sm:text-6xl lg:text-8xl">
                     {{ $page?->title ?: 'A Menu Guided by Season and Craft' }}
                 </h1>
-                <p data-menu-motion="hero-item" class="mt-7 max-w-2xl text-base leading-8 text-stone-200 sm:text-lg">
+                <p data-gsap-reveal data-menu-motion="hero-item" class="mt-7 max-w-2xl text-base leading-8 text-stone-200 sm:text-lg">
                     {{ $page?->excerpt ?: 'From delicate first courses to expressive mains and elegant finales, every plate is composed with balance, precision, and character.' }}
                 </p>
 
-                <div data-menu-motion="hero-item" class="mt-10 flex flex-col gap-4 sm:flex-row">
+                <div data-gsap-reveal data-menu-motion="hero-item" class="mt-10 flex flex-col gap-4 sm:flex-row">
                     <a
                         href="#menu-selections"
                         class="inline-flex min-h-12 items-center justify-center bg-brand-gold px-7 py-3 text-xs font-semibold uppercase tracking-[0.2em] text-brand-ink transition duration-300 hover:bg-brand-gold-dark hover:text-white"
