@@ -67,7 +67,7 @@ function addGoldFrame(target) {
         duration: 0.9,
         ease: "power3.out",
         scale: 1,
-        scrollTrigger: { trigger: target.parentElement, start: "top 78%", once: true },
+        scrollTrigger: { trigger: target.parentElement ?? target, start: "top 78%", end: "bottom top", once: true },
     });
 }
 

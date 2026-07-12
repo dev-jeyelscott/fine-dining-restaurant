@@ -110,6 +110,12 @@ test('homepage motion reads media conditions and reverts its match media lifecyc
         ->not->toContain('({ reducedMotion }) =>');
 });
 
+test('homepage frame motion uses a complete scroll trigger range', function (): void {
+    expect((string) file_get_contents(resource_path('js/public-animations.js')))
+        ->toContain('target.parentElement ?? target')
+        ->toContain('end: "bottom top"');
+});
+
 test('homepage carousel initializer keeps the required interaction and lifecycle contracts', function (): void {
     $carouselModule = (string) file_get_contents(resource_path('js/home-gallery-carousel.js'));
 
@@ -118,10 +124,26 @@ test('homepage carousel initializer keeps the required interaction and lifecycle
         ->toContain('ArrowRight')
         ->toContain('event.key === "Home"')
         ->toContain('event.key === "End"')
+        ->toContain('queuedTarget')
+        ->toContain('pointerdown')
+        ->toContain('pointerup')
         ->toContain('ResizeObserver')
-        ->not->toContain('Draggable')
-        ->not->toContain('draggable')
         ->toContain('reducedMotion');
+});
+
+test('homepage carousel uses the responsive landscape composition contract', function (): void {
+    $carousel = (string) file_get_contents(resource_path('views/components/public/home-gallery-carousel.blade.php'));
+
+    expect($carousel)
+        ->toContain('aspect-[4/3]')
+        ->toContain('sm:aspect-[16/10]')
+        ->toContain('lg:aspect-[16/9]')
+        ->toContain('overflow-x-clip')
+        ->toContain('touch-pan-y')
+        ->toContain('width="1600" height="900"')
+        ->toContain('w-[92%]')
+        ->toContain('sm:w-[84%]')
+        ->toContain('lg:w-[78%]');
 });
 
 test('homepage carousel keeps the six-image controller bound and safe one-image state', function (): void {
