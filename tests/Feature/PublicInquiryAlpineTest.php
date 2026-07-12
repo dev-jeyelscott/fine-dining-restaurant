@@ -26,6 +26,15 @@ test('public notification center provides distinct accessible success and error 
         ->toContain('aria-label="Dismiss notification"');
 });
 
+test('public stylesheet cloaks Alpine notifications before initialization', function (): void {
+    $styles = file_get_contents(resource_path('css/public.css'));
+
+    expect($styles)
+        ->not->toBeFalse()
+        ->toContain('[x-cloak]')
+        ->toContain('display: none !important;');
+});
+
 test('public layout renders one shared notification center', function (): void {
     $layout = file_get_contents(resource_path('views/components/layouts/public.blade.php'));
 

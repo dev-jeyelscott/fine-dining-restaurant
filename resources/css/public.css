@@ -6,6 +6,110 @@
 @source '../views/components/layouts/public.blade.php';
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 
+[x-cloak] {
+    display: none !important;
+}
+
+[data-home-gallery-enhanced] [data-home-gallery-viewport] {
+    position: relative;
+    display: block;
+    aspect-ratio: 4 / 3;
+    width: 100%;
+    max-width: 67.5rem;
+    margin-inline: auto;
+    overflow-x: clip;
+    overflow-y: visible;
+}
+
+[data-home-gallery-enhanced] [data-home-gallery-slide] {
+    position: absolute !important;
+    top: 8%;
+    bottom: 8%;
+    left: 50%;
+    z-index: 0;
+    width: 92%;
+    height: 84%;
+    margin: 0 !important;
+    grid-column: auto !important;
+    grid-row: auto !important;
+    will-change: transform, opacity;
+}
+
+[data-home-gallery-enhanced] [data-home-gallery-slide][aria-hidden="true"] {
+    pointer-events: none;
+}
+
+.home-gallery-controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    max-width: 67.5rem;
+    margin: 1.5rem auto 0;
+    padding-top: 1.25rem;
+    border-top: 1px solid rgb(201 164 93 / 25%);
+}
+
+.home-gallery-counter {
+    color: #c9a45d;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+}
+
+.home-gallery-counter-total {
+    color: rgb(255 255 255 / 35%);
+}
+
+.home-gallery-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.home-gallery-button {
+    display: inline-flex;
+    width: 3rem;
+    height: 3rem;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgb(201 164 93 / 50%);
+    color: #c9a45d;
+    transition: color 200ms ease, background-color 200ms ease, border-color 200ms ease;
+}
+
+.home-gallery-button:hover {
+    border-color: #c9a45d;
+    background: #c9a45d;
+    color: #171916;
+}
+
+.home-gallery-button:focus-visible {
+    outline: 2px solid #c9a45d;
+    outline-offset: 4px;
+}
+
+@media (min-width: 40rem) {
+    [data-home-gallery-enhanced] [data-home-gallery-viewport] {
+        aspect-ratio: 16 / 10;
+    }
+
+    [data-home-gallery-enhanced] [data-home-gallery-slide] {
+        width: 84%;
+    }
+}
+
+@media (min-width: 64rem) {
+    [data-home-gallery-enhanced] [data-home-gallery-viewport] {
+        aspect-ratio: 16 / 9;
+    }
+
+    [data-home-gallery-enhanced] [data-home-gallery-slide] {
+        width: 78%;
+        max-width: 67.5rem;
+    }
+}
+
 @layer components {
     .public-hero-viewport {
         min-height: 100vh;
