@@ -10,6 +10,7 @@ use Filament\Actions\EditAction;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
 
 class MenuItemsTable
@@ -24,7 +25,8 @@ class MenuItemsTable
                         ResponsiveImageManager::VARIANT_THUMBNAIL,
                     ))
                     ->disk('public')
-                    ->square(),
+                    ->square()
+                    ->hiddenFrom('md'),
 
                 TextColumn::make('menuCategory.name')
                     ->label('Category')
@@ -36,21 +38,31 @@ class MenuItemsTable
                     ->sortable(),
 
                 TextColumn::make('price')
-                    ->sortable(),
+                    ->sortable()
+                    ->hiddenFrom('lg'),
 
                 TextColumn::make('sort_order')
-                    ->sortable(),
+                    ->sortable()
+                    ->hiddenFrom('xl'),
 
                 IconColumn::make('is_visible')
-                    ->boolean(),
+                    ->boolean()
+                    ->label('Visible'),
 
                 TextColumn::make('updated_at')
                     ->dateTime()
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
+                TernaryFilter::make('is_visible')
+                    ->label('Visibility')
+                    ->trueLabel('Visible')
+                    ->falseLabel('Hidden'),
             ])
+            ->emptyStateHeading('No menu items yet')
+            ->emptyStateDescription('Add a menu item to begin building the menu.')
+            ->emptyStateIcon('heroicon-o-book-open')
             ->recordActions([
                 EditAction::make(),
             ])
