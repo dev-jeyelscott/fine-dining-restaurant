@@ -1,0 +1,292 @@
+@import "../../../../vendor/filament/filament/resources/css/theme.css";
+@import "../../brand-tokens.css";
+
+@source "../../../../app/Filament/**/*";
+@source "../../../../resources/views/filament/**/*";
+
+/*
+|--------------------------------------------------------------------------
+| Admin semantic design tokens
+|--------------------------------------------------------------------------
+|
+| These variables translate the public restaurant brand into admin-safe
+| surfaces, typography, borders, radii, shadows, and focus treatment.
+| They remain scoped to the admin panel through .fi-panel-admin.
+|
+*/
+
+.fi-panel-admin {
+    --admin-background: var(--color-brand-paper);
+    --admin-surface: var(--color-brand-ivory);
+    --admin-surface-muted: #ebe4d8;
+    --admin-chrome: rgb(250 248 242 / 94%);
+
+    --admin-accent: var(--color-brand-gold);
+    --admin-accent-strong: var(--color-brand-gold-dark);
+
+    --admin-text: var(--color-brand-ink);
+    --admin-text-muted: var(--color-brand-muted);
+
+    --admin-border: rgb(23 25 22 / 12%);
+    --admin-focus: var(--color-brand-gold-dark);
+
+    --admin-radius-sm: 0.625rem;
+    --admin-radius-md: 0.875rem;
+    --admin-radius-lg: 1.125rem;
+
+    --admin-shadow-sm:
+        0 1px 2px rgb(23 25 22 / 5%), 0 1px 3px rgb(23 25 22 / 8%);
+
+    --admin-shadow-md:
+        0 8px 24px rgb(23 25 22 / 8%), 0 2px 8px rgb(23 25 22 / 6%);
+
+    background-color: var(--admin-background);
+    color: var(--admin-text);
+}
+
+.dark .fi-panel-admin {
+    --admin-background: var(--color-brand-ink);
+    --admin-surface: var(--color-brand-ink-soft);
+    --admin-surface-muted: #2d3129;
+    --admin-chrome: rgb(36 39 32 / 94%);
+
+    --admin-text: var(--color-brand-ivory);
+    --admin-text-muted: #bbb7ac;
+
+    --admin-border: rgb(201 164 93 / 22%);
+    --admin-focus: var(--color-brand-gold);
+
+    --admin-shadow-sm: 0 1px 2px rgb(0 0 0 / 18%), 0 2px 8px rgb(0 0 0 / 16%);
+
+    --admin-shadow-md:
+        0 12px 32px rgb(0 0 0 / 28%), 0 4px 12px rgb(0 0 0 / 22%);
+}
+
+/*
+|--------------------------------------------------------------------------
+| Application canvas
+|--------------------------------------------------------------------------
+*/
+
+.fi-panel-admin.fi-body {
+    background-color: var(--admin-background);
+    color: var(--admin-text);
+}
+
+/*
+|--------------------------------------------------------------------------
+| Typography
+|--------------------------------------------------------------------------
+*/
+
+.fi-panel-admin
+    :where(
+        .fi-header-heading,
+        .fi-simple-header-heading,
+        .fi-section-header-heading,
+        .fi-modal-heading
+    ) {
+    font-family: var(--font-display);
+    letter-spacing: -0.025em;
+}
+
+.fi-panel-admin
+    :where(
+        .fi-header-subheading,
+        .fi-simple-header-subheading,
+        .fi-section-header-description
+    ) {
+    color: var(--admin-text-muted);
+}
+
+/*
+|--------------------------------------------------------------------------
+| Topbar and sidebar
+|--------------------------------------------------------------------------
+*/
+
+.fi-panel-admin .fi-topbar {
+    border-bottom: 1px solid var(--admin-border);
+    background-color: var(--admin-chrome);
+    box-shadow: var(--admin-shadow-sm);
+    backdrop-filter: blur(14px);
+}
+
+.fi-panel-admin .fi-sidebar {
+    border-inline-end: 1px solid var(--admin-border);
+    background-color: var(--admin-surface);
+}
+
+.fi-panel-admin .fi-sidebar-header {
+    border-bottom: 1px solid var(--admin-border);
+}
+
+.fi-panel-admin .fi-sidebar-nav {
+    scrollbar-color: var(--admin-accent) transparent;
+}
+
+.fi-panel-admin .fi-sidebar-item-btn,
+.fi-panel-admin .fi-topbar-item-btn,
+.fi-panel-admin .fi-sidebar-group-dropdown-trigger-btn {
+    border-radius: var(--admin-radius-sm);
+}
+
+.fi-panel-admin .fi-sidebar-item-btn {
+    border-inline-start: 3px solid transparent;
+}
+
+.fi-panel-admin .fi-sidebar-item.fi-active > .fi-sidebar-item-btn {
+    border-inline-start-color: var(--admin-accent);
+    background-color: var(--admin-surface-muted);
+}
+
+.fi-panel-admin
+    .fi-sidebar-item.fi-active
+    > .fi-sidebar-item-btn
+    > .fi-sidebar-item-label {
+    color: var(--admin-accent-strong);
+}
+
+/*
+|--------------------------------------------------------------------------
+| Cards, tables, dropdowns, and modal surfaces
+|--------------------------------------------------------------------------
+*/
+
+.fi-panel-admin
+    :where(
+        .fi-section,
+        .fi-ta-ctn,
+        .fi-modal-window,
+        .fi-dropdown-panel,
+        .fi-wi-stats-overview-stat,
+        .fi-simple-main
+    ) {
+    border: 1px solid var(--admin-border);
+    border-radius: var(--admin-radius-lg);
+    background-color: var(--admin-surface);
+    box-shadow: var(--admin-shadow-sm);
+}
+
+.fi-panel-admin .fi-modal-window,
+.fi-panel-admin .fi-dropdown-panel {
+    box-shadow: var(--admin-shadow-md);
+}
+
+.fi-panel-admin .fi-section-header {
+    border-bottom-color: var(--admin-border);
+}
+
+/*
+|--------------------------------------------------------------------------
+| Forms
+|--------------------------------------------------------------------------
+*/
+
+.fi-panel-admin .fi-input-wrp {
+    border: 1px solid var(--admin-border);
+    border-radius: var(--admin-radius-sm);
+    background-color: var(--admin-surface);
+    transition:
+        border-color 150ms ease,
+        background-color 150ms ease,
+        box-shadow 150ms ease;
+}
+
+.fi-panel-admin .fi-input-wrp:hover {
+    border-color: rgb(201 164 93 / 55%);
+}
+
+.fi-panel-admin .fi-input-wrp:focus-within {
+    border-color: var(--admin-focus);
+}
+
+/*
+|--------------------------------------------------------------------------
+| Buttons, links, and badges
+|--------------------------------------------------------------------------
+*/
+
+.fi-panel-admin .fi-btn {
+    border-radius: var(--admin-radius-sm);
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    transition:
+        transform 150ms ease,
+        box-shadow 150ms ease,
+        background-color 150ms ease,
+        border-color 150ms ease,
+        color 150ms ease;
+}
+
+.fi-panel-admin .fi-btn:hover {
+    transform: translateY(-1px);
+}
+
+.fi-panel-admin .fi-btn:active {
+    transform: translateY(0);
+}
+
+.fi-panel-admin .fi-badge {
+    border-radius: 9999px;
+    font-weight: 600;
+    letter-spacing: 0.025em;
+}
+
+.fi-panel-admin .fi-link {
+    text-decoration-color: rgb(201 164 93 / 55%);
+    text-underline-offset: 0.2em;
+}
+
+/*
+|--------------------------------------------------------------------------
+| Notifications
+|--------------------------------------------------------------------------
+*/
+
+.fi-panel-admin .fi-no-notification {
+    border: 1px solid var(--admin-border);
+    border-radius: var(--admin-radius-md);
+    box-shadow: var(--admin-shadow-md);
+}
+
+/*
+|--------------------------------------------------------------------------
+| Accessible keyboard focus
+|--------------------------------------------------------------------------
+*/
+
+.fi-panel-admin
+    :where(
+        a,
+        button,
+        input,
+        select,
+        textarea,
+        [role="button"],
+        [tabindex]:not([tabindex="-1"])
+    ):focus-visible {
+    outline: 2px solid var(--admin-focus);
+    outline-offset: 3px;
+}
+
+/*
+|--------------------------------------------------------------------------
+| Reduced motion
+|--------------------------------------------------------------------------
+*/
+
+@media (prefers-reduced-motion: reduce) {
+    .fi-panel-admin *,
+    .fi-panel-admin *::before,
+    .fi-panel-admin *::after {
+        scroll-behavior: auto !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+
+    .fi-panel-admin .fi-btn:hover {
+        transform: none;
+    }
+}
