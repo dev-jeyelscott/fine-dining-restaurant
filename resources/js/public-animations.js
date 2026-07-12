@@ -101,7 +101,7 @@ function setMenuFinalStates(root) {
     links.forEach((link) => link.setAttribute("aria-current", link === activeLink ? "true" : "false"));
 }
 
-function initializeMenuMotion(root, { reducedMotion }) {
+function initializeMenuMotion(root, { desktop, reducedMotion }) {
     const hero = root.querySelector('[data-menu-motion="hero"]');
     const categoryNav = root.querySelector('[data-menu-motion="category-nav"]');
     const fullHeading = root.querySelector('[data-menu-motion="full-heading"]');
@@ -116,20 +116,7 @@ function initializeMenuMotion(root, { reducedMotion }) {
     }
 
     if (hero) {
-        const image = hero.querySelector('[data-menu-motion="hero-image"]');
-        const items = hero.querySelectorAll('[data-menu-motion="hero-item"]');
-
-        if (image) {
-            gsap.fromTo(image, { clipPath: "inset(0 0 100% 0)", scale: 1.05 }, { clipPath: "inset(0 0 0% 0)", scale: 1, duration: 1.4, ease: "power4.out" });
-        }
-
-        gsap.set(items, { autoAlpha: 0, y: 20 });
-        gsap.timeline({ defaults: { ease: "power4.out" } }).to(items, {
-            autoAlpha: 1,
-            duration: 0.9,
-            stagger: 0.11,
-            y: 0,
-        });
+        initializeHeroMotion(root, { desktop });
     }
 
     if (categoryNav) {
@@ -421,7 +408,7 @@ export function initPublicAnimations(root = document.querySelector("[data-home-m
         const { desktop = false, reducedMotion = false } = context.conditions;
 
         if (root.dataset.publicMotion === "menu") {
-            return initializeMenuMotion(root, { reducedMotion });
+            return initializeMenuMotion(root, { desktop, reducedMotion });
         }
 
         if (root.matches("[data-order-inquiry-motion]")) {
