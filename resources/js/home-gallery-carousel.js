@@ -2,31 +2,12 @@ import gsap from "gsap";
 
 const wrap = (value, length) => ((value % length) + length) % length;
 
-function createControls(count) {
-    const controls = document.createElement("div");
-
-    controls.dataset.homeGalleryControls = "";
-    controls.className = "home-gallery-controls";
-    controls.innerHTML = `
-        <p class="home-gallery-counter" aria-live="polite">
-            <span data-home-gallery-current>01</span>
-            <span class="home-gallery-counter-total"> / <span>${String(count).padStart(2, "0")}</span></span>
-        </p>
-        <div class="home-gallery-actions">
-            <button type="button" class="home-gallery-button" data-home-gallery-previous aria-label="Previous gallery image">&larr;</button>
-            <button type="button" class="home-gallery-button" data-home-gallery-next aria-label="Next gallery image">&rarr;</button>
-        </div>
-    `;
-
-    return controls;
-}
-
 export function initHomeGalleryCarousel(root, { reducedMotion = false } = {}) {
     if (!root) {
         return () => {};
     }
 
-    const slides = [...root.querySelectorAll('[data-gsap="tile"]')];
+    const slides = [...root.querySelectorAll("[data-home-gallery-slide]")];
     const viewport = slides[0]?.parentElement;
 
     if (!viewport || slides.length === 0) {
@@ -39,6 +20,10 @@ export function initHomeGalleryCarousel(root, { reducedMotion = false } = {}) {
     const captions = slides
         .map((slide) => [...slide.children].find((child) => child.classList.contains("bottom-0") && child.classList.contains("inset-x-0")))
         .filter(Boolean);
+    const controls = root.querySelector("[data-home-gallery-controls]");
+    const previous = controls?.querySelector("[data-home-gallery-previous]");
+    const next = controls?.querySelector("[data-home-gallery-next]");
+    const current = controls?.querySelector("[data-home-gallery-current]");
 
     root.removeAttribute("data-gsap");
     root.dataset.homeGalleryEnhanced = "";
@@ -54,13 +39,6 @@ export function initHomeGalleryCarousel(root, { reducedMotion = false } = {}) {
         slide.setAttribute("aria-label", `${index + 1} of ${count}`);
         slide.querySelectorAll("img").forEach((image) => image.setAttribute("draggable", "false"));
     });
-
-    const controls = count > 1 ? createControls(count) : null;
-    controls && viewport.insertAdjacentElement("afterend", controls);
-
-    const previous = controls?.querySelector("[data-home-gallery-previous]");
-    const next = controls?.querySelector("[data-home-gallery-next]");
-    const current = controls?.querySelector("[data-home-gallery-current]");
 
     let currentIndex = 0;
     let isAnimating = false;
@@ -109,6 +87,7 @@ export function initHomeGalleryCarousel(root, { reducedMotion = false } = {}) {
         if (current) {
             current.textContent = String(currentIndex + 1).padStart(2, "0");
         }
+
     };
 
     const renderImmediate = () => {
@@ -252,8 +231,6 @@ export function initHomeGalleryCarousel(root, { reducedMotion = false } = {}) {
         viewport.removeEventListener("pointerdown", handlePointerDown);
         viewport.removeEventListener("pointerup", handlePointerUp);
         viewport.removeEventListener("pointercancel", resetPointer);
-        controls?.remove();
-
         queuedTarget = null;
         gsap.killTweensOf(slides);
         gsap.killTweensOf(captions);

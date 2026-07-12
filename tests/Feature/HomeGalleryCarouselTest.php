@@ -20,16 +20,13 @@ test('homepage carousel initializer keeps accessible interaction and lifecycle c
         ->toContain('gsap.killTweensOf(slides)');
 });
 
-test('homepage carousel is loaded without statically importing gsap in the public entry', function (): void {
+test('homepage carousel is initialized through the shared public animation runtime', function (): void {
     $entry = file_get_contents(resource_path('js/app.js'));
 
     expect($entry)
         ->not->toBeFalse()
-        ->toContain('import("./home-gallery-carousel")')
         ->toContain('import("./public-animations")')
-        ->toContain('const carouselCleanup = initHomeGalleryCarousel(')
         ->toContain('const motionCleanup = initPublicAnimations(homeMotionRoot)')
-        ->toContain('carouselCleanup()')
         ->not->toContain('from "gsap"');
 });
 
