@@ -43,6 +43,9 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->viteTheme('resources/css/filament/admin/theme.css')
             ->simplePageMaxContentWidth(Width::Small)
+            ->sidebarCollapsibleOnDesktop()
+            ->sidebarWidth('18rem')
+            ->collapsedSidebarWidth('5rem')
             ->navigationGroups([
                 NavigationGroup::make()
                     ->label('Website Content')
