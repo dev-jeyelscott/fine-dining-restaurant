@@ -18,7 +18,13 @@ class ContactInquiryResource extends Resource
 {
     protected static ?string $model = ContactInquiry::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|\UnitEnum|null $navigationGroup = 'Customer Inquiries';
+
+    protected static ?string $navigationLabel = 'Contact Inquiries';
+
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedEnvelope;
+
+    protected static ?int $navigationSort = 30;
 
     public static function form(Schema $schema): Schema
     {

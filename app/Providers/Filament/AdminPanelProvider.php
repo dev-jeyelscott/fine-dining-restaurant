@@ -6,7 +6,7 @@ use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
-use Filament\Pages\Dashboard;
+use Filament\Navigation\NavigationGroup;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
@@ -43,6 +43,23 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->viteTheme('resources/css/filament/admin/theme.css')
             ->simplePageMaxContentWidth(Width::Small)
+            ->navigationGroups([
+                NavigationGroup::make()
+                    ->label('Website Content')
+                    ->collapsible(false),
+
+                NavigationGroup::make()
+                    ->label('Menu Management')
+                    ->collapsible(false),
+
+                NavigationGroup::make()
+                    ->label('Media')
+                    ->collapsible(false),
+
+                NavigationGroup::make()
+                    ->label('Customer Inquiries')
+                    ->collapsible(false),
+            ])
             ->renderHook(
                 PanelsRenderHook::AUTH_LOGIN_FORM_BEFORE,
                 fn (): View => view('filament.admin.auth.login-intro'),
@@ -59,9 +76,6 @@ class AdminPanelProvider extends PanelProvider
                 in: app_path('Filament/Pages'),
                 for: 'App\Filament\Pages',
             )
-            ->pages([
-                Dashboard::class,
-            ])
             ->discoverWidgets(
                 in: app_path('Filament/Widgets'),
                 for: 'App\Filament\Widgets',
