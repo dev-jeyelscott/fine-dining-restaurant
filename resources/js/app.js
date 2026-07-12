@@ -10,9 +10,26 @@ Alpine.start();
 const homeMotionRoot = document.querySelector("[data-home-motion]");
 
 if (homeMotionRoot) {
-    import("./public-animations")
-        .then(({ initPublicAnimations }) => initPublicAnimations(homeMotionRoot))
+    Promise.all([
+        import("./home-gallery-carousel"),
+        import("./public-animations"),
+    ])
+        .then(([{ initHomeGalleryCarousel }, { initPublicAnimations }]) => {
+            const carouselCleanup = initHomeGalleryCarousel(
+                homeMotionRoot.querySelector('[data-gsap="gallery"]'),
+                { reducedMotion: window.matchMedia("(prefers-reduced-motion: reduce)").matches },
+            );
+            const motionCleanup = initPublicAnimations(homeMotionRoot);
+            const cleanup = () => {
+                motionCleanup();
+                carouselCleanup();
+            };
+
+            if (import.meta.hot) {
+                import.meta.hot.dispose(cleanup);
+            }
+        })
         .catch((error) => {
-            console.error("Unable to initialize Home page animations.", error);
+            console.error("Unable to initialize public page interactions.", error);
         });
 }
