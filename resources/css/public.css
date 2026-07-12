@@ -19,6 +19,7 @@
     margin-inline: auto;
     overflow-x: clip;
     overflow-y: visible;
+    touch-action: pan-y;
 }
 
 [data-home-gallery-enhanced] [data-home-gallery-slide] {
