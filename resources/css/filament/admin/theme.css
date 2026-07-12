@@ -622,6 +622,36 @@
 
 .fi-panel-admin .fi-input-wrp:focus-within {
     border-color: var(--admin-focus);
+    box-shadow: 0 0 0 3px rgb(201 164 93 / 18%);
+}
+
+.fi-panel-admin
+    :where(.fi-fo-field-label-content, .fi-checkbox-label, .fi-fo-field-wrp-label) {
+    color: var(--admin-text);
+    font-weight: 600;
+}
+
+.fi-panel-admin :where(.fi-fo-field-wrp-hint, .fi-fo-field-wrp-helper-text) {
+    color: var(--admin-text-muted);
+}
+
+.fi-panel-admin .fi-fo-field-wrp-error-message {
+    color: var(--color-brand-burgundy);
+    font-weight: 600;
+}
+
+.fi-panel-admin :where(.fi-fo-file-upload, .fi-fo-rich-editor) {
+    border-radius: var(--admin-radius-sm);
+}
+
+.fi-panel-admin .fi-fo-file-upload .filepond--panel-root {
+    border: 1px dashed rgb(201 164 93 / 52%);
+    background-color: rgb(201 164 93 / 6%);
+}
+
+.fi-panel-admin .fi-fo-file-upload:focus-within .filepond--panel-root {
+    border-color: var(--admin-focus);
+    box-shadow: 0 0 0 3px rgb(201 164 93 / 18%);
 }
 
 /*
