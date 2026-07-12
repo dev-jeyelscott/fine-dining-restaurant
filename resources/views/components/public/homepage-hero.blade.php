@@ -11,7 +11,7 @@
     'secondaryUrl' => null,
 ])
 
-<section data-public-hero class="relative isolate flex min-h-[44rem] items-center overflow-hidden bg-brand-ink lg:min-h-screen">
+<section data-public-hero class="public-hero-viewport relative isolate flex items-center overflow-hidden bg-brand-ink">
     <div data-gsap="hero-image" class="absolute inset-0 -z-30">
     <x-public.responsive-image
         :image="$image"
@@ -30,7 +30,7 @@
     <div class="absolute inset-0 -z-20 bg-[radial-gradient(circle_at_70%_35%,rgba(201,164,93,0.14),transparent_36%),linear-gradient(to_bottom,rgba(23,25,22,0.82),rgba(23,25,22,0.46)_45%,rgba(23,25,22,0.92))]"></div>
     <div class="absolute inset-0 -z-10 bg-gradient-to-r from-brand-ink/85 via-brand-ink/35 to-transparent"></div>
 
-    <div class="mx-auto w-full max-w-7xl px-5 pb-20 pt-36 sm:px-6 lg:px-10 lg:pb-28 lg:pt-44">
+    <div class="mx-auto w-full max-w-7xl px-5 pb-12 pt-28 sm:px-6 sm:pb-20 sm:pt-36 lg:px-10 lg:pb-28 lg:pt-44">
         <div data-gsap="hero-content" class="max-w-4xl">
             @if ($eyebrow)
                 <p data-gsap-reveal class="text-xs font-semibold uppercase tracking-[0.38em] text-brand-gold sm:text-sm">

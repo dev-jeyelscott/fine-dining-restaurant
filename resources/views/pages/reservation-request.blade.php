@@ -3,7 +3,7 @@
     :description="$page?->meta_description ?: 'Submit a reservation request for manual restaurant review and confirmation.'"
 >
     <div data-home-motion data-reservation-motion>
-    <section data-reservation-hero data-public-hero class="relative isolate flex min-h-[44rem] items-center overflow-hidden bg-brand-ink lg:min-h-screen">
+    <section data-reservation-hero data-public-hero class="public-hero-viewport relative isolate flex items-center overflow-hidden bg-brand-ink">
         <div data-gsap="hero-image" class="absolute inset-0 -z-30">
         @if ($heroImage?->image_url)
                 <x-public.responsive-image
@@ -25,7 +25,7 @@
         <div class="absolute inset-0 -z-20 bg-[linear-gradient(to_bottom,rgba(23,25,22,0.5),rgba(23,25,22,0.42)_35%,rgba(23,25,22,0.96))]"></div>
         <div class="absolute inset-0 -z-10 bg-gradient-to-r from-brand-ink/85 via-brand-ink/30 to-transparent"></div>
 
-        <div class="mx-auto w-full max-w-7xl px-5 pb-20 pt-36 sm:px-6 lg:px-10 lg:pb-28 lg:pt-44">
+        <div class="mx-auto w-full max-w-7xl px-5 pb-12 pt-28 sm:px-6 sm:pb-20 sm:pt-36 lg:px-10 lg:pb-28 lg:pt-44">
             <div data-gsap="hero-content" class="max-w-4xl">
                 <p data-gsap-reveal class="text-xs font-semibold uppercase tracking-[0.38em] text-brand-gold sm:text-sm">An evening worth anticipating</p>
                 <h1 data-gsap-reveal class="mt-6 max-w-4xl font-display text-5xl leading-[0.98] text-white sm:text-6xl lg:text-8xl">

@@ -82,8 +82,8 @@ test('all public pages share the homepage navigation and hero contract', functio
         ->assertOk()
         ->assertSee('class="fixed inset-x-0 top-0 z-50', false)
         ->assertSee('data-public-hero', false)
-        ->assertSee('min-h-[44rem] items-center', false)
-        ->assertSee('lg:min-h-screen', false);
+        ->assertSee('public-hero-viewport', false)
+        ->assertDontSee('min-h-[44rem]', false);
 })->with([
     'home' => 'home',
     'menu' => 'menu',

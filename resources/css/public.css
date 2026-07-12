@@ -5,3 +5,10 @@
 @source '../views/components/public/**/*.blade.php';
 @source '../views/components/layouts/public.blade.php';
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+
+@layer components {
+    .public-hero-viewport {
+        min-height: 100vh;
+        min-height: 100svh;
+    }
+}

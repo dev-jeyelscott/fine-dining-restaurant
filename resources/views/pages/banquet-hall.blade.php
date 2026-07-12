@@ -7,7 +7,7 @@
         $galleryImages = $banquetImages->skip(1);
     @endphp
 
-    <section data-home-motion data-banquet-hero data-public-hero class="relative isolate flex min-h-[44rem] items-center overflow-hidden bg-brand-ink lg:min-h-screen">
+    <section data-home-motion data-banquet-hero data-public-hero class="public-hero-viewport relative isolate flex items-center overflow-hidden bg-brand-ink">
         @if ($featuredImage?->image_url)
             <div data-gsap="hero-image" class="absolute inset-0 -z-30">
                 <x-public.responsive-image
@@ -29,7 +29,7 @@
         <div class="absolute inset-0 -z-20 bg-[linear-gradient(to_bottom,rgba(23,25,22,0.42),rgba(23,25,22,0.28)_32%,rgba(23,25,22,0.94))]"></div>
         <div class="absolute inset-0 -z-10 bg-gradient-to-r from-brand-ink/90 via-brand-ink/45 to-transparent"></div>
 
-        <div class="mx-auto w-full max-w-7xl px-5 pb-20 pt-36 sm:px-6 lg:px-10 lg:pb-28 lg:pt-44">
+        <div class="mx-auto w-full max-w-7xl px-5 pb-12 pt-28 sm:px-6 sm:pb-20 sm:pt-36 lg:px-10 lg:pb-28 lg:pt-44">
             <div data-gsap="hero-content" class="max-w-4xl">
                 <p data-gsap-reveal class="text-xs font-semibold uppercase tracking-[0.38em] text-brand-gold sm:text-sm">Banquet Hall</p>
                 <h1 data-gsap-reveal class="mt-6 max-w-4xl font-display text-5xl leading-[0.98] text-white sm:text-6xl lg:text-8xl">
