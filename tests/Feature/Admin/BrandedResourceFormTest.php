@@ -7,7 +7,9 @@ use App\Filament\Resources\Pages\Schemas\PageForm;
 use App\Filament\Resources\SiteSettings\Schemas\SiteSettingForm;
 use Filament\Forms\Components\FileUpload;
 use Filament\Schemas\Components\Section;
+use Filament\Schemas\Contracts\HasSchemas;
 use Filament\Schemas\Schema;
+use Livewire\Component;
 
 /**
  * @param  class-string  $form
@@ -16,7 +18,7 @@ use Filament\Schemas\Schema;
 function brandedFormSections(string $form): array
 {
     return array_values(array_filter(
-        $form::configure(Schema::make())->getComponents(),
+        $form::configure(Schema::make(Mockery::mock(Component::class, HasSchemas::class)))->getComponents(),
         static fn (mixed $component): bool => $component instanceof Section,
     ));
 }

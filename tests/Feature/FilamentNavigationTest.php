@@ -92,7 +92,7 @@ test(
 
 test('dashboard is presented as overview', function () {
     expect(Dashboard::getNavigationLabel())
-        ->toBe('Overview')
+        ->toBe('Website overview')
         ->and(Dashboard::getNavigationIcon())
         ->not->toBeNull();
 });
