@@ -2,15 +2,35 @@
 
 namespace App\Filament\Pages;
 
-use BackedEnum;
+use App\Filament\Widgets\ContentQuickActions;
+use App\Filament\Widgets\InquiryOverview;
+use App\Filament\Widgets\RecentInquiries;
 use Filament\Pages\Dashboard as BaseDashboard;
-use Filament\Support\Icons\Heroicon;
 
 class Dashboard extends BaseDashboard
 {
-    protected static ?string $navigationLabel = 'Overview';
+    protected static ?string $title = 'Website overview';
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedHome;
+    /**
+     * @return int|array<string, int>
+     */
+    public function getColumns(): int|array
+    {
+        return [
+            'default' => 1,
+            'lg' => 12,
+        ];
+    }
 
-    protected static ?int $navigationSort = -100;
+    /**
+     * @return array<class-string>
+     */
+    public function getWidgets(): array
+    {
+        return [
+            InquiryOverview::class,
+            RecentInquiries::class,
+            ContentQuickActions::class,
+        ];
+    }
 }
