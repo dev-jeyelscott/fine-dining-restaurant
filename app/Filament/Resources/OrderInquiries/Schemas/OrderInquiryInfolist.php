@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\OrderInquiries\Schemas;
 
+use App\Models\OrderInquiry;
 use Filament\Infolists\Components\RepeatableEntry;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Components\Section;
@@ -31,14 +32,19 @@ class OrderInquiryInfolist
                             ->formatStateUsing(fn (string $state): string => ucfirst($state)),
                         TextEntry::make('preferred_time')->label('Preferred time'),
                         TextEntry::make('delivery_address')
-                            ->visible(fn (string $state): bool => filled($state))
+                            ->label('Delivery Address')
+                            ->visible(
+                                fn (OrderInquiry $record): bool => $record->fulfillment_type === 'delivery'
+                                    && filled($record->delivery_address)
+                            )
                             ->columnSpanFull(),
                         TextEntry::make('order_details')
                             ->label('Order details')
                             ->placeholder('No additional order details were provided.')
                             ->columnSpanFull(),
                         TextEntry::make('special_instructions')
-                            ->placeholder('No special instructions were provided.')
+                            ->label('Special Instructions')
+                            ->placeholder('No special instructions provided.')
                             ->columnSpanFull(),
                     ]),
                 Section::make('Requested items')
@@ -67,7 +73,8 @@ class OrderInquiryInfolist
                             ->color(fn (bool $state): string => $state ? 'success' : 'warning'),
                         TextEntry::make('created_at')->label('Submitted')->dateTime(),
                         TextEntry::make('notification_sent_at')
-                            ->label('Notification sent')
+                            ->label('Notification Sent')
+                            ->dateTime()
                             ->placeholder('Not recorded'),
                     ]),
             ]);

@@ -8,6 +8,7 @@ use App\Filament\Resources\ReservationRequests\ReservationRequestResource;
 use App\Models\ContactInquiry;
 use App\Models\OrderInquiry;
 use App\Models\ReservationRequest;
+use Carbon\CarbonInterface;
 use Filament\Facades\Filament;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Widgets\Widget;
@@ -15,6 +16,16 @@ use Illuminate\Database\QueryException;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 
+/**
+ * @phpstan-type RecentInquiry array{
+ *     type: 'Reservation Request'|'Order Inquiry'|'Contact Inquiry',
+ *     customer_name: string,
+ *     summary: string,
+ *     is_read: bool,
+ *     created_at: CarbonInterface,
+ *     url: string
+ * }
+ */
 class RecentInquiries extends Widget
 {
     protected static ?int $sort = 2;
@@ -28,7 +39,7 @@ class RecentInquiries extends Widget
 
     public static function canView(): bool
     {
-        if (! static::canAccessAdminPanel()) {
+        if (! self::canAccessAdminPanel()) {
             return false;
         }
 
@@ -39,7 +50,7 @@ class RecentInquiries extends Widget
 
     /**
      * @return array{
-     *     inquiries: Collection<int, array<string, mixed>>,
+     *     inquiries: Collection<int, RecentInquiry>,
      *     loadError: bool
      * }
      */
@@ -71,7 +82,7 @@ class RecentInquiries extends Widget
     }
 
     /**
-     * @return Collection<int, array<string, mixed>>
+     * @return Collection<int, RecentInquiry>
      */
     private function reservationRequests(): Collection
     {
@@ -92,26 +103,26 @@ class RecentInquiries extends Widget
             ->latestFirst()
             ->limit(4)
             ->get()
-            ->map(fn (ReservationRequest $request): array => [
-                'type' => 'Reservation Request',
-                'customer_name' => $request->customer_name,
-                'summary' => sprintf(
+            ->map(fn (ReservationRequest $request): array => $this->makeRecentInquiry(
+                type: 'Reservation Request',
+                customerName: $request->customer_name,
+                summary: sprintf(
                     '%d %s · %s at %s',
                     $request->guest_count,
                     Str::plural('guest', $request->guest_count),
                     $request->preferred_date->format('M j'),
                     $request->preferred_time,
                 ),
-                'is_read' => $request->is_read,
-                'created_at' => $request->created_at ?? now(),
-                'url' => ReservationRequestResource::getUrl('view', [
+                isRead: $request->is_read,
+                createdAt: $request->created_at ?? now(),
+                url: ReservationRequestResource::getUrl('view', [
                     'record' => $request,
                 ]),
-            ]);
+            ));
     }
 
     /**
-     * @return Collection<int, array<string, mixed>>
+     * @return Collection<int, RecentInquiry>
      */
     private function orderInquiries(): Collection
     {
@@ -131,24 +142,24 @@ class RecentInquiries extends Widget
             ->latestFirst()
             ->limit(4)
             ->get()
-            ->map(fn (OrderInquiry $inquiry): array => [
-                'type' => 'Order Inquiry',
-                'customer_name' => $inquiry->customer_name,
-                'summary' => sprintf(
+            ->map(fn (OrderInquiry $inquiry): array => $this->makeRecentInquiry(
+                type: 'Order Inquiry',
+                customerName: $inquiry->customer_name,
+                summary: sprintf(
                     '%s · %s',
                     Str::headline($inquiry->fulfillment_type),
                     $inquiry->preferred_time,
                 ),
-                'is_read' => $inquiry->is_read,
-                'created_at' => $inquiry->created_at ?? now(),
-                'url' => OrderInquiryResource::getUrl('view', [
+                isRead: $inquiry->is_read,
+                createdAt: $inquiry->created_at ?? now(),
+                url: OrderInquiryResource::getUrl('view', [
                     'record' => $inquiry,
                 ]),
-            ]);
+            ));
     }
 
     /**
-     * @return Collection<int, array<string, mixed>>
+     * @return Collection<int, RecentInquiry>
      */
     private function contactInquiries(): Collection
     {
@@ -167,18 +178,40 @@ class RecentInquiries extends Widget
             ->latestFirst()
             ->limit(4)
             ->get()
-            ->map(fn (ContactInquiry $inquiry): array => [
-                'type' => 'Contact Inquiry',
-                'customer_name' => $inquiry->customer_name,
-                'summary' => filled($inquiry->subject)
+            ->map(fn (ContactInquiry $inquiry): array => $this->makeRecentInquiry(
+                type: 'Contact Inquiry',
+                customerName: $inquiry->customer_name,
+                summary: filled($inquiry->subject)
                     ? Str::limit($inquiry->subject, 60)
                     : 'General inquiry',
-                'is_read' => $inquiry->is_read,
-                'created_at' => $inquiry->created_at ?? now(),
-                'url' => ContactInquiryResource::getUrl('view', [
+                isRead: $inquiry->is_read,
+                createdAt: $inquiry->created_at ?? now(),
+                url: ContactInquiryResource::getUrl('view', [
                     'record' => $inquiry,
                 ]),
-            ]);
+            ));
+    }
+
+    /**
+     * @param  'Reservation Request'|'Order Inquiry'|'Contact Inquiry'  $type
+     * @return RecentInquiry
+     */
+    private function makeRecentInquiry(
+        string $type,
+        string $customerName,
+        string $summary,
+        bool $isRead,
+        CarbonInterface $createdAt,
+        string $url,
+    ): array {
+        return [
+            'type' => $type,
+            'customer_name' => $customerName,
+            'summary' => $summary,
+            'is_read' => $isRead,
+            'created_at' => $createdAt,
+            'url' => $url,
+        ];
     }
 
     private static function canAccessAdminPanel(): bool

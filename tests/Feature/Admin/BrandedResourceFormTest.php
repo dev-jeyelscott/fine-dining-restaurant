@@ -17,10 +17,23 @@ use Livewire\Component;
  */
 function brandedFormSections(string $form): array
 {
-    return array_values(array_filter(
-        $form::configure(Schema::make(Mockery::mock(Component::class, HasSchemas::class)))->getComponents(),
-        static fn (mixed $component): bool => $component instanceof Section,
-    ));
+    $sections = [];
+
+    $walk = static function (array $components) use (&$walk, &$sections): void {
+        foreach ($components as $component) {
+            if ($component instanceof Section) {
+                $sections[] = $component;
+            }
+
+            if (method_exists($component, 'getChildComponents')) {
+                $walk($component->getChildComponents());
+            }
+        }
+    };
+
+    $walk($form::configure(Schema::make(Mockery::mock(Component::class, HasSchemas::class)))->getComponents());
+
+    return $sections;
 }
 
 test('approved editable resources use labelled form sections', function (string $form, array $headings) {
@@ -29,7 +42,7 @@ test('approved editable resources use labelled form sections', function (string 
     expect($sections)
         ->toHaveCount(count($headings))
         ->and(array_map(static fn (Section $section): string => (string) $section->getHeading(), $sections))
-        ->toBe($headings);
+        ->toEqualCanonicalizing($headings);
 })->with([
     'site settings' => [SiteSettingForm::class, ['Setting details', 'Setting value']],
     'pages' => [PageForm::class, ['Page content', 'Search preview', 'Publication']],

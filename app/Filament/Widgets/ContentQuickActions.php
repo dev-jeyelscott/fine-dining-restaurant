@@ -23,7 +23,7 @@ class ContentQuickActions extends Widget
 
     public static function canView(): bool
     {
-        if (! static::canAccessAdminPanel()) {
+        if (! self::canAccessAdminPanel()) {
             return false;
         }
 

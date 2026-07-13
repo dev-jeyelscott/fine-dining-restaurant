@@ -41,7 +41,7 @@ class InquiryOverview extends StatsOverviewWidget
 
     public static function canView(): bool
     {
-        if (! static::canAccessAdminPanel()) {
+        if (! self::canAccessAdminPanel()) {
             return false;
         }
 
