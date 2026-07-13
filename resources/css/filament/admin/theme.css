@@ -22,7 +22,7 @@
     --admin-chrome: rgb(250 248 242 / 94%);
 
     --admin-accent: var(--color-brand-gold);
-    --admin-accent-strong: var(--color-brand-gold-dark);
+    --admin-accent-strong: var(--color-brand-gold-text);
 
     --admin-text: var(--color-brand-ink);
     --admin-text-muted: var(--color-brand-muted);
@@ -52,6 +52,7 @@
 
     --admin-text: var(--color-brand-ivory);
     --admin-text-muted: #bbb7ac;
+    --admin-accent-strong: var(--color-brand-gold);
 
     --admin-border: rgb(201 164 93 / 22%);
     --admin-focus: var(--color-brand-gold);
@@ -1139,6 +1140,7 @@
 
 :root {
     --admin-dashboard-gold: #b68a44;
+    --admin-dashboard-gold-text: var(--color-brand-gold-text);
     --admin-dashboard-gold-soft: rgba(182, 138, 68, 0.14);
     --admin-dashboard-gold-border: rgba(182, 138, 68, 0.28);
     --admin-dashboard-ink: #241d16;
@@ -1225,7 +1227,7 @@
 
 .admin-dashboard-panel__eyebrow {
     margin: 0 0 0.35rem;
-    color: var(--admin-dashboard-gold);
+    color: var(--admin-dashboard-gold-text);
     font-size: 0.7rem;
     font-weight: 700;
     letter-spacing: 0.14em;
@@ -1310,7 +1312,7 @@
 }
 
 .admin-dashboard-inquiry__type {
-    color: var(--admin-dashboard-gold);
+    color: var(--admin-dashboard-gold-text);
     font-size: 0.68rem;
     font-weight: 700;
     letter-spacing: 0.09em;
@@ -1365,7 +1367,7 @@
 .admin-dashboard-inquiry__arrow {
     width: 1rem;
     height: 1rem;
-    color: var(--admin-dashboard-gold);
+    color: var(--admin-dashboard-gold-text);
 }
 
 /* Quick actions */
@@ -1408,7 +1410,7 @@
 .admin-dashboard-action__icon {
     width: 1.15rem;
     height: 1.15rem;
-    color: var(--admin-dashboard-gold);
+    color: var(--admin-dashboard-gold-text);
 }
 
 .admin-dashboard-action__content {
@@ -1454,7 +1456,7 @@
     flex: 0 0 auto;
     width: 1.4rem;
     height: 1.4rem;
-    color: var(--admin-dashboard-gold);
+    color: var(--admin-dashboard-gold-text);
 }
 
 .admin-dashboard-state--error .admin-dashboard-state__icon {
@@ -1480,6 +1482,7 @@
 /* Dark-mode compatibility */
 
 .dark {
+    --admin-dashboard-gold-text: var(--color-brand-gold);
     --admin-dashboard-ink: #f4eadb;
     --admin-dashboard-muted: #b9ad9e;
     --admin-dashboard-surface: #201a15;
