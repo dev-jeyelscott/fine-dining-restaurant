@@ -27,11 +27,11 @@ class OrderInquiriesTable
 
                 TextColumn::make('phone')
                     ->searchable()
-                    ->hiddenFrom('md'),
+                    ->visibleFrom('md'),
 
                 TextColumn::make('email')
                     ->searchable()
-                    ->hiddenFrom('lg'),
+                    ->visibleFrom('lg'),
 
                 TextColumn::make('fulfillment_type')
                     ->badge()
@@ -39,7 +39,7 @@ class OrderInquiriesTable
 
                 TextColumn::make('preferred_time')
                     ->sortable()
-                    ->hiddenFrom('lg'),
+                    ->visibleFrom('lg'),
 
                 TextColumn::make('created_at')
                     ->dateTime()

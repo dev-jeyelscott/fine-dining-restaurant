@@ -28,11 +28,11 @@ class ReservationRequestsTable
 
                 TextColumn::make('phone')
                     ->searchable()
-                    ->hiddenFrom('md'),
+                    ->visibleFrom('md'),
 
                 TextColumn::make('email')
                     ->searchable()
-                    ->hiddenFrom('lg'),
+                    ->visibleFrom('lg'),
 
                 TextColumn::make('preferred_date')
                     ->date()
@@ -40,16 +40,16 @@ class ReservationRequestsTable
 
                 TextColumn::make('preferred_time')
                     ->sortable()
-                    ->hiddenFrom('lg'),
+                    ->visibleFrom('lg'),
 
                 TextColumn::make('guest_count')
                     ->sortable()
-                    ->hiddenFrom('xl'),
+                    ->visibleFrom('xl'),
 
                 IconColumn::make('is_banquet_or_event')
                     ->boolean()
                     ->label('Event')
-                    ->hiddenFrom('xl'),
+                    ->visibleFrom('xl'),
 
                 TextColumn::make('created_at')
                     ->dateTime()

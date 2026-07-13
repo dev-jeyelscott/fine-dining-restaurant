@@ -63,3 +63,27 @@ test('inquiry tables use review labels and preserve the review filter', function
     'order inquiries' => [OrderInquiriesTable::class],
     'contact inquiries' => [ContactInquiriesTable::class],
 ]);
+
+test('secondary table columns become visible from their desktop breakpoint', function (
+    string $tableDefinition,
+    string $columnName,
+    string $breakpoint,
+) {
+    $column = brandedResourceTable($tableDefinition)->getColumn($columnName);
+
+    expect($column)
+        ->not->toBeNull()
+        ->and($column->getVisibleFrom())
+        ->toBe($breakpoint)
+        ->and($column->getHiddenFrom())
+        ->toBeNull();
+})->with([
+    'reservation phone' => [ReservationRequestsTable::class, 'phone', 'md'],
+    'reservation email' => [ReservationRequestsTable::class, 'email', 'lg'],
+    'order phone' => [OrderInquiriesTable::class, 'phone', 'md'],
+    'contact email' => [ContactInquiriesTable::class, 'email', 'md'],
+    'menu item image' => [MenuItemsTable::class, 'responsive_thumbnail', 'md'],
+    'menu category slug' => [MenuCategoriesTable::class, 'slug', 'lg'],
+    'gallery image' => [GalleryImagesTable::class, 'responsive_thumbnail', 'md'],
+    'page slug' => [PagesTable::class, 'slug', 'lg'],
+]);

@@ -26,7 +26,7 @@ class MenuItemsTable
                     ))
                     ->disk('public')
                     ->square()
-                    ->hiddenFrom('md'),
+                    ->visibleFrom('md'),
 
                 TextColumn::make('menuCategory.name')
                     ->label('Category')
@@ -39,11 +39,11 @@ class MenuItemsTable
 
                 TextColumn::make('price')
                     ->sortable()
-                    ->hiddenFrom('lg'),
+                    ->visibleFrom('lg'),
 
                 TextColumn::make('sort_order')
                     ->sortable()
-                    ->hiddenFrom('xl'),
+                    ->visibleFrom('xl'),
 
                 IconColumn::make('is_visible')
                     ->boolean()

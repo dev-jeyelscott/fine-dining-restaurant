@@ -26,7 +26,7 @@ class GalleryImagesTable
                     ))
                     ->disk('public')
                     ->square()
-                    ->hiddenFrom('md'),
+                    ->visibleFrom('md'),
 
                 TextColumn::make('title')
                     ->searchable()
@@ -35,11 +35,11 @@ class GalleryImagesTable
                 TextColumn::make('category')
                     ->badge()
                     ->sortable()
-                    ->hiddenFrom('lg'),
+                    ->visibleFrom('lg'),
 
                 TextColumn::make('sort_order')
                     ->sortable()
-                    ->hiddenFrom('xl'),
+                    ->visibleFrom('xl'),
 
                 IconColumn::make('is_visible')
                     ->boolean()

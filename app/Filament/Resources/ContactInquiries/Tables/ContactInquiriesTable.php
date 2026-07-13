@@ -27,15 +27,15 @@ class ContactInquiriesTable
 
                 TextColumn::make('email')
                     ->searchable()
-                    ->hiddenFrom('md'),
+                    ->visibleFrom('md'),
 
                 TextColumn::make('phone')
                     ->searchable()
-                    ->hiddenFrom('lg'),
+                    ->visibleFrom('lg'),
 
                 TextColumn::make('subject')
                     ->searchable()
-                    ->hiddenFrom('lg'),
+                    ->visibleFrom('lg'),
 
                 TextColumn::make('created_at')
                     ->dateTime()

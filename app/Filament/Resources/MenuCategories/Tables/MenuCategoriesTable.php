@@ -22,11 +22,11 @@ class MenuCategoriesTable
 
                 TextColumn::make('slug')
                     ->searchable()
-                    ->hiddenFrom('lg'),
+                    ->visibleFrom('lg'),
 
                 TextColumn::make('sort_order')
                     ->sortable()
-                    ->hiddenFrom('lg'),
+                    ->visibleFrom('lg'),
 
                 IconColumn::make('is_visible')
                     ->boolean()

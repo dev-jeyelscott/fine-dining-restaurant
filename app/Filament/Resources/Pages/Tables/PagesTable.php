@@ -23,7 +23,7 @@ class PagesTable
                 TextColumn::make('slug')
                     ->searchable()
                     ->sortable()
-                    ->hiddenFrom('lg'),
+                    ->visibleFrom('lg'),
 
                 IconColumn::make('is_published')
                     ->boolean()
