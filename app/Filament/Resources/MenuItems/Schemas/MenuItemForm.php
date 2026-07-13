@@ -8,6 +8,8 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
+use Filament\Schemas\Components\Grid;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 
 class MenuItemForm
@@ -16,45 +18,105 @@ class MenuItemForm
     {
         return $schema
             ->components([
-                Select::make('menu_category_id')
-                    ->relationship('menuCategory', 'name')
-                    ->required()
-                    ->searchable()
-                    ->preload(),
+                Grid::make()
+                    ->columns([
+                        'default' => 1,
+                        'xl' => 3,
+                    ])
+                    ->schema([
+                        Grid::make(1)
+                            ->schema([
+                                Section::make('Menu item details')
+                                    ->description(
+                                        'Give guests a clear name, description, category, and price.'
+                                    )
+                                    ->columns([
+                                        'default' => 1,
+                                        'md' => 2,
+                                    ])
+                                    ->schema([
+                                        Select::make('menu_category_id')
+                                            ->label('Menu category')
+                                            ->relationship('menuCategory', 'name')
+                                            ->required()
+                                            ->searchable()
+                                            ->preload(),
 
-                TextInput::make('name')
-                    ->required()
-                    ->maxLength(180),
+                                        TextInput::make('name')
+                                            ->required()
+                                            ->maxLength(180),
 
-                TextInput::make('slug')
-                    ->maxLength(200)
-                    ->unique(ignoreRecord: true),
+                                        TextInput::make('slug')
+                                            ->maxLength(200)
+                                            ->unique(ignoreRecord: true),
 
-                Textarea::make('description')
-                    ->rows(3)
+                                        TextInput::make('price')
+                                            ->numeric()
+                                            ->prefix('$'),
+
+                                        Textarea::make('description')
+                                            ->rows(4)
+                                            ->columnSpanFull(),
+                                    ])
+                                    ->columnSpanFull(),
+
+                                Section::make('Display settings')
+                                    ->description(
+                                        'Control the order and public visibility of this item.'
+                                    )
+                                    ->columns([
+                                        'default' => 1,
+                                        'md' => 2,
+                                    ])
+                                    ->schema([
+                                        TextInput::make('sort_order')
+                                            ->label('Sort order')
+                                            ->numeric()
+                                            ->default(0)
+                                            ->required(),
+
+                                        Toggle::make('is_visible')
+                                            ->label('Visible publicly')
+                                            ->default(true),
+                                    ])
+                                    ->columnSpanFull(),
+                            ])
+                            ->columnSpan([
+                                'default' => 1,
+                                'xl' => 2,
+                            ]),
+
+                        Section::make('Menu image')
+                            ->description(
+                                'Upload a polished menu image that meets the restaurant image requirements.'
+                            )
+                            ->schema([
+                                FileUpload::make('image_path')
+                                    ->label('Image')
+                                    ->image()
+                                    ->acceptedFileTypes([
+                                        'image/jpeg',
+                                        'image/png',
+                                        'image/webp',
+                                    ])
+                                    ->rules([
+                                        new SafeImageDimensions,
+                                    ])
+                                    ->disk('public')
+                                    ->directory('menu-items')
+                                    ->visibility('public')
+                                    ->maxSize(2048)
+                                    ->helperText(
+                                        'JPEG, PNG, or WebP up to 2 MB. Responsive derivatives are generated automatically.'
+                                    )
+                                    ->columnSpanFull(),
+                            ])
+                            ->columnSpan([
+                                'default' => 1,
+                                'xl' => 1,
+                            ]),
+                    ])
                     ->columnSpanFull(),
-
-                TextInput::make('price')
-                    ->numeric()
-                    ->prefix('$'),
-
-                FileUpload::make('image_path')
-                    ->image()
-                    ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/webp'])
-                    ->rules([new SafeImageDimensions])
-                    ->disk('public')
-                    ->directory('menu-items')
-                    ->visibility('public')
-                    ->maxSize(2048)
-                    ->helperText('JPEG, PNG, or WebP up to 2 MB. Responsive derivatives are generated automatically.'),
-
-                TextInput::make('sort_order')
-                    ->numeric()
-                    ->default(0)
-                    ->required(),
-
-                Toggle::make('is_visible')
-                    ->default(true),
             ]);
     }
 }

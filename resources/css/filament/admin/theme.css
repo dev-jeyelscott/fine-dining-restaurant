@@ -1,0 +1,1553 @@
+@import "../../../../vendor/filament/filament/resources/css/theme.css";
+@import "../../brand-tokens.css";
+
+@source "../../../../app/Filament/**/*";
+@source "../../../../resources/views/filament/**/*";
+
+/*
+|--------------------------------------------------------------------------
+| Admin semantic design tokens
+|--------------------------------------------------------------------------
+|
+| These variables translate the public restaurant brand into admin-safe
+| surfaces, typography, borders, radii, shadows, and focus treatment.
+| They remain scoped to the admin panel through .fi-panel-admin.
+|
+*/
+
+.fi-panel-admin {
+    --admin-background: var(--color-brand-paper);
+    --admin-surface: var(--color-brand-ivory);
+    --admin-surface-muted: #ebe4d8;
+    --admin-chrome: rgb(250 248 242 / 94%);
+
+    --admin-accent: var(--color-brand-gold);
+    --admin-accent-strong: var(--color-brand-gold-text);
+
+    --admin-text: var(--color-brand-ink);
+    --admin-text-muted: var(--color-brand-muted);
+
+    --admin-border: rgb(23 25 22 / 12%);
+    --admin-focus: var(--color-brand-gold-dark);
+
+    --admin-radius-sm: 0.625rem;
+    --admin-radius-md: 0.875rem;
+    --admin-radius-lg: 1.125rem;
+
+    --admin-shadow-sm:
+        0 1px 2px rgb(23 25 22 / 5%), 0 1px 3px rgb(23 25 22 / 8%);
+
+    --admin-shadow-md:
+        0 8px 24px rgb(23 25 22 / 8%), 0 2px 8px rgb(23 25 22 / 6%);
+
+    background-color: var(--admin-background);
+    color: var(--admin-text);
+}
+
+.dark .fi-panel-admin {
+    --admin-background: var(--color-brand-ink);
+    --admin-surface: var(--color-brand-ink-soft);
+    --admin-surface-muted: #2d3129;
+    --admin-chrome: rgb(36 39 32 / 94%);
+
+    --admin-text: var(--color-brand-ivory);
+    --admin-text-muted: #bbb7ac;
+    --admin-accent-strong: var(--color-brand-gold);
+
+    --admin-border: rgb(201 164 93 / 22%);
+    --admin-focus: var(--color-brand-gold);
+
+    --admin-shadow-sm: 0 1px 2px rgb(0 0 0 / 18%), 0 2px 8px rgb(0 0 0 / 16%);
+
+    --admin-shadow-md:
+        0 12px 32px rgb(0 0 0 / 28%), 0 4px 12px rgb(0 0 0 / 22%);
+}
+
+/*
+|--------------------------------------------------------------------------
+| Application canvas
+|--------------------------------------------------------------------------
+*/
+
+.fi-panel-admin.fi-body {
+    background-color: var(--admin-background);
+    color: var(--admin-text);
+}
+
+/*
+|--------------------------------------------------------------------------
+| Typography
+|--------------------------------------------------------------------------
+*/
+
+.fi-panel-admin
+    :where(
+        .fi-header-heading,
+        .fi-simple-header-heading,
+        .fi-section-header-heading,
+        .fi-modal-heading
+    ) {
+    font-family: var(--font-display);
+    letter-spacing: -0.025em;
+}
+
+.fi-panel-admin .fi-wi-stats-overview > .fi-section {
+    width: 100%;
+    overflow: hidden;
+}
+
+.fi-panel-admin .fi-wi-stats-overview .fi-section-header {
+    padding: 1rem 1rem 0.75rem !important;
+    border-bottom: 0;
+}
+
+.fi-panel-admin .fi-wi-stats-overview .fi-section-content-ctn {
+    padding: 0 1rem 1rem !important;
+}
+
+.fi-panel-admin .fi-wi-stats-overview .fi-section-content {
+    padding: 0 !important;
+}
+
+.fi-panel-admin .fi-wi-stats-overview .fi-wi-stats-overview-stats-ctn {
+    gap: 1rem;
+}
+
+.fi-panel-admin
+    :where(
+        .fi-header-subheading,
+        .fi-simple-header-subheading,
+        .fi-section-header-description
+    ) {
+    color: var(--admin-text-muted);
+}
+
+/*
+|--------------------------------------------------------------------------
+| Topbar
+|--------------------------------------------------------------------------
+*/
+
+.fi-panel-admin .fi-topbar {
+    border-bottom: 1px solid var(--admin-border);
+    background:
+        linear-gradient(90deg, rgb(201 164 93 / 6%), transparent 24rem),
+        var(--admin-chrome);
+    box-shadow: var(--admin-shadow-sm);
+    backdrop-filter: blur(16px);
+}
+
+.fi-panel-admin .fi-topbar::after {
+    position: absolute;
+    inset-inline: 0;
+    bottom: -1px;
+    height: 1px;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgb(201 164 93 / 42%),
+        transparent
+    );
+    content: "";
+    pointer-events: none;
+}
+
+.fi-panel-admin
+    .fi-topbar
+    :where(.fi-icon-btn, .fi-topbar-item-btn, .fi-dropdown-trigger > button) {
+    border-radius: var(--admin-radius-sm);
+    color: var(--admin-text-muted);
+    transition:
+        background-color 150ms ease,
+        color 150ms ease,
+        box-shadow 150ms ease,
+        transform 150ms ease;
+}
+
+.fi-panel-admin
+    .fi-topbar
+    :where(
+        .fi-icon-btn,
+        .fi-topbar-item-btn,
+        .fi-dropdown-trigger > button
+    ):hover {
+    background-color: rgb(201 164 93 / 12%);
+    color: var(--admin-accent-strong);
+}
+
+.fi-panel-admin
+    .fi-topbar
+    :where(
+        .fi-icon-btn,
+        .fi-topbar-item-btn,
+        .fi-dropdown-trigger > button
+    ):active {
+    transform: translateY(1px);
+}
+
+.fi-panel-admin .fi-topbar .fi-avatar {
+    box-shadow:
+        0 0 0 2px var(--admin-surface),
+        0 0 0 3px rgb(201 164 93 / 55%);
+}
+
+/*
+|--------------------------------------------------------------------------
+| Sidebar
+|--------------------------------------------------------------------------
+*/
+
+.fi-panel-admin .fi-sidebar {
+    border-inline-end: 1px solid var(--admin-border);
+    background:
+        linear-gradient(180deg, rgb(201 164 93 / 7%), transparent 16rem),
+        var(--admin-surface);
+    box-shadow: 8px 0 30px rgb(23 25 22 / 4%);
+}
+
+.dark .fi-panel-admin .fi-sidebar {
+    box-shadow: 10px 0 34px rgb(0 0 0 / 18%);
+}
+
+.fi-panel-admin .fi-sidebar-header {
+    min-height: 4.75rem;
+    border-bottom: 1px solid var(--admin-border);
+    background-color: rgb(250 248 242 / 44%);
+}
+
+.dark .fi-panel-admin .fi-sidebar-header {
+    background-color: rgb(36 39 32 / 46%);
+}
+
+.fi-panel-admin .fi-sidebar-nav {
+    padding-block: 1rem 1.5rem;
+    scrollbar-width: thin;
+    scrollbar-color: var(--admin-accent) transparent;
+}
+
+.fi-panel-admin .fi-sidebar-nav::-webkit-scrollbar {
+    width: 0.4rem;
+}
+
+.fi-panel-admin .fi-sidebar-nav::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.fi-panel-admin .fi-sidebar-nav::-webkit-scrollbar-thumb {
+    border-radius: 9999px;
+    background-color: rgb(201 164 93 / 55%);
+}
+
+.fi-panel-admin .fi-sidebar-group + .fi-sidebar-group {
+    margin-top: 1.25rem;
+}
+
+.fi-panel-admin .fi-sidebar-group-label {
+    color: var(--admin-text-muted);
+    font-size: 0.66rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+}
+
+.fi-panel-admin .fi-sidebar-group-dropdown-trigger-btn {
+    border-radius: var(--admin-radius-sm);
+    color: var(--admin-text-muted);
+    transition:
+        background-color 150ms ease,
+        color 150ms ease;
+}
+
+.fi-panel-admin .fi-sidebar-group-dropdown-trigger-btn:hover {
+    background-color: rgb(201 164 93 / 9%);
+    color: var(--admin-accent-strong);
+}
+
+.fi-panel-admin .fi-sidebar-item-btn {
+    position: relative;
+    min-height: 2.75rem;
+    overflow: hidden;
+    border: 1px solid transparent;
+    border-radius: var(--admin-radius-sm);
+    color: var(--admin-text-muted);
+    transition:
+        border-color 150ms ease,
+        background-color 150ms ease,
+        color 150ms ease,
+        box-shadow 150ms ease,
+        transform 150ms ease;
+}
+
+.fi-panel-admin .fi-sidebar-item-btn::before {
+    position: absolute;
+    inset-block: 0.45rem;
+    inset-inline-start: 0;
+    width: 3px;
+    border-radius: 0 9999px 9999px 0;
+    background-color: transparent;
+    content: "";
+    transition:
+        background-color 150ms ease,
+        box-shadow 150ms ease;
+}
+
+.fi-panel-admin .fi-sidebar-item-btn:hover {
+    border-color: rgb(201 164 93 / 18%);
+    background-color: rgb(201 164 93 / 9%);
+    color: var(--admin-text);
+    transform: translateX(2px);
+}
+
+.fi-panel-admin .fi-sidebar-item-btn:hover .fi-icon {
+    color: var(--admin-accent-strong);
+}
+
+.fi-panel-admin .fi-sidebar-item.fi-active > .fi-sidebar-item-btn {
+    border-color: rgb(201 164 93 / 28%);
+    background: linear-gradient(
+        90deg,
+        rgb(201 164 93 / 16%),
+        rgb(201 164 93 / 7%)
+    );
+    color: var(--admin-text);
+    box-shadow:
+        inset 0 0 0 1px rgb(255 255 255 / 18%),
+        0 4px 14px rgb(23 25 22 / 5%);
+}
+
+.dark .fi-panel-admin .fi-sidebar-item.fi-active > .fi-sidebar-item-btn {
+    box-shadow:
+        inset 0 0 0 1px rgb(201 164 93 / 8%),
+        0 6px 18px rgb(0 0 0 / 18%);
+}
+
+.fi-panel-admin .fi-sidebar-item.fi-active > .fi-sidebar-item-btn::before {
+    background-color: var(--admin-accent);
+    box-shadow: 0 0 12px rgb(201 164 93 / 60%);
+}
+
+.fi-panel-admin
+    .fi-sidebar-item.fi-active
+    > .fi-sidebar-item-btn
+    :where(.fi-sidebar-item-label, .fi-icon) {
+    color: var(--admin-accent-strong);
+}
+
+.dark
+    .fi-panel-admin
+    .fi-sidebar-item.fi-active
+    > .fi-sidebar-item-btn
+    :where(.fi-sidebar-item-label, .fi-icon) {
+    color: var(--admin-accent);
+}
+
+.fi-panel-admin .fi-sidebar-item-label {
+    font-weight: 600;
+    letter-spacing: 0.005em;
+}
+
+.fi-panel-admin .fi-sidebar-item .fi-icon {
+    transition:
+        color 150ms ease,
+        transform 150ms ease;
+}
+
+.fi-panel-admin .fi-sidebar-item-btn:hover .fi-icon,
+.fi-panel-admin .fi-sidebar-item.fi-active > .fi-sidebar-item-btn .fi-icon {
+    transform: scale(1.04);
+}
+
+.fi-panel-admin .fi-sidebar-item-badge-ctn {
+    margin-inline-start: auto;
+}
+
+.fi-panel-admin .fi-sidebar-item-badge-ctn .fi-badge {
+    border: 1px solid rgb(201 164 93 / 24%);
+    background-color: rgb(201 164 93 / 10%);
+    color: var(--admin-accent-strong);
+}
+
+/*
+|--------------------------------------------------------------------------
+| Resource tables
+|--------------------------------------------------------------------------
+*/
+
+.fi-panel-admin .fi-ta-header-ctn,
+.fi-panel-admin .fi-ta-content-ctn {
+    overflow: hidden;
+    border: 1px solid var(--admin-border);
+    border-radius: var(--admin-radius-lg);
+    background-color: var(--admin-surface);
+    box-shadow: var(--admin-shadow-sm);
+}
+
+.fi-panel-admin .fi-ta-header-ctn {
+    margin-bottom: 0.875rem;
+    background:
+        linear-gradient(90deg, rgb(201 164 93 / 10%), transparent 28rem),
+        var(--admin-surface);
+}
+
+.fi-panel-admin .fi-ta-header-toolbar {
+    padding: 0.875rem;
+}
+
+.fi-panel-admin .fi-ta-table {
+    color: var(--admin-text);
+}
+
+.fi-panel-admin .fi-ta-table thead {
+    background-color: rgb(201 164 93 / 8%);
+}
+
+.fi-panel-admin .fi-ta-table :where(th, td) {
+    border-color: var(--admin-border);
+}
+
+.fi-panel-admin .fi-ta-table th {
+    color: var(--admin-text-muted);
+    font-size: 0.69rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.fi-panel-admin .fi-ta-table tbody tr {
+    transition: background-color 150ms ease, box-shadow 150ms ease;
+}
+
+.fi-panel-admin .fi-ta-table tbody tr:hover {
+    background-color: rgb(201 164 93 / 7%);
+    box-shadow: inset 3px 0 0 rgb(201 164 93 / 72%);
+}
+
+.fi-panel-admin .fi-ta-table .fi-badge {
+    border: 1px solid rgb(201 164 93 / 26%);
+    font-weight: 700;
+    letter-spacing: 0.035em;
+}
+
+.fi-panel-admin .fi-ta-empty-state {
+    padding-block: clamp(2rem, 6vw, 4.5rem);
+}
+
+.fi-panel-admin .fi-ta-empty-state-heading {
+    color: var(--admin-text);
+    font-family: var(--font-display);
+}
+
+.fi-panel-admin .fi-ta-empty-state-description {
+    color: var(--admin-text-muted);
+}
+
+@media (max-width: 47.999rem) {
+    .fi-panel-admin .fi-ta-header-toolbar {
+        padding: 0.75rem;
+    }
+
+    .fi-panel-admin .fi-ta-content-ctn {
+        border-inline: 0;
+        border-radius: 0;
+    }
+
+    .fi-panel-admin .fi-ta-table tbody tr:hover {
+        box-shadow: none;
+    }
+}
+
+/*
+|--------------------------------------------------------------------------
+| Mobile navigation
+|--------------------------------------------------------------------------
+*/
+
+.fi-panel-admin .fi-sidebar-close-overlay {
+    background-color: rgb(23 25 22 / 58%);
+    backdrop-filter: blur(3px);
+}
+
+@media (max-width: 63.999rem) {
+    .fi-panel-admin .fi-topbar {
+        background-color: rgb(250 248 242 / 96%);
+    }
+
+    .dark .fi-panel-admin .fi-topbar {
+        background-color: rgb(36 39 32 / 96%);
+    }
+
+    .fi-panel-admin .fi-sidebar {
+        box-shadow: 18px 0 50px rgb(0 0 0 / 24%);
+    }
+
+    .fi-panel-admin .fi-sidebar-header {
+        min-height: 4.5rem;
+    }
+}
+
+/*
+|--------------------------------------------------------------------------
+| Admin brand
+|--------------------------------------------------------------------------
+*/
+
+.admin-brand {
+    display: grid;
+    width: 100%;
+    min-width: 0;
+    gap: 0.2rem;
+    color: var(--admin-text);
+    line-height: 1;
+}
+
+.admin-brand__identity {
+    display: grid;
+    min-width: 0;
+    gap: 0.2rem;
+}
+
+.admin-brand__name {
+    display: inline-flex;
+    min-width: 0;
+    align-items: center;
+    gap: 0.55rem;
+    overflow: hidden;
+    color: var(--admin-text);
+    font-family: var(--font-display);
+    font-size: 1.18rem;
+    font-weight: 600;
+    letter-spacing: 0.065em;
+    line-height: 1.1;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.admin-brand__mark {
+    width: 0.42rem;
+    height: 0.42rem;
+    flex: none;
+    border-radius: 9999px;
+    background-color: var(--admin-accent);
+    box-shadow: 0 0 0 4px rgb(201 164 93 / 12%);
+}
+
+.admin-brand__context {
+    overflow: hidden;
+    color: var(--admin-text-muted);
+    font-size: 0.57rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    line-height: 1.35;
+    text-overflow: ellipsis;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.fi-panel-admin .fi-sidebar-header .fi-logo {
+    width: 100%;
+    min-width: 0;
+}
+
+.fi-panel-admin .fi-sidebar-header .admin-brand {
+    justify-items: start;
+    text-align: start;
+}
+
+.fi-panel-admin .fi-topbar .admin-brand {
+    width: auto;
+    justify-items: start;
+}
+
+.fi-panel-admin .fi-topbar .admin-brand__name {
+    font-size: 1rem;
+}
+
+.fi-panel-admin .fi-topbar .admin-brand__context {
+    display: none;
+}
+
+/*
+|--------------------------------------------------------------------------
+| Login-specific admin brand
+|--------------------------------------------------------------------------
+*/
+
+.fi-panel-admin .fi-simple-header .fi-logo:has(.admin-brand) {
+    width: 100%;
+    height: auto !important;
+    overflow: visible;
+}
+
+.fi-panel-admin .fi-simple-header .admin-brand {
+    justify-items: center;
+    gap: 0.65rem;
+    text-align: center;
+}
+
+.fi-panel-admin .fi-simple-header .admin-brand__identity {
+    justify-items: center;
+}
+
+.fi-panel-admin .fi-simple-header .admin-brand__name {
+    justify-content: center;
+    color: var(--color-brand-ink);
+    font-size: clamp(1.35rem, 4vw, 1.75rem);
+}
+
+.fi-panel-admin .fi-simple-header .admin-brand__context {
+    color: var(--color-brand-gold-dark);
+    font-size: 0.64rem;
+}
+
+.admin-brand__login-details {
+    display: grid;
+    justify-items: center;
+    gap: 0.7rem;
+    width: 100%;
+    margin-top: 0.2rem;
+}
+
+.admin-brand__notice {
+    margin: 0;
+    color: var(--color-brand-muted);
+    font-size: 0.75rem;
+    line-height: 1.5;
+}
+
+.admin-brand__workflows {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.45rem;
+    color: var(--color-brand-muted);
+    font-size: 0.66rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    line-height: 1.5;
+    text-transform: uppercase;
+}
+
+.admin-brand__return-link {
+    border-radius: var(--admin-radius-sm);
+    color: var(--color-brand-burgundy);
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-decoration: none;
+    text-underline-offset: 0.25rem;
+    transition:
+        color 150ms ease,
+        transform 150ms ease;
+}
+
+.admin-brand__return-link:hover {
+    color: var(--color-brand-gold-dark);
+    text-decoration: underline;
+    transform: translateY(-1px);
+}
+
+.admin-brand__return-link:focus-visible {
+    outline: 2px solid var(--color-brand-gold-dark);
+    outline-offset: 4px;
+}
+
+@media (max-width: 40rem) {
+    .admin-brand__name {
+        font-size: 1.05rem;
+    }
+
+    .fi-panel-admin .fi-simple-header .admin-brand__name {
+        font-size: 1.4rem;
+    }
+}
+
+/*
+|--------------------------------------------------------------------------
+| Cards, tables, dropdowns, and modal surfaces
+|--------------------------------------------------------------------------
+*/
+
+.fi-panel-admin
+    :where(
+        .fi-section,
+        .fi-ta-ctn,
+        .fi-modal-window,
+        .fi-dropdown-panel,
+        .fi-wi-stats-overview-stat,
+        .fi-simple-main
+    ) {
+    border: 1px solid var(--admin-border);
+    border-radius: var(--admin-radius-lg);
+    background-color: var(--admin-surface);
+    box-shadow: var(--admin-shadow-sm);
+}
+
+.fi-panel-admin .fi-modal-window,
+.fi-panel-admin .fi-dropdown-panel {
+    box-shadow: var(--admin-shadow-md);
+}
+
+.fi-panel-admin .fi-section-header {
+    border-bottom-color: var(--admin-border);
+}
+
+/*
+|--------------------------------------------------------------------------
+| Forms
+|--------------------------------------------------------------------------
+*/
+
+.fi-panel-admin .fi-input-wrp {
+    border: 1px solid var(--admin-border);
+    border-radius: var(--admin-radius-sm);
+    background-color: var(--admin-surface);
+    transition:
+        border-color 150ms ease,
+        background-color 150ms ease,
+        box-shadow 150ms ease;
+}
+
+.fi-panel-admin .fi-input-wrp:hover {
+    border-color: rgb(201 164 93 / 55%);
+}
+
+.fi-panel-admin .fi-input-wrp:focus-within {
+    border-color: var(--admin-focus);
+    box-shadow: 0 0 0 3px rgb(201 164 93 / 18%);
+}
+
+.fi-panel-admin
+    :where(.fi-fo-field-label-content, .fi-checkbox-label, .fi-fo-field-wrp-label) {
+    color: var(--admin-text);
+    font-weight: 600;
+}
+
+.fi-panel-admin :where(.fi-fo-field-wrp-hint, .fi-fo-field-wrp-helper-text) {
+    color: var(--admin-text-muted);
+}
+
+.fi-panel-admin .fi-fo-field-wrp-error-message {
+    color: var(--color-brand-burgundy);
+    font-weight: 600;
+}
+
+.fi-panel-admin :where(.fi-fo-file-upload, .fi-fo-rich-editor) {
+    border-radius: var(--admin-radius-sm);
+}
+
+.fi-panel-admin .fi-fo-file-upload .filepond--panel-root {
+    border: 1px dashed rgb(201 164 93 / 52%);
+    background-color: rgb(201 164 93 / 6%);
+}
+
+.fi-panel-admin .fi-fo-file-upload:focus-within .filepond--panel-root {
+    border-color: var(--admin-focus);
+    box-shadow: 0 0 0 3px rgb(201 164 93 / 18%);
+}
+
+/*
+|--------------------------------------------------------------------------
+| Buttons, links, and badges
+|--------------------------------------------------------------------------
+*/
+
+.fi-panel-admin .fi-btn {
+    border-radius: var(--admin-radius-sm);
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    transition:
+        transform 150ms ease,
+        box-shadow 150ms ease,
+        background-color 150ms ease,
+        border-color 150ms ease,
+        color 150ms ease;
+}
+
+.fi-panel-admin .fi-btn:hover {
+    transform: translateY(-1px);
+}
+
+.fi-panel-admin .fi-btn:active {
+    transform: translateY(0);
+}
+
+.fi-panel-admin .fi-badge {
+    border-radius: 9999px;
+    font-weight: 600;
+    letter-spacing: 0.025em;
+}
+
+.fi-panel-admin .fi-link {
+    text-decoration-color: rgb(201 164 93 / 55%);
+    text-underline-offset: 0.2em;
+}
+
+/*
+|--------------------------------------------------------------------------
+| Notifications
+|--------------------------------------------------------------------------
+*/
+
+.fi-panel-admin .fi-no-notification {
+    border: 1px solid var(--admin-border);
+    border-radius: var(--admin-radius-md);
+    box-shadow: var(--admin-shadow-md);
+}
+
+/*
+|--------------------------------------------------------------------------
+| Accessible keyboard focus
+|--------------------------------------------------------------------------
+*/
+
+.fi-panel-admin
+    :where(
+        a,
+        button,
+        input,
+        select,
+        textarea,
+        [role="button"],
+        [tabindex]:not([tabindex="-1"])
+    ):focus-visible {
+    outline: 2px solid var(--admin-focus);
+    outline-offset: 3px;
+}
+
+/*
+|--------------------------------------------------------------------------
+| Reduced motion
+|--------------------------------------------------------------------------
+*/
+
+@media (prefers-reduced-motion: reduce) {
+    .fi-panel-admin *,
+    .fi-panel-admin *::before,
+    .fi-panel-admin *::after {
+        scroll-behavior: auto !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+
+    .fi-panel-admin .fi-btn:hover {
+        transform: none;
+    }
+}
+
+/*
+|--------------------------------------------------------------------------
+| Branded admin login experience
+|--------------------------------------------------------------------------
+|
+| The login page keeps Filament's native authentication form and behavior.
+| The marker rendered by AUTH_LOGIN_FORM_BEFORE allows login-only styling
+| without publishing or overriding Filament framework views.
+|
+*/
+
+.fi-panel-admin.fi-body:has(.admin-login-intro) {
+    height: 100dvh;
+    overflow: hidden;
+}
+
+.fi-panel-admin .fi-simple-layout:has(.admin-login-intro) {
+    position: relative;
+    isolation: isolate;
+    width: 100%;
+    height: 100dvh;
+    min-height: 100dvh;
+    overflow: hidden;
+    background:
+        radial-gradient(
+            circle at 15% 10%,
+            rgb(201 164 93 / 18%),
+            transparent 30rem
+        ),
+        radial-gradient(
+            circle at 85% 90%,
+            rgb(116 37 31 / 20%),
+            transparent 28rem
+        ),
+        linear-gradient(
+            135deg,
+            var(--color-brand-ink),
+            var(--color-brand-ink-soft)
+        );
+}
+
+.fi-panel-admin .fi-simple-layout:has(.admin-login-intro)::before {
+    position: absolute;
+    z-index: -1;
+    inset: 0;
+    background-image:
+        linear-gradient(rgb(250 248 242 / 3%) 1px, transparent 1px),
+        linear-gradient(90deg, rgb(250 248 242 / 3%) 1px, transparent 1px);
+    background-size: 4rem 4rem;
+    content: "";
+    pointer-events: none;
+}
+
+.fi-panel-admin .fi-simple-main-ctn:has(.admin-login-intro) {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    align-items: center;
+    justify-content: center;
+    padding: clamp(0.75rem, 1.5vw, 1.25rem);
+    overflow: hidden;
+}
+
+.fi-panel-admin .fi-simple-main:has(.admin-login-intro) {
+    width: min(100%, 34rem);
+    max-height: calc(100dvh - 1.5rem);
+    padding: clamp(1.25rem, 2.25vw, 2rem);
+    overflow-y: auto;
+    border: 1px solid rgb(201 164 93 / 30%);
+    border-radius: 1.25rem;
+    background-color: rgb(250 248 242 / 96%);
+    box-shadow:
+        0 32px 90px rgb(0 0 0 / 36%),
+        0 8px 24px rgb(0 0 0 / 18%);
+    color: var(--color-brand-ink);
+    color-scheme: light;
+    scrollbar-width: none;
+    backdrop-filter: blur(18px);
+}
+
+.fi-panel-admin .fi-simple-main:has(.admin-login-intro)::-webkit-scrollbar {
+    display: none;
+}
+
+/*
+|--------------------------------------------------------------------------
+| Brand lockup
+|--------------------------------------------------------------------------
+*/
+
+.admin-brand-lockup {
+    display: inline-flex;
+    width: 100%;
+    height: 100%;
+    min-width: 0;
+    align-items: center;
+    justify-content: center;
+    gap: 0.625rem;
+}
+
+.admin-brand-lockup-name {
+    overflow: hidden;
+    color: var(--color-brand-ink);
+    font-family: var(--font-display);
+    font-size: clamp(1.35rem, 5vw, 1.75rem);
+    letter-spacing: 0.08em;
+    line-height: 1;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.admin-brand-lockup-mark {
+    width: 0.45rem;
+    height: 0.45rem;
+    flex: none;
+    border-radius: 9999px;
+    background-color: var(--color-brand-gold);
+    box-shadow: 0 0 0 4px rgb(201 164 93 / 12%);
+}
+
+/*
+|--------------------------------------------------------------------------
+| Supporting login content
+|--------------------------------------------------------------------------
+*/
+
+.admin-login-intro {
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+.admin-login-eyebrow {
+    color: var(--color-brand-gold-dark);
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+}
+
+.admin-login-copy {
+    max-width: 38rem;
+    margin: 0.625rem auto 0;
+    color: var(--color-brand-muted);
+    font-size: 0.875rem;
+    line-height: 1.7;
+}
+
+/*
+|--------------------------------------------------------------------------
+| Login form
+|--------------------------------------------------------------------------
+*/
+
+.fi-panel-admin
+    .fi-simple-page:has(.admin-login-intro)
+    :where(.fi-fo-field-label-content, .fi-checkbox-label) {
+    color: var(--color-brand-ink);
+}
+
+.fi-panel-admin .fi-simple-page:has(.admin-login-intro) .fi-input-wrp {
+    border-color: rgb(23 25 22 / 16%);
+    background-color: rgb(255 255 255 / 86%);
+}
+
+.fi-panel-admin .fi-simple-page:has(.admin-login-intro) .fi-input-wrp:hover {
+    border-color: rgb(201 164 93 / 68%);
+}
+
+.fi-panel-admin
+    .fi-simple-page:has(.admin-login-intro)
+    .fi-input-wrp:focus-within {
+    border-color: var(--color-brand-gold-dark);
+    box-shadow: 0 0 0 3px rgb(201 164 93 / 18%);
+}
+
+.fi-panel-admin .fi-simple-page:has(.admin-login-intro) .fi-input {
+    color: var(--color-brand-ink);
+}
+
+.fi-panel-admin .fi-simple-page:has(.admin-login-intro) .fi-input::placeholder {
+    color: rgb(109 113 105 / 72%);
+}
+
+.fi-panel-admin
+    .fi-simple-page:has(.admin-login-intro)
+    .fi-fo-field-wrp-error-message {
+    color: var(--color-brand-burgundy);
+    font-weight: 600;
+}
+
+.fi-panel-admin
+    .fi-simple-page:has(.admin-login-intro)
+    .fi-form-actions
+    .fi-btn {
+    min-height: 3rem;
+    border: 1px solid var(--color-brand-ink);
+    background-color: var(--color-brand-ink);
+    color: var(--color-brand-ivory);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+.fi-panel-admin
+    .fi-simple-page:has(.admin-login-intro)
+    .fi-form-actions
+    .fi-btn:hover {
+    border-color: var(--color-brand-gold);
+    background-color: var(--color-brand-ink-soft);
+    color: var(--color-brand-gold);
+}
+
+.fi-panel-admin .fi-simple-page:has(.admin-login-intro) .fi-link {
+    color: var(--color-brand-burgundy);
+    font-weight: 600;
+}
+
+.fi-panel-admin .fi-simple-page:has(.admin-login-intro) .fi-link:hover {
+    color: var(--color-brand-gold-dark);
+}
+
+/*
+|--------------------------------------------------------------------------
+| Login footer
+|--------------------------------------------------------------------------
+*/
+
+.admin-login-footer {
+    display: grid;
+    justify-items: center;
+    gap: 0.75rem;
+    margin-top: 1.75rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid rgb(23 25 22 / 10%);
+    text-align: center;
+}
+
+.admin-login-return-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    border-radius: var(--admin-radius-sm);
+    color: var(--color-brand-burgundy);
+    font-size: 0.8125rem;
+    font-weight: 700;
+    text-decoration: none;
+    transition:
+        color 150ms ease,
+        transform 150ms ease;
+}
+
+.admin-login-return-link:hover {
+    color: var(--color-brand-gold-dark);
+    transform: translateX(-2px);
+}
+
+.admin-login-return-icon {
+    width: 1rem;
+    height: 1rem;
+}
+
+.admin-login-security-note {
+    color: var(--color-brand-muted);
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+/*
+|--------------------------------------------------------------------------
+| Responsive login layout
+|--------------------------------------------------------------------------
+*/
+
+@media (max-width: 40rem) {
+    .fi-panel-admin .fi-simple-main-ctn:has(.admin-login-intro) {
+        align-items: center;
+        padding: 1rem;
+    }
+
+    .fi-panel-admin .fi-simple-main:has(.admin-login-intro) {
+        padding: 1.5rem;
+        border-radius: var(--admin-radius-md);
+    }
+
+    .admin-login-copy {
+        font-size: 0.8125rem;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .admin-login-return-link:hover {
+        transform: none;
+    }
+}
+
+/* -------------------------------------------------------------------------- */
+/* Branded admin dashboard                                                    */
+/* -------------------------------------------------------------------------- */
+
+:root {
+    --admin-dashboard-gold: #b68a44;
+    --admin-dashboard-gold-text: var(--color-brand-gold-text);
+    --admin-dashboard-gold-soft: rgba(182, 138, 68, 0.14);
+    --admin-dashboard-gold-border: rgba(182, 138, 68, 0.28);
+    --admin-dashboard-ink: #241d16;
+    --admin-dashboard-muted: #71685d;
+    --admin-dashboard-surface: #fffdf9;
+    --admin-dashboard-surface-soft: #f8f3ea;
+    --admin-dashboard-border: rgba(70, 54, 36, 0.12);
+    --admin-dashboard-shadow: 0 18px 45px rgba(42, 32, 22, 0.08);
+}
+
+/* Stats */
+
+.admin-dashboard-stat {
+    overflow: hidden;
+    border: 1px solid var(--admin-dashboard-gold-border) !important;
+    border-radius: 1.1rem !important;
+    background:
+        radial-gradient(
+            circle at top right,
+            rgba(182, 138, 68, 0.13),
+            transparent 38%
+        ),
+        linear-gradient(
+            145deg,
+            var(--admin-dashboard-surface),
+            var(--admin-dashboard-surface-soft)
+        ) !important;
+    box-shadow: var(--admin-dashboard-shadow) !important;
+    transition:
+        border-color 180ms ease,
+        box-shadow 180ms ease,
+        transform 180ms ease;
+}
+
+.admin-dashboard-stat:hover {
+    border-color: rgba(182, 138, 68, 0.48) !important;
+    box-shadow: 0 22px 52px rgba(42, 32, 22, 0.12) !important;
+    transform: translateY(-2px);
+}
+
+.admin-dashboard-stat .fi-wi-stats-overview-stat-value {
+    color: var(--admin-dashboard-ink);
+    font-family: var(
+        --font-display,
+        ui-serif,
+        Georgia,
+        Cambria,
+        "Times New Roman",
+        serif
+    );
+    font-weight: 600;
+    letter-spacing: -0.035em;
+}
+
+.admin-dashboard-stat .fi-wi-stats-overview-stat-label {
+    color: var(--admin-dashboard-muted);
+    font-weight: 600;
+    letter-spacing: 0.01em;
+}
+
+/* Shared dashboard panel */
+
+.admin-dashboard-panel {
+    overflow: hidden;
+    height: 100%;
+    border: 1px solid var(--admin-dashboard-border);
+    border-radius: 1.2rem;
+    background: linear-gradient(
+        150deg,
+        rgba(255, 255, 255, 0.98),
+        rgba(250, 246, 238, 0.96)
+    );
+    box-shadow: var(--admin-dashboard-shadow);
+}
+
+.admin-dashboard-panel__header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1.35rem 1.4rem 1.1rem;
+    border-bottom: 1px solid var(--admin-dashboard-border);
+}
+
+.admin-dashboard-panel__eyebrow {
+    margin: 0 0 0.35rem;
+    color: var(--admin-dashboard-gold-text);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    line-height: 1.3;
+    text-transform: uppercase;
+}
+
+.admin-dashboard-panel__title {
+    margin: 0;
+    color: var(--admin-dashboard-ink);
+    font-family: var(
+        --font-display,
+        ui-serif,
+        Georgia,
+        Cambria,
+        "Times New Roman",
+        serif
+    );
+    font-size: clamp(1.25rem, 2vw, 1.55rem);
+    font-weight: 600;
+    letter-spacing: -0.025em;
+    line-height: 1.2;
+}
+
+.admin-dashboard-panel__description {
+    max-width: 42rem;
+    margin: 0.45rem 0 0;
+    color: var(--admin-dashboard-muted);
+    font-size: 0.875rem;
+    line-height: 1.55;
+}
+
+/* Recent inquiries */
+
+.admin-dashboard-inquiries {
+    display: grid;
+}
+
+.admin-dashboard-inquiry {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 1rem;
+    min-width: 0;
+    padding: 1rem 1.4rem;
+    border-bottom: 1px solid var(--admin-dashboard-border);
+    color: inherit;
+    text-decoration: none;
+    transition:
+        background-color 160ms ease,
+        box-shadow 160ms ease;
+}
+
+.admin-dashboard-inquiry:last-child {
+    border-bottom: 0;
+}
+
+.admin-dashboard-inquiry:hover {
+    background: rgba(182, 138, 68, 0.075);
+}
+
+.admin-dashboard-inquiry:focus-visible,
+.admin-dashboard-action:focus-visible {
+    outline: 3px solid rgba(182, 138, 68, 0.38);
+    outline-offset: -3px;
+}
+
+.admin-dashboard-inquiry.is-unread {
+    box-shadow: inset 3px 0 0 var(--admin-dashboard-gold);
+}
+
+.admin-dashboard-inquiry__content {
+    min-width: 0;
+}
+
+.admin-dashboard-inquiry__heading {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.45rem;
+    margin-bottom: 0.3rem;
+}
+
+.admin-dashboard-inquiry__type {
+    color: var(--admin-dashboard-gold-text);
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+}
+
+.admin-dashboard-badge {
+    display: inline-flex;
+    align-items: center;
+    min-height: 1.3rem;
+    padding: 0.15rem 0.45rem;
+    border: 1px solid rgba(182, 138, 68, 0.32);
+    border-radius: 999px;
+    background: var(--admin-dashboard-gold-soft);
+    color: #76551f;
+    font-size: 0.65rem;
+    font-weight: 700;
+    line-height: 1;
+    text-transform: uppercase;
+}
+
+.admin-dashboard-inquiry__name {
+    display: block;
+    overflow: hidden;
+    color: var(--admin-dashboard-ink);
+    font-size: 0.925rem;
+    font-weight: 650;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.admin-dashboard-inquiry__summary {
+    display: block;
+    overflow: hidden;
+    margin-top: 0.2rem;
+    color: var(--admin-dashboard-muted);
+    font-size: 0.8rem;
+    line-height: 1.45;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.admin-dashboard-inquiry__meta {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--admin-dashboard-muted);
+    font-size: 0.72rem;
+    white-space: nowrap;
+}
+
+.admin-dashboard-inquiry__arrow {
+    width: 1rem;
+    height: 1rem;
+    color: var(--admin-dashboard-gold-text);
+}
+
+/* Quick actions */
+
+.admin-dashboard-actions {
+    display: grid;
+    padding: 0.55rem;
+}
+
+.admin-dashboard-action {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 0.85rem;
+    border-radius: 0.85rem;
+    color: inherit;
+    text-decoration: none;
+    transition:
+        background-color 160ms ease,
+        transform 160ms ease;
+}
+
+.admin-dashboard-action:hover {
+    background: rgba(182, 138, 68, 0.09);
+    transform: translateX(2px);
+}
+
+.admin-dashboard-action__icon-wrapper {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border: 1px solid var(--admin-dashboard-gold-border);
+    border-radius: 0.75rem;
+    background: var(--admin-dashboard-gold-soft);
+}
+
+.admin-dashboard-action__icon {
+    width: 1.15rem;
+    height: 1.15rem;
+    color: var(--admin-dashboard-gold-text);
+}
+
+.admin-dashboard-action__content {
+    display: grid;
+    min-width: 0;
+    gap: 0.12rem;
+}
+
+.admin-dashboard-action__content strong {
+    color: var(--admin-dashboard-ink);
+    font-size: 0.85rem;
+    font-weight: 650;
+}
+
+.admin-dashboard-action__content span {
+    color: var(--admin-dashboard-muted);
+    font-size: 0.72rem;
+    line-height: 1.4;
+}
+
+.admin-dashboard-action__arrow {
+    width: 0.95rem;
+    height: 0.95rem;
+    color: var(--admin-dashboard-muted);
+}
+
+/* Loading, empty, and failure states */
+
+.admin-dashboard-state {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.8rem;
+    padding: 1.4rem;
+    color: var(--admin-dashboard-muted);
+}
+
+.admin-dashboard-state--error {
+    background: rgba(180, 70, 55, 0.065);
+    color: #8d3f35;
+}
+
+.admin-dashboard-state__icon {
+    flex: 0 0 auto;
+    width: 1.4rem;
+    height: 1.4rem;
+    color: var(--admin-dashboard-gold-text);
+}
+
+.admin-dashboard-state--error .admin-dashboard-state__icon {
+    color: #a84c3f;
+}
+
+.admin-dashboard-state__icon--spin {
+    animation: admin-dashboard-spin 900ms linear infinite;
+}
+
+.admin-dashboard-state strong {
+    display: block;
+    color: var(--admin-dashboard-ink);
+    font-size: 0.875rem;
+}
+
+.admin-dashboard-state p {
+    margin: 0.2rem 0 0;
+    font-size: 0.8rem;
+    line-height: 1.5;
+}
+
+/* Dark-mode compatibility */
+
+.dark {
+    --admin-dashboard-gold-text: var(--color-brand-gold);
+    --admin-dashboard-ink: #f4eadb;
+    --admin-dashboard-muted: #b9ad9e;
+    --admin-dashboard-surface: #201a15;
+    --admin-dashboard-surface-soft: #18130f;
+    --admin-dashboard-border: rgba(232, 204, 159, 0.13);
+    --admin-dashboard-shadow: 0 18px 45px rgba(0, 0, 0, 0.28);
+}
+
+.dark .admin-dashboard-panel {
+    background: linear-gradient(
+        150deg,
+        rgba(35, 28, 22, 0.98),
+        rgba(24, 19, 15, 0.98)
+    );
+}
+
+.dark .admin-dashboard-badge {
+    color: #e4c790;
+}
+
+.dark .admin-dashboard-state--error {
+    color: #efb0a8;
+}
+
+/* Responsive behavior */
+
+@media (max-width: 639px) {
+    .admin-dashboard-panel__header {
+        padding: 1.1rem;
+    }
+
+    .admin-dashboard-inquiry {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 0.5rem;
+        padding: 0.95rem 1.1rem;
+    }
+
+    .admin-dashboard-inquiry__meta {
+        justify-content: space-between;
+    }
+
+    .admin-dashboard-action:hover {
+        transform: none;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .admin-dashboard-stat,
+    .admin-dashboard-action,
+    .admin-dashboard-inquiry {
+        transition: none;
+    }
+
+    .admin-dashboard-stat:hover,
+    .admin-dashboard-action:hover {
+        transform: none;
+    }
+
+    .admin-dashboard-state__icon--spin {
+        animation: none;
+    }
+}
+
+@keyframes admin-dashboard-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}

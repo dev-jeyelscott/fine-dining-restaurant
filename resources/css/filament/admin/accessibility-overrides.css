@@ -1,0 +1,11 @@
+/*
+ * Final accessibility layer for the branded Filament admin theme.
+ * Keep these overrides after theme.css so keyboard focus remains visible
+ * across both light and dark admin surfaces.
+ */
+
+.fi-panel-admin .admin-dashboard-inquiry:focus-visible,
+.fi-panel-admin .admin-dashboard-action:focus-visible {
+    outline: 2px solid var(--admin-focus);
+    outline-offset: 2px;
+}

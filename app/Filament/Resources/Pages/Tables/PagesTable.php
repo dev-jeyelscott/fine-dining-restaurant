@@ -7,6 +7,7 @@ use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
 
 class PagesTable
@@ -21,18 +22,27 @@ class PagesTable
 
                 TextColumn::make('slug')
                     ->searchable()
-                    ->sortable(),
+                    ->sortable()
+                    ->visibleFrom('lg'),
 
                 IconColumn::make('is_published')
-                    ->boolean(),
+                    ->boolean()
+                    ->label('Published'),
 
                 TextColumn::make('updated_at')
                     ->dateTime()
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
+                TernaryFilter::make('is_published')
+                    ->label('Publication')
+                    ->trueLabel('Published')
+                    ->falseLabel('Draft'),
             ])
+            ->emptyStateHeading('No pages yet')
+            ->emptyStateDescription('Add a page to create a new public content surface.')
+            ->emptyStateIcon('heroicon-o-document-text')
             ->recordActions([
                 EditAction::make(),
             ])
