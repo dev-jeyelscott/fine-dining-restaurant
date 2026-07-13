@@ -39,7 +39,7 @@ class AdminPanelProvider extends PanelProvider
                 'primary' => '#c9a45d',
                 'gray' => Color::Stone,
             ])
-            ->viteTheme('resources/css/filament/admin/theme.css')
+            ->viteTheme('resources/css/filament/admin/app.css')
             ->simplePageMaxContentWidth(Width::Small)
             ->sidebarCollapsibleOnDesktop()
             ->sidebarWidth('18rem')
