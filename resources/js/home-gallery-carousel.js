@@ -231,6 +231,7 @@ export function initHomeGalleryCarousel(root, { reducedMotion = false } = {}) {
         viewport.removeEventListener("pointerdown", handlePointerDown);
         viewport.removeEventListener("pointerup", handlePointerUp);
         viewport.removeEventListener("pointercancel", resetPointer);
+        controls?.remove();
         queuedTarget = null;
         gsap.killTweensOf(slides);
         gsap.killTweensOf(captions);
