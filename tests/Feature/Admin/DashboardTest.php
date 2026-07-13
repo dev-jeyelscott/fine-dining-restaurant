@@ -92,6 +92,32 @@ it('shows recent inquiries without exposing unnecessary customer data', function
         ->assertDontSee('Sensitive event information');
 });
 
+it('shows the globally newest inquiries when one type has more than four records', function (): void {
+    $this->actingAs(dashboardTestAdmin());
+
+    foreach (range(1, 8) as $index) {
+        dashboardTestReservationRequest([
+            'customer_name' => "Newest Reservation {$index}",
+            'created_at' => now()->subMinutes(8 - $index),
+        ]);
+    }
+
+    foreach (range(1, 4) as $index) {
+        dashboardTestContactInquiry([
+            'customer_name' => "Older Contact {$index}",
+            'created_at' => now()->subHours($index),
+        ]);
+    }
+
+    $widget = Livewire::test(RecentInquiries::class);
+
+    foreach (range(1, 8) as $index) {
+        $widget->assertSee("Newest Reservation {$index}");
+    }
+
+    $widget->assertDontSee('Older Contact');
+});
+
 it('renders a polished empty inquiry state', function (): void {
     $this->actingAs(dashboardTestAdmin());
 

@@ -28,6 +28,8 @@ use Illuminate\Support\Str;
  */
 class RecentInquiries extends Widget
 {
+    private const DISPLAY_LIMIT = 8;
+
     protected static ?int $sort = 2;
 
     protected string $view = 'filament.widgets.recent-inquiries';
@@ -64,7 +66,7 @@ class RecentInquiries extends Widget
                 ->sortByDesc(
                     fn (array $inquiry): int => $inquiry['created_at']->getTimestamp(),
                 )
-                ->take(8)
+                ->take(self::DISPLAY_LIMIT)
                 ->values();
 
             return [
@@ -101,7 +103,7 @@ class RecentInquiries extends Widget
                 'created_at',
             ])
             ->latestFirst()
-            ->limit(4)
+            ->limit(self::DISPLAY_LIMIT)
             ->get()
             ->map(fn (ReservationRequest $request): array => $this->makeRecentInquiry(
                 type: 'Reservation Request',
@@ -140,7 +142,7 @@ class RecentInquiries extends Widget
                 'created_at',
             ])
             ->latestFirst()
-            ->limit(4)
+            ->limit(self::DISPLAY_LIMIT)
             ->get()
             ->map(fn (OrderInquiry $inquiry): array => $this->makeRecentInquiry(
                 type: 'Order Inquiry',
@@ -176,7 +178,7 @@ class RecentInquiries extends Widget
                 'created_at',
             ])
             ->latestFirst()
-            ->limit(4)
+            ->limit(self::DISPLAY_LIMIT)
             ->get()
             ->map(fn (ContactInquiry $inquiry): array => $this->makeRecentInquiry(
                 type: 'Contact Inquiry',
