@@ -40,6 +40,7 @@ class ContactInquiryInfolist
                         TextEntry::make('created_at')->label('Submitted')->dateTime(),
                         TextEntry::make('notification_sent_at')
                             ->label('Notification sent')
+                            ->dateTime()
                             ->placeholder('Not recorded'),
                     ]),
             ]);

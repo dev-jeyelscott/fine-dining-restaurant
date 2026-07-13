@@ -29,6 +29,7 @@ function inquiryDetailRecords(): array
         'special_requests' => 'A quiet table, if available.',
         'is_banquet_or_event' => true,
         'is_read' => false,
+        'notification_sent_at' => '2026-07-13 08:30:00',
     ]);
 
     $orderInquiry = OrderInquiry::query()->create([
@@ -41,6 +42,7 @@ function inquiryDetailRecords(): array
         'special_instructions' => 'Please call before preparing.',
         'delivery_address' => '12 Orchard Lane, Manila',
         'is_read' => false,
+        'notification_sent_at' => '2026-07-13 08:30:00',
     ]);
 
     $orderInquiry->items()->create([
@@ -56,6 +58,7 @@ function inquiryDetailRecords(): array
         'subject' => null,
         'message' => 'Could you share your private dining options?',
         'is_read' => true,
+        'notification_sent_at' => '2026-07-13 08:30:00',
     ]);
 
     return [$reservationRequest, $orderInquiry, $contactInquiry];
@@ -77,6 +80,8 @@ test('authorized admins can review branded inquiry detail pages', function () {
             'Banquet or event',
             'A quiet table, if available.',
             'Review details',
+            'Notification sent',
+            'Jul 13, 2026 08:30:00',
         ]);
 
     $this->get(OrderInquiryResource::getUrl('view', ['record' => $orderInquiry]))
@@ -87,13 +92,17 @@ test('authorized admins can review branded inquiry detail pages', function () {
             'owen.inquiry@example.com',
             'Order inquiry',
             'This is an inquiry for staff review and is not a paid or fulfilled order.',
+            'Delivery address',
             '12 Orchard Lane, Manila',
             'Two trays for a family gathering.',
+            'Special instructions',
             'Please call before preparing.',
             'Requested items',
             'Truffle Pasta',
             'No mushrooms.',
             'Review details',
+            'Notification sent',
+            'Jul 13, 2026 08:30:00',
         ]);
 
     $this->get(ContactInquiryResource::getUrl('view', ['record' => $contactInquiry]))
@@ -108,6 +117,8 @@ test('authorized admins can review branded inquiry detail pages', function () {
             'No subject was provided.',
             'Could you share your private dining options?',
             'Review details',
+            'Notification sent',
+            'Jul 13, 2026 08:30:00',
         ]);
 });
 

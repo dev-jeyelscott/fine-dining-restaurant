@@ -32,7 +32,7 @@ class OrderInquiryInfolist
                             ->formatStateUsing(fn (string $state): string => ucfirst($state)),
                         TextEntry::make('preferred_time')->label('Preferred time'),
                         TextEntry::make('delivery_address')
-                            ->label('Delivery Address')
+                            ->label('Delivery address')
                             ->visible(
                                 fn (OrderInquiry $record): bool => $record->fulfillment_type === 'delivery'
                                     && filled($record->delivery_address)
@@ -43,7 +43,7 @@ class OrderInquiryInfolist
                             ->placeholder('No additional order details were provided.')
                             ->columnSpanFull(),
                         TextEntry::make('special_instructions')
-                            ->label('Special Instructions')
+                            ->label('Special instructions')
                             ->placeholder('No special instructions provided.')
                             ->columnSpanFull(),
                     ]),
@@ -73,7 +73,7 @@ class OrderInquiryInfolist
                             ->color(fn (bool $state): string => $state ? 'success' : 'warning'),
                         TextEntry::make('created_at')->label('Submitted')->dateTime(),
                         TextEntry::make('notification_sent_at')
-                            ->label('Notification Sent')
+                            ->label('Notification sent')
                             ->dateTime()
                             ->placeholder('Not recorded'),
                     ]),
