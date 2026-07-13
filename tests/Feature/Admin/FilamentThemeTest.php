@@ -12,7 +12,7 @@ test('it registers the dedicated branded admin theme', function () {
         ->and($panel->getPath())
         ->toBe('admin')
         ->and($panel->getViteTheme())
-        ->toBe('resources/css/filament/admin/theme.css')
+        ->toBe('resources/css/filament/admin/app.css')
         ->and($panel->getFontFamily())
         ->toBe('Instrument Sans')
         ->and($panel->getBrandName())
@@ -23,16 +23,32 @@ test('it registers the dedicated branded admin theme', function () {
         ->toBe('3rem')
         ->and($panel->getSimplePageMaxContentWidth())
         ->toBe(Width::Small)
+        ->and(file_exists(resource_path('css/filament/admin/app.css')))
+        ->toBeTrue()
         ->and(file_exists(resource_path('css/filament/admin/theme.css')))
+        ->toBeTrue()
+        ->and(file_exists(resource_path('css/filament/admin/accessibility-overrides.css')))
         ->toBeTrue()
         ->and(file_exists(resource_path('css/brand-tokens.css')))
         ->toBeTrue()
         ->and(file_exists(resource_path('views/filament/admin/brand-logo.blade.php')))
         ->toBeTrue()
+        ->and(file_exists(resource_path('views/filament/admin/brand.blade.php')))
+        ->toBeTrue()
         ->and(file_exists(resource_path('views/filament/admin/auth/login-intro.blade.php')))
         ->toBeTrue()
         ->and(file_exists(resource_path('views/filament/admin/auth/login-footer.blade.php')))
         ->toBeTrue();
+});
+
+test('admin logo uses the context-aware brand component', function () {
+    $logo = Filament::getPanel('admin')->getBrandLogo();
+
+    expect($logo)
+        ->toBeInstanceOf(View::class)
+        ->and($logo->render())
+        ->toContain('class="admin-brand"')
+        ->not->toContain('admin-brand-lockup');
 });
 
 test('normal branded accent text meets wcag contrast in light and dark themes', function () {
@@ -49,13 +65,39 @@ test('normal branded accent text meets wcag contrast in light and dark themes', 
         ->toBeGreaterThanOrEqual(4.5);
 });
 
+test('dashboard focus indicators use the final accessible focus layer', function () {
+    $entrypoint = file_get_contents(resource_path('css/filament/admin/app.css'));
+    $overrides = file_get_contents(resource_path('css/filament/admin/accessibility-overrides.css'));
+
+    expect($entrypoint)
+        ->not->toBeFalse()
+        ->toContain('@import "./theme.css";')
+        ->toContain('@import "./accessibility-overrides.css";')
+        ->and(strpos($entrypoint, '@import "./theme.css";'))
+        ->toBeLessThan(strpos($entrypoint, '@import "./accessibility-overrides.css";'))
+        ->and($overrides)
+        ->not->toBeFalse()
+        ->toContain('.admin-dashboard-inquiry:focus-visible')
+        ->toContain('.admin-dashboard-action:focus-visible')
+        ->toContain('outline: 2px solid var(--admin-focus);')
+        ->toContain('outline-offset: 2px;');
+
+    $lightFocus = filamentThemeToken('resources/css/brand-tokens.css', '--color-brand-gold-dark');
+    $darkFocus = filamentThemeToken('resources/css/brand-tokens.css', '--color-brand-gold');
+
+    expect(filamentThemeContrastRatio($lightFocus, '#fffdf9'))
+        ->toBeGreaterThanOrEqual(3.0)
+        ->and(filamentThemeContrastRatio($darkFocus, '#171916'))
+        ->toBeGreaterThanOrEqual(3.0);
+});
+
 function filamentThemeToken(string $path, string $token): string
 {
     $contents = file_get_contents(base_path($path));
 
     expect($contents)->not->toBeFalse();
 
-    preg_match('/'.preg_quote($token, '/').':\\s*(#[0-9a-f]{6})/i', $contents, $matches);
+    preg_match('/'.preg_quote($token, '/').':\s*(#[0-9a-f]{6})/i', $contents, $matches);
 
     expect($matches)->toHaveKey(1);
 
