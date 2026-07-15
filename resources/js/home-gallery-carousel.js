@@ -2,6 +2,28 @@ import gsap from "gsap";
 
 const wrap = (value, length) => ((value % length) + length) % length;
 
+const captureAttributes = (element, names) => Object.fromEntries(
+    names.map((name) => [
+        name,
+        {
+            present: element.hasAttribute(name),
+            value: element.getAttribute(name),
+        },
+    ]),
+);
+
+const restoreAttributes = (element, attributes) => {
+    Object.entries(attributes).forEach(([name, attribute]) => {
+        if (!attribute.present) {
+            element.removeAttribute(name);
+
+            return;
+        }
+
+        element.setAttribute(name, attribute.value ?? "");
+    });
+};
+
 export function initHomeGalleryCarousel(root, { reducedMotion = false } = {}) {
     if (!root) {
         return () => {};
@@ -15,8 +37,6 @@ export function initHomeGalleryCarousel(root, { reducedMotion = false } = {}) {
     }
 
     const count = slides.length;
-    const originalGalleryMotion = root.getAttribute("data-gsap");
-    const originalTabIndex = viewport.getAttribute("tabindex");
     const captions = slides
         .map((slide) => [...slide.children].find((child) => child.classList.contains("bottom-0") && child.classList.contains("inset-x-0")))
         .filter(Boolean);
@@ -24,6 +44,27 @@ export function initHomeGalleryCarousel(root, { reducedMotion = false } = {}) {
     const previous = controls?.querySelector("[data-home-gallery-previous]");
     const next = controls?.querySelector("[data-home-gallery-next]");
     const current = controls?.querySelector("[data-home-gallery-current]");
+    const rootAttributes = captureAttributes(root, [
+        "data-gsap",
+        "data-home-gallery-enhanced",
+        "aria-label",
+        "aria-roledescription",
+    ]);
+    const viewportAttributes = captureAttributes(viewport, [
+        "data-home-gallery-viewport",
+        "tabindex",
+    ]);
+    const slideAttributes = slides.map((slide) => captureAttributes(slide, [
+        "data-home-gallery-slide",
+        "data-index",
+        "data-state",
+        "aria-label",
+        "aria-current",
+        "aria-hidden",
+        "inert",
+    ]));
+    const images = slides.flatMap((slide) => [...slide.querySelectorAll("img")]);
+    const imageAttributes = images.map((image) => captureAttributes(image, ["draggable"]));
 
     root.removeAttribute("data-gsap");
     root.dataset.homeGalleryEnhanced = "";
@@ -87,7 +128,6 @@ export function initHomeGalleryCarousel(root, { reducedMotion = false } = {}) {
         if (current) {
             current.textContent = String(currentIndex + 1).padStart(2, "0");
         }
-
     };
 
     const renderImmediate = () => {
@@ -128,6 +168,7 @@ export function initHomeGalleryCarousel(root, { reducedMotion = false } = {}) {
 
         if (isAnimating) {
             queuedTarget = target;
+
             return;
         }
 
@@ -136,6 +177,7 @@ export function initHomeGalleryCarousel(root, { reducedMotion = false } = {}) {
 
         if (reducedMotion) {
             renderImmediate();
+
             return;
         }
 
@@ -224,6 +266,7 @@ export function initHomeGalleryCarousel(root, { reducedMotion = false } = {}) {
 
     return () => {
         activeTimeline?.kill();
+        activeTimeline = null;
         resizeObserver?.disconnect();
         previous?.removeEventListener("click", handlePrevious);
         next?.removeEventListener("click", handleNext);
@@ -231,37 +274,25 @@ export function initHomeGalleryCarousel(root, { reducedMotion = false } = {}) {
         viewport.removeEventListener("pointerdown", handlePointerDown);
         viewport.removeEventListener("pointerup", handlePointerUp);
         viewport.removeEventListener("pointercancel", resetPointer);
-        controls?.remove();
+
+        if (pointerId !== null && viewport.hasPointerCapture?.(pointerId)) {
+            viewport.releasePointerCapture?.(pointerId);
+        }
+
+        resetPointer();
         queuedTarget = null;
+        isAnimating = false;
         gsap.killTweensOf(slides);
         gsap.killTweensOf(captions);
 
-        slides.forEach((slide) => {
-            slide.removeAttribute("aria-current");
-            slide.removeAttribute("aria-hidden");
-            slide.removeAttribute("aria-label");
-            slide.removeAttribute("data-home-gallery-slide");
-            slide.removeAttribute("data-index");
-            slide.removeAttribute("data-state");
-            slide.removeAttribute("inert");
+        slides.forEach((slide, index) => {
             gsap.set(slide, { clearProps: "all" });
+            restoreAttributes(slide, slideAttributes[index]);
         });
 
         captions.forEach((caption) => gsap.set(caption, { clearProps: "all" }));
-        viewport.removeAttribute("data-home-gallery-viewport");
-
-        if (originalTabIndex === null) {
-            viewport.removeAttribute("tabindex");
-        } else {
-            viewport.setAttribute("tabindex", originalTabIndex);
-        }
-
-        root.removeAttribute("data-home-gallery-enhanced");
-        root.removeAttribute("aria-label");
-        root.removeAttribute("aria-roledescription");
-
-        if (originalGalleryMotion !== null) {
-            root.setAttribute("data-gsap", originalGalleryMotion);
-        }
+        images.forEach((image, index) => restoreAttributes(image, imageAttributes[index]));
+        restoreAttributes(viewport, viewportAttributes);
+        restoreAttributes(root, rootAttributes);
     };
 }
