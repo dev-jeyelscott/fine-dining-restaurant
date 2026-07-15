@@ -44,6 +44,7 @@ export function initHomeGalleryCarousel(root, { reducedMotion = false } = {}) {
     const previous = controls?.querySelector("[data-home-gallery-previous]");
     const next = controls?.querySelector("[data-home-gallery-next]");
     const current = controls?.querySelector("[data-home-gallery-current]");
+    const originalCurrentText = current?.textContent ?? null;
     const rootAttributes = captureAttributes(root, [
         "data-gsap",
         "data-home-gallery-enhanced",
@@ -292,6 +293,11 @@ export function initHomeGalleryCarousel(root, { reducedMotion = false } = {}) {
 
         captions.forEach((caption) => gsap.set(caption, { clearProps: "all" }));
         images.forEach((image, index) => restoreAttributes(image, imageAttributes[index]));
+
+        if (current && originalCurrentText !== null) {
+            current.textContent = originalCurrentText;
+        }
+
         restoreAttributes(viewport, viewportAttributes);
         restoreAttributes(root, rootAttributes);
     };
