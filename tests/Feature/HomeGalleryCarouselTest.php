@@ -16,7 +16,12 @@ test('homepage carousel initializer keeps accessible interaction and lifecycle c
         ->toContain('aria-current')
         ->toContain('aria-hidden')
         ->toContain('setAttribute("inert", "")')
-        ->toContain('controls?.remove()')
+        ->toContain('current.textContent = originalCurrentText')
+        ->toContain('restoreAttributes(slide, slideAttributes[index])')
+        ->toContain('restoreAttributes(image, imageAttributes[index])')
+        ->toContain('restoreAttributes(viewport, viewportAttributes)')
+        ->toContain('restoreAttributes(root, rootAttributes)')
+        ->not->toContain('controls?.remove()')
         ->toContain('gsap.killTweensOf(slides)');
 });
 
