@@ -10,10 +10,12 @@ test('homepage gallery carousel preserves server rendered markup across motion l
         ->toContain('data-home-gallery-viewport');
 
     expect($carouselModule)
+        ->toContain('const originalCurrentText = current?.textContent ?? null')
         ->toContain('const rootAttributes = captureAttributes')
         ->toContain('const viewportAttributes = captureAttributes')
         ->toContain('const slideAttributes = slides.map')
         ->toContain('const imageAttributes = images.map')
+        ->toContain('current.textContent = originalCurrentText')
         ->toContain('restoreAttributes(slide, slideAttributes[index])')
         ->toContain('restoreAttributes(image, imageAttributes[index])')
         ->toContain('restoreAttributes(viewport, viewportAttributes)')
