@@ -32,5 +32,10 @@
         <env name="PULSE_ENABLED" value="false"/>
         <env name="TELESCOPE_ENABLED" value="false"/>
         <env name="NIGHTWATCH_ENABLED" value="false"/>
+
+        <!-- Test-only Filament administrator -->
+        <env name="ADMIN_USER_NAME" value="Test Administrator"/>
+        <env name="ADMIN_USER_EMAIL" value="admin@example.com"/>
+        <env name="ADMIN_USER_PASSWORD" value="password"/>
     </php>
 </phpunit>

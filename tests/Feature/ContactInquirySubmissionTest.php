@@ -18,27 +18,32 @@ $validPayload = static function (array $overrides = []): array {
     ], $overrides);
 };
 
-test('invalid payload fails validation', function (): void {
+$contactFormUrl = static fn (): string => route('contact.create').'#contact-inquiry';
+
+test('invalid payload fails validation', function () use ($contactFormUrl): void {
     Queue::fake();
 
     $response = $this
         ->from(route('contact.create'))
-        ->post(route('contact-inquiries.store'), []);
+        ->post(route('contact-inquiries.store'), [
+            'subject' => 'Banquet inquiry',
+        ]);
 
     $response
-        ->assertRedirect(route('contact.create'))
+        ->assertRedirect($contactFormUrl())
         ->assertSessionHasErrors([
             'customer_name',
             'email',
             'message',
-        ]);
+        ])
+        ->assertSessionHasInput('subject', 'Banquet inquiry');
 
     $this->assertDatabaseCount('contact_inquiries', 0);
 
     Queue::assertNothingPushed();
 });
 
-test('valid payload stores database record', function () use ($validPayload): void {
+test('valid payload stores database record', function () use ($contactFormUrl, $validPayload): void {
     Queue::fake();
 
     $response = $this
@@ -46,7 +51,7 @@ test('valid payload stores database record', function () use ($validPayload): vo
         ->post(route('contact-inquiries.store'), $validPayload());
 
     $response
-        ->assertRedirect(route('contact.create'))
+        ->assertRedirect($contactFormUrl())
         ->assertSessionHasNoErrors();
 
     $this->assertDatabaseCount('contact_inquiries', 1);
@@ -60,7 +65,38 @@ test('valid payload stores database record', function () use ($validPayload): vo
     ]);
 });
 
-test('valid payload queues notification', function () use ($validPayload): void {
+test('valid JSON payload stores once and returns a safe success response', function () use ($validPayload): void {
+    Queue::fake();
+
+    $response = $this
+        ->withHeader('Accept', 'application/json')
+        ->postJson(route('contact-inquiries.store'), $validPayload());
+
+    $response
+        ->assertOk()
+        ->assertJsonPath('success', true)
+        ->assertJsonPath('message', fn (string $message): bool => str_contains($message, 'Contact Inquiry'));
+
+    $this->assertDatabaseCount('contact_inquiries', 1);
+});
+
+test('invalid JSON payload returns field errors without storing', function (): void {
+    Queue::fake();
+
+    $response = $this
+        ->withHeader('Accept', 'application/json')
+        ->postJson(route('contact-inquiries.store'), [
+            'email' => 'invalid',
+        ]);
+
+    $response
+        ->assertStatus(422)
+        ->assertJsonValidationErrors(['customer_name', 'email', 'message']);
+
+    $this->assertDatabaseCount('contact_inquiries', 0);
+});
+
+test('valid payload queues notification', function () use ($contactFormUrl, $validPayload): void {
     Queue::fake();
 
     config([
@@ -72,7 +108,7 @@ test('valid payload queues notification', function () use ($validPayload): void 
         ->post(route('contact-inquiries.store'), $validPayload());
 
     $response
-        ->assertRedirect(route('contact.create'))
+        ->assertRedirect($contactFormUrl())
         ->assertSessionHasNoErrors();
 
     $contactInquiry = ContactInquiry::query()->firstOrFail();
@@ -88,7 +124,7 @@ test('valid payload queues notification', function () use ($validPayload): void 
     expect($contactInquiry->notification_sent_at)->toBeNull();
 });
 
-test('success message appears', function () use ($validPayload): void {
+test('success message appears', function () use ($contactFormUrl, $validPayload): void {
     Queue::fake();
 
     $response = $this
@@ -96,7 +132,7 @@ test('success message appears', function () use ($validPayload): void {
         ->post(route('contact-inquiries.store'), $validPayload());
 
     $response
-        ->assertRedirect(route('contact.create'))
+        ->assertRedirect($contactFormUrl())
         ->assertSessionHasNoErrors()
         ->assertSessionHas('success');
 });

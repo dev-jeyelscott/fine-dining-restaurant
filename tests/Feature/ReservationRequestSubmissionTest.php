@@ -35,6 +35,9 @@ beforeEach(function (): void {
 test('reservation request page renders form', function (): void {
     $this->get(route('reservation-request.create'))
         ->assertOk()
+        ->assertSee('x-data="inquiryForm"', false)
+        ->assertSee('@submit.prevent="submit"', false)
+        ->assertSee('x-bind:aria-busy="submitting"', false)
         ->assertSeeText('Reservation Request')
         ->assertSee('method="POST"', false)
         ->assertSee('name="customer_name"', false)
@@ -46,6 +49,44 @@ test('reservation request page renders form', function (): void {
         ->assertSee('max="200"', false)
         ->assertSee('name="special_requests"', false)
         ->assertSee('name="website"', false);
+});
+
+test('reservation request page uses the luxury homepage design language', function (): void {
+    $this->get(route('reservation-request.create'))
+        ->assertOk()
+        ->assertSeeText('An evening worth anticipating')
+        ->assertSeeText('An evening thoughtfully prepared')
+        ->assertSeeText('Your request, thoughtfully handled')
+        ->assertSee('data-reservation-hero', false)
+        ->assertSee('data-reservation-form', false)
+        ->assertSee('bg-brand-ivory', false)
+        ->assertSee('font-display', false);
+});
+
+test('reservation request page exposes accessible motion hooks without hiding form feedback', function (): void {
+    $this->get(route('reservation-request.create'))
+        ->assertOk()
+        ->assertSee('data-home-motion', false)
+        ->assertSee('data-reservation-motion', false)
+        ->assertSee('data-gsap="hero-image"', false)
+        ->assertSee('data-gsap="hero-content"', false)
+        ->assertSee('data-reservation-sidebar', false)
+        ->assertSee('data-reservation-process-step', false)
+        ->assertSee('data-reservation-notice', false)
+        ->assertSee('data-reservation-field-group="identity"', false)
+        ->assertSee('data-reservation-field-group="contact"', false)
+        ->assertSee('data-reservation-field-group="schedule"', false)
+        ->assertSee('data-reservation-field-group="event"', false)
+        ->assertSee('data-reservation-field-group="notes"', false)
+        ->assertSee('data-reservation-field-group="submit"', false)
+        ->assertSee('data-reservation-form', false);
+
+    $viewSource = file_get_contents(resource_path('views/pages/reservation-request.blade.php'));
+
+    expect($viewSource)
+        ->toBeString()
+        ->toContain('data-reservation-feedback role="status"')
+        ->toContain('data-reservation-feedback role="alert"');
 });
 
 test('invalid reservation request payload fails validation', function (): void {
@@ -111,6 +152,35 @@ test('valid reservation request payload stores database record', function (): vo
 
     expect(Carbon::parse($reservationRequest->preferred_date)->toDateString())
         ->toBe($payload['preferred_date']);
+});
+
+test('valid JSON reservation request stores once and returns manual review message', function (): void {
+    Queue::fake();
+
+    $response = $this
+        ->withHeader('Accept', 'application/json')
+        ->postJson(route('reservation-requests.store'), reservationRequestSubmissionTestPayload());
+
+    $response
+        ->assertOk()
+        ->assertJsonPath('success', true)
+        ->assertJsonPath('message', fn (string $message): bool => str_contains($message, 'not yet a confirmed reservation'));
+
+    $this->assertDatabaseCount('reservation_requests', 1);
+});
+
+test('invalid JSON reservation request returns field errors without storing', function (): void {
+    Queue::fake();
+
+    $response = $this
+        ->withHeader('Accept', 'application/json')
+        ->postJson(route('reservation-requests.store'), []);
+
+    $response
+        ->assertStatus(422)
+        ->assertJsonValidationErrors(['customer_name', 'phone', 'email', 'guest_count', 'preferred_date', 'preferred_time']);
+
+    $this->assertDatabaseCount('reservation_requests', 0);
 });
 
 test('valid reservation request payload queues notification', function (): void {

@@ -1,9 +1,9 @@
 {
     "$schema": "https://getcomposer.org/schema.json",
-    "name": "laravel/livewire-starter-kit",
+    "name": "dev-jeyelscott/fine-dining-restaurant",
     "type": "project",
-    "description": "The official Laravel starter kit for Livewire.",
-    "keywords": ["laravel", "framework"],
+    "description": "A Laravel website for a fine-dining restaurant with admin-managed content and customer inquiry workflows.",
+    "keywords": ["laravel", "restaurant", "filament", "fine-dining"],
     "license": "MIT",
     "require": {
         "php": "^8.4",

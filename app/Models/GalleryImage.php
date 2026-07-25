@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\HasResponsiveImages;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
@@ -18,6 +19,7 @@ use Illuminate\Support\Carbon;
  * @property bool $is_visible
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
+ * @property-read string|null $image_url
  */
 #[Fillable([
     'title',
@@ -29,6 +31,8 @@ use Illuminate\Support\Carbon;
 ])]
 class GalleryImage extends Model
 {
+    use HasResponsiveImages;
+
     /**
      * @return array<string, string>
      */
@@ -55,6 +59,9 @@ class GalleryImage extends Model
     #[Scope]
     protected function ordered(Builder $query): void
     {
-        $query->orderBy('sort_order')->orderByDesc('created_at');
+        $query
+            ->orderBy('sort_order')
+            ->orderByDesc('created_at')
+            ->orderByDesc('id');
     }
 }

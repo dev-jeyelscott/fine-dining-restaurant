@@ -5,8 +5,8 @@ namespace App\Filament\Resources\ContactInquiries\Tables;
 use App\Models\ContactInquiry;
 use Filament\Actions\Action;
 use Filament\Actions\ViewAction;
-use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
 
 class ContactInquiriesTable
@@ -15,30 +15,42 @@ class ContactInquiriesTable
     {
         return $table
             ->columns([
-                IconColumn::make('is_read')
-                    ->boolean()
-                    ->label('Reviewed'),
+                TextColumn::make('is_read')
+                    ->label('Review status')
+                    ->badge()
+                    ->formatStateUsing(fn (bool $state): string => $state ? 'Reviewed' : 'New')
+                    ->color(fn (bool $state): string => $state ? 'success' : 'warning'),
 
                 TextColumn::make('customer_name')
                     ->searchable()
                     ->sortable(),
 
                 TextColumn::make('email')
-                    ->searchable(),
+                    ->searchable()
+                    ->visibleFrom('md'),
 
                 TextColumn::make('phone')
-                    ->searchable(),
+                    ->searchable()
+                    ->visibleFrom('lg'),
 
                 TextColumn::make('subject')
-                    ->searchable(),
+                    ->searchable()
+                    ->visibleFrom('lg'),
 
                 TextColumn::make('created_at')
                     ->dateTime()
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
+                TernaryFilter::make('is_read')
+                    ->label('Review status')
+                    ->trueLabel('Reviewed')
+                    ->falseLabel('New'),
             ])
+            ->emptyStateHeading('No contact inquiries yet')
+            ->emptyStateDescription('New contact inquiries will appear here for staff review.')
+            ->emptyStateIcon('heroicon-o-envelope')
             ->recordActions([
                 ViewAction::make(),
                 Action::make('markAsReviewed')

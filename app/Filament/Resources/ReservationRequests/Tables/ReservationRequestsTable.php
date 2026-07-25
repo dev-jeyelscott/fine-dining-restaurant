@@ -7,6 +7,7 @@ use Filament\Actions\Action;
 use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
 
 class ReservationRequestsTable
@@ -15,41 +16,55 @@ class ReservationRequestsTable
     {
         return $table
             ->columns([
-                IconColumn::make('is_read')
-                    ->boolean()
-                    ->label('Reviewed'),
+                TextColumn::make('is_read')
+                    ->label('Review status')
+                    ->badge()
+                    ->formatStateUsing(fn (bool $state): string => $state ? 'Reviewed' : 'New')
+                    ->color(fn (bool $state): string => $state ? 'success' : 'warning'),
 
                 TextColumn::make('customer_name')
                     ->searchable()
                     ->sortable(),
 
                 TextColumn::make('phone')
-                    ->searchable(),
+                    ->searchable()
+                    ->visibleFrom('md'),
 
                 TextColumn::make('email')
-                    ->searchable(),
+                    ->searchable()
+                    ->visibleFrom('lg'),
 
                 TextColumn::make('preferred_date')
                     ->date()
                     ->sortable(),
 
                 TextColumn::make('preferred_time')
-                    ->sortable(),
+                    ->sortable()
+                    ->visibleFrom('lg'),
 
                 TextColumn::make('guest_count')
-                    ->sortable(),
+                    ->sortable()
+                    ->visibleFrom('xl'),
 
                 IconColumn::make('is_banquet_or_event')
                     ->boolean()
-                    ->label('Banquet/Event'),
+                    ->label('Event')
+                    ->visibleFrom('xl'),
 
                 TextColumn::make('created_at')
                     ->dateTime()
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
+                TernaryFilter::make('is_read')
+                    ->label('Review status')
+                    ->trueLabel('Reviewed')
+                    ->falseLabel('New'),
             ])
+            ->emptyStateHeading('No reservation requests yet')
+            ->emptyStateDescription('New reservation requests will appear here for staff review.')
+            ->emptyStateIcon('heroicon-o-calendar-days')
             ->recordActions([
                 ViewAction::make(),
                 Action::make('markAsReviewed')

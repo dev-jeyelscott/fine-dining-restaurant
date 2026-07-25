@@ -30,4 +30,12 @@ class StoreContactInquiryRequest extends FormRequest
             'website' => ['nullable', 'prohibited_unless:website,null'],
         ];
     }
+
+    /**
+     * Get the URL to redirect to when validation fails.
+     */
+    protected function getRedirectUrl(): string
+    {
+        return route('contact.create').'#contact-inquiry';
+    }
 }

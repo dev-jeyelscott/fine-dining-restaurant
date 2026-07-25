@@ -24,11 +24,15 @@ class SiteSettingsTable
 
                 TextColumn::make('updated_at')
                     ->dateTime()
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 //
             ])
+            ->emptyStateHeading('No site settings yet')
+            ->emptyStateDescription('Add a setting to manage shared restaurant information.')
+            ->emptyStateIcon('heroicon-o-cog-6-tooth')
             ->recordActions([
                 EditAction::make(),
             ])

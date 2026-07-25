@@ -9,6 +9,8 @@ use Illuminate\Contracts\View\View;
 
 class GalleryController extends Controller
 {
+    private const IMAGES_PER_PAGE = 12;
+
     public function index(): View
     {
         return view('pages.gallery', [
@@ -18,10 +20,11 @@ class GalleryController extends Controller
                 ->first(),
 
             'galleryImages' => GalleryImage::query()
-                ->where('is_visible', true)
-                ->orderBy('sort_order', 'desc')
-                ->orderByDesc('created_at')
-                ->get(),
+                ->visible()
+                ->ordered()
+                ->simplePaginate(self::IMAGES_PER_PAGE)
+                ->withQueryString()
+                ->fragment('gallery-collection'),
         ]);
     }
 }

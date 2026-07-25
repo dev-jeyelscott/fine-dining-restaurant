@@ -18,7 +18,13 @@ class OrderInquiryResource extends Resource
 {
     protected static ?string $model = OrderInquiry::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|\UnitEnum|null $navigationGroup = 'Customer Inquiries';
+
+    protected static ?string $navigationLabel = 'Order Inquiries';
+
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedShoppingBag;
+
+    protected static ?int $navigationSort = 20;
 
     public static function form(Schema $schema): Schema
     {

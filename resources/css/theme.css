@@ -1,0 +1,59 @@
+@import "./brand-tokens.css";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@layer theme {
+    .dark {
+        --color-accent: var(--color-white);
+        --color-accent-content: var(--color-white);
+        --color-accent-foreground: var(--color-neutral-800);
+    }
+}
+
+@layer base {
+    *,
+    ::after,
+    ::before,
+    ::backdrop,
+    ::file-selector-button {
+        border-color: var(--color-gray-200, currentColor);
+    }
+
+    html {
+        scroll-behavior: smooth;
+    }
+
+    body {
+        background: var(--color-brand-ink);
+        color: var(--color-brand-ivory);
+    }
+
+    ::selection {
+        background: color-mix(
+            in srgb,
+            var(--color-brand-gold) 38%,
+            transparent
+        );
+        color: var(--color-brand-ivory);
+    }
+
+    :where(a, button, input, select, textarea):focus-visible {
+        outline: 2px solid var(--color-brand-gold);
+        outline-offset: 3px;
+    }
+}
+
+[x-cloak] {
+    display: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        scroll-behavior: auto !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}

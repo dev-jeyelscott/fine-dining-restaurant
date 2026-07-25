@@ -80,6 +80,7 @@ Use a simple Laravel monolith.
 
 Preferred stack:
 
+- Runtime target: PHP 8.5. The Composer constraint remains `^8.4` so the supported PHP 8.4 and PHP 8.5 CI matrix and compatible hosting environments continue to work.
 - Backend: Laravel
 - Frontend: Blade templates
 - Styling: Tailwind CSS
@@ -138,7 +139,7 @@ The Laravel Boost guidelines are specifically curated by Laravel maintainers for
 
 This application is a Laravel application and its main Laravel ecosystems package & versions are below. You are an expert with them all. Ensure you abide by these specific packages & versions.
 
-- php - 8.4
+- php - 8.5 (target runtime; PHP 8.4 remains supported by the Composer constraint and CI matrix)
 - filament/filament (FILAMENT) - v5
 - laravel/fortify (FORTIFY) - v1
 - laravel/framework (LARAVEL) - v13

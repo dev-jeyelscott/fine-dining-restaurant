@@ -18,15 +18,14 @@ class MenuController extends Controller
                 ->first(),
 
             'categories' => MenuCategory::query()
-                ->where('is_visible', true)
+                ->visible()
                 ->with([
                     'menuItems' => fn ($query) => $query
-                        ->where('is_visible', true)
-                        ->orderBy('sort_order', 'desc')
-                        ->orderBy('name'),
+                        ->reorder()
+                        ->visible()
+                        ->ordered(),
                 ])
-                ->orderBy('sort_order')
-                ->orderBy('name')
+                ->ordered()
                 ->get(),
         ]);
     }
